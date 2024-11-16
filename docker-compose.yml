@@ -1,0 +1,35 @@
+services:
+
+  postgres:
+    container_name: postgres-sql-bsn
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: gamindie_db
+    volumes:
+      - data:/data/postgres
+    networks:
+      -  gamindie_network
+    restart: unless-stopped
+
+  maili-dev:
+    container_name: mail-dev-bsn
+    image: maildev/maildev
+    ports:
+      - "1080:1080" # Web Interface
+      - "1025:1025" # SMTP
+    
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  gamindie_network:
+    driver: bridge
+    
+    

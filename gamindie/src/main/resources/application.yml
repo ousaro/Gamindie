@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev # to set the active profile to dev
+  servlet:
+    multipart:
+      max-file-size: 50MB # to set the maximum file size
+
+stringdoc:
+  default-produces-media-type: application/json # to set the default media type for the API
+
+server:
+  servlet: 
+    context-path: /api/v1/ # to set the context path for the API endpoints

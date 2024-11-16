@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gamindie_db
+    username: username
+    password: password
+    driver-class-name: org.postgresql.Driver # to set the driver class name for the datasource
+  jpa:
+    hibernate:
+      ddl-auto: update # to update the schema
+    show-sql: false # to show the SQL queries
+    properties:
+      hibernate:
+        format-sql: true # to format the SQL queries
+    database: postgresql # to set the database platform
+    database-platform: org.hibernate.dialect.PostgreSQLDialect # to set the database dialect
+  mail:
+    host: localhost
+    port: 1025
+    username: maildev
+    password: maildev
+    properties:
+      mail:
+        smtp:
+          trust: "*" # to trust all certificates
+          auth: true # to authenticate with the server
+          starttls:
+            enable: true # to enable the use of the STARTTLS command (if supported by the server)
+          connectiontimeout: 5000 # to set the connection timeout
+          timeout: 3000 # to set the socket read timeout
+          writetimeout: 5000 # to set the write timeout
