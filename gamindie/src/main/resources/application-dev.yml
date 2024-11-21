@@ -28,3 +28,12 @@ spring:
           connectiontimeout: 5000 # to set the connection timeout
           timeout: 3000 # to set the socket read timeout
           writetimeout: 5000 # to set the write timeout
+
+application: # to set the application properties
+  security: # to set the security properties
+    jwt:
+      secret-key: 8152E1C6CD47ED9E4D127FD8242F1 # to set the secret key for the JWT
+      expiration: 8640000 # to set the expiration time for the JWT
+    mailing:
+      frontend:
+        activation-url: http://localhost:4200/activate-account # to set the activation URL for the frontend
