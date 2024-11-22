@@ -4,21 +4,25 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Dictionary;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ousaro.gamindie.role.Role;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,8 +51,8 @@ public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue
     private Integer id;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private LocalDate dateOfBirth;
     @Column(unique = true)
     private String email;
@@ -56,7 +60,11 @@ public class User implements UserDetails, Principal {
     private String ProfilePicture;
     private boolean accountLocked;
     private boolean enabled;
-    private Dictionary<String, String> socialLinks;
+    @ElementCollection // ElementCollection is used to store a collection of basic types in a separate table.
+    @CollectionTable(name = "user_social_links", joinColumns = @JoinColumn(name = "user_id")) // CollectionTable is used to specify the table name and the join column for the collection of basic types.
+    @MapKeyColumn(name = "social_name") // MapKeyColumn is used to specify the column name for the key of the map.
+    @Column(name = "social_url") // Column is used to specify the column name for the value of the map.
+    private Map<String, String> socialLinks;
     private String bio;
     private List<String> savedPosts;
 
@@ -116,7 +124,7 @@ public class User implements UserDetails, Principal {
     }   
 
     public String fullName(){
-        return firstName + " " + lastName;
+        return firstname + " " + lastname;
     }
 
     public void Follow(User user){
@@ -131,7 +139,7 @@ public class User implements UserDetails, Principal {
     //     // Send a message to the user
     // }
 
-    public void editProfile(Dictionary<String, String> profile){
+    public void editProfile(Map<String, String> profile){
         // Edit the profile of the user
 
         

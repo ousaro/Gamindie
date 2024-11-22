@@ -4,7 +4,7 @@ services:
     container_name: postgres-sql-bsn
     image: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432" # Postgres Port the first one is the host port and the second one is the container port
     environment:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password

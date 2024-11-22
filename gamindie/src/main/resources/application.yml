@@ -1,4 +1,8 @@
 spring:
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
   profiles:
     active: dev # to set the active profile to dev
   servlet:

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/gamindie_db
+    url: jdbc:postgresql://localhost:5433/gamindie_db
     username: username
     password: password
     driver-class-name: org.postgresql.Driver # to set the driver class name for the datasource
@@ -32,8 +32,10 @@ spring:
 application: # to set the application properties
   security: # to set the security properties
     jwt:
-      secret-key: 8152E1C6CD47ED9E4D127FD8242F1 # to set the secret key for the JWT
+      secret-key: FgTXl5sdvwySO1bAvv/ePZkY/OHCuqc49O/+9u+8bCk=  # to set the secret key for the JWT
       expiration: 8640000 # to set the expiration time for the JWT
-    mailing:
-      frontend:
-        activation-url: http://localhost:4200/activate-account # to set the activation URL for the frontend
+  mailing:
+    frontend:
+      activation-url: http://localhost:4200/activate-account # to set the activation URL for the frontend
+server:
+  port: 8088 # to set the server port

@@ -1,6 +1,5 @@
 package com.ousaro.gamindie.auth;
 
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -12,15 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class RegistrationRequest {
+public class AuthenticationRequest {
 
-
-    @NotEmpty(message = "Firstname is mandatory")
-    @NotBlank(message = "Firstname is mandatory")
-    private String firstname;
-    @NotEmpty(message = "LastName is mandatory")
-    @NotBlank(message = "LastName is mandatory")
-    private String lastname;
     @Email(message = "Email is not formatted")
     @NotEmpty(message = "Email is mandatory")
     @NotBlank(message = "Email is mandatory")
@@ -29,16 +21,4 @@ public class RegistrationRequest {
     @NotBlank(message = "Password is mandatory")
     @Size(min=8, message= "Password should be 8 characters long minimun")
     private String password;
-
-
-    @Override
-    public String toString(){
-        return "RegistrationRequest{" +
-                "firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
 }
