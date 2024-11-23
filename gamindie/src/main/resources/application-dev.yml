@@ -32,7 +32,7 @@ spring:
 application: # to set the application properties
   security: # to set the security properties
     jwt:
-      secret-key: FgTXl5sdvwySO1bAvv/ePZkY/OHCuqc49O/+9u+8bCk=  # to set the secret key for the JWT
+      secret-key: FgTXl5sdvwySO1bAvv/ePZkY/OHCuqc49O/+9u+8bCk=  # to set the secret key for the JWT (Base64 encoded) should be at least 256 bits long
       expiration: 8640000 # to set the expiration time for the JWT
   mailing:
     frontend:

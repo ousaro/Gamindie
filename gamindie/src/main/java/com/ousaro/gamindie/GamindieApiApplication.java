@@ -22,7 +22,7 @@ public class GamindieApiApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(RoleRepository roleRepository) {
+	public CommandLineRunner commandLineRunner(RoleRepository roleRepository) { // adding this method to create the USER role if it doesn’t exist the commanliverunner is a callback interface that can be used to execute the custom code before the application starts
 		return args -> {
 
 			if(roleRepository.findByName("USER").isEmpty()) {
