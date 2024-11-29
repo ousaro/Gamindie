@@ -21,26 +21,26 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("auth") // in the application.yml the context is specify to /api/v1 so this will be /api/v1/auth
 @RequiredArgsConstructor
-@Tag(name="Authentication")
+@Tag(name="Authentication") // Swagger tag
 public class AuthenticationController {
     
     private final AuthenticationService authService;
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> register(@Valid  @RequestBody RegistrationRequest request ) throws MessagingException {
+    @ResponseStatus(HttpStatus.ACCEPTED) // 202 to indicate that the request has been accepted for processing but the processing has not been completed.
+    public ResponseEntity<?> register(@Valid  @RequestBody RegistrationRequest request ) throws MessagingException { // ? is a wildcard that represents an unknown type the return type is ResponseEntity<?> because we are not returning any specific type
         authService.register(request);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted().build(); // accepted() returns a ResponseEntity with status code 202
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authService.authenticate(request));
+    public ResponseEntity<AuthenticationResponse> authenticate(@Valid @RequestBody AuthenticationRequest request) { // we expect a response of type AuthenticationResponse 
+        return ResponseEntity.ok(authService.authenticate(request)); // ok() returns a ResponseEntity with status code 200
     }
 
     
     @GetMapping("/activate-account")
-    public void confirm(@RequestParam String token) throws MessagingException {
+    public void confirm(@RequestParam String token) throws MessagingException { // @RequestParam is used to bind a request parameter to a method parameter (activate-account?token=...)
         authService.activateAccount(token);
     }
     

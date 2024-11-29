@@ -21,7 +21,7 @@ import io.jsonwebtoken.security.Keys;
 @Service  // service provider where we can define the logic used in the application
 public class JwtService {
 
-    @Value("${application.security.jwt.expiration}")
+    @Value("${application.security.jwt.expiration}") // to get the expiration time of the token from the application.properties file
     private long jwtExpiration;
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -31,7 +31,7 @@ public class JwtService {
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) { // T is the type of the claim that we want to extract and claimsResolver is the function that will extract the claim
-        final Claims claims = extractAllClaims(token); // to extract all the claims from the token
+        final Claims claims = extractAllClaims(token); // to extract all the claims from the token // claims are the data that we want to store in the token
         return claimsResolver.apply(claims); // to apply the claimsResolver function to the claims
     }
 
@@ -82,7 +82,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration); // to extract the expiration date from the token
     }
 
-    private Key getSignInKey() {
+    private Key getSignInKey() { // this is used to create a key from the secret key to sign the token for security
         byte[] keyBytes = Decoders.BASE64.decode(secretKey); // to decode the secret key
         return Keys.hmacShaKeyFor(keyBytes); // to create a key from the secret key
     }

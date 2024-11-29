@@ -21,7 +21,7 @@ public class ExceptionResponse {
 
     private Integer businessErrorCode;
     private String businessExceptionDescription;
-    private String error;
-    private Set<String> validationErrors;
-    private Map<String, String> errors;
+    private String error; // This is the error message
+    private Set<String> validationErrors; // This is a set of strings that will contain the validation errors
+    private Map<String, String> errors; // This is a map that will contain the errors like the field name and the error message
 }

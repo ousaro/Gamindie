@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.ousaro.gamindie.feedback.Comment;
+import com.ousaro.gamindie.feedback.Likes;
+import com.ousaro.gamindie.post.Post;
 import com.ousaro.gamindie.role.Role;
 
 import jakarta.persistence.CollectionTable;
@@ -23,6 +26,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapKeyColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +46,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @AllArgsConstructor
 @Entity
 @Table(name = "_user")
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class) // this annotation is used to automatically populate the createdDate and lastModifiedDate fields when the entity is created or updated.
 
 // userDeails and Principal are interfaces that are implemented by the User class to provide the necessary information for the user to be authenticated and authorized by the Spring Security framework.
 public class User implements UserDetails, Principal {
@@ -71,11 +75,20 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = FetchType.EAGER) // fetch = FetchType.EAGER is used to load the roles of the user when the user is loaded.
     private List<Role> roles;
 
+    @OneToMany(mappedBy="owner")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy="owner")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy="owner")
+    private List<Likes> likes;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
     @LastModifiedDate
-    @Column(insertable = false)
+    @Column(insertable = false) // intsertable = false is used to prevent the lastModifiedDate from being updated when the entity is created.
     private LocalDateTime lastModifiedDate;
 
     @Override
@@ -84,7 +97,7 @@ public class User implements UserDetails, Principal {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() { // ? is a wildcard that represents an unknown type. Used to prevent type errors when working with collections of different types.
         return this.roles
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName())) // SimpleGrantedAuthority is a class that implements the GrantedAuthority interface. It is used to represent the roles of the user. 
@@ -125,28 +138,6 @@ public class User implements UserDetails, Principal {
 
     public String fullName(){
         return firstname + " " + lastname;
-    }
-
-    public void Follow(User user){
-        // Follow the user
-    }
-
-    public void Unfollow(User user){
-        // Unfollow the user
-    }
-
-    // public void SendMessage(User user, Message message){
-    //     // Send a message to the user
-    // }
-
-    public void editProfile(Map<String, String> profile){
-        // Edit the profile of the user
-
-        
-    }
-
-    public void SavePost(String postId){
-        savedPosts.add(postId);
     }
 
 }

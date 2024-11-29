@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ousaro.gamindie.email.EmailService;
 import com.ousaro.gamindie.email.EmailTemplateName;
@@ -41,7 +40,7 @@ public class AuthenticationService {
     private String activationUrl; // final keyword is not needed here because the value is set by spring
 
     public void register(RegistrationRequest request) throws MessagingException {
-        var userRole = roleRepository.findByName("USER")
+        var userRole = roleRepository.findByName("USER") // find the role with the name USER
                 // todo - better exception handling
             .orElseThrow(() -> new RuntimeException("Role User was not initialized"));
 
@@ -49,7 +48,7 @@ public class AuthenticationService {
             .firstname(request.getFirstname())
             .lastname(request.getLastname())    
             .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
+            .password(passwordEncoder.encode(request.getPassword())) // encode the password with the password encoder
             .accountLocked(false)
             .enabled(false)
             .roles(List.of(userRole))
@@ -75,7 +74,7 @@ public class AuthenticationService {
     private String generateAndSaveActivationToken(User user) {
         // generate token
         String generatedToken =generateActivationCode(6);
-        var token = Token.builder()
+        var token = Token.builder() // to create a token object 
             .token(generatedToken)
             .createdAt(LocalDateTime.now())
             .expiresAt(LocalDateTime.now().plusMinutes(15))       

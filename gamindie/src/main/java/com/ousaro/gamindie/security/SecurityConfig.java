@@ -29,7 +29,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean // this for spring to know that this is a bean definition method
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // securityFilterChain is a bean that is used to build the security filter chain
         http
            .cors(withDefaults())
            .csrf(AbstractHttpConfigurer::disable)
@@ -49,9 +49,9 @@ public class SecurityConfig {
                 ).permitAll()
                     .anyRequest().authenticated() // this to specify that any request should be authenticated
                 )
-            .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement(session -> session.sessionCreationPolicy(STATELESS)) // this to specify that the session should be stateless this is because we are using jwt
+            .authenticationProvider(authenticationProvider) // set the authentication provider to be used
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // add the jwt filter before the UsernamePasswordAuthenticationFilter to check the jwt token before the authentication process
 
 
             return http.build();

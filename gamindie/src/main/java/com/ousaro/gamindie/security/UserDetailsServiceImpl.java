@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService{ // this class is used to load user-specific data. It has one method named loadUserByUsername() which can be overridden to customize the process of finding the user
 
     private final UserRepository userRepository;
     

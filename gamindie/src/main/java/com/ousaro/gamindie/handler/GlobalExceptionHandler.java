@@ -17,7 +17,7 @@ import jakarta.mail.MessagingException;
 @RestControllerAdvice // This annotation is used to handle exceptions globally in the application.
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(LockedException.class)
+    @ExceptionHandler(LockedException.class) // this annotation is used to handle a specific exception
     public ResponseEntity<ExceptionResponse> handleException(LockedException exp) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException exp) {
             Set<String> errors = new HashSet<>();
-            exp.getBindingResult().getFieldErrors()
+            exp.getBindingResult().getFieldErrors() // getbindingResult() returns the errors that were found during the validation and getFieldErrors() returns the field errors
             .forEach(error -> {
                 var errorsMessage = error.getDefaultMessage();
                 errors.add(errorsMessage);
@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
            // log the exception
-            exp.printStackTrace();
+            exp.printStackTrace(); // this will print the stack trace of the exception
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(
