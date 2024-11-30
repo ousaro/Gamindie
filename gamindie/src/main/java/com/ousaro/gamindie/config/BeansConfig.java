@@ -2,6 +2,7 @@ package com.ousaro.gamindie.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,6 +37,11 @@ public class BeansConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception  { // this is an implementation of AuthenticationManager that is capable of validating an Authentication object
         return config.getAuthenticationManager();
+    }
+
+    @Bean 
+    public AuditorAware<Integer> auditorAware() {
+        return new ApplicationAuditAware();
     }
     
 }

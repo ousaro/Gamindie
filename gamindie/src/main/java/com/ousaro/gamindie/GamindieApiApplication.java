@@ -12,7 +12,7 @@ import com.ousaro.gamindie.role.Role;
 import com.ousaro.gamindie.role.RoleRepository;
 
 @SpringBootApplication
-@EnableJpaAuditing // adding this annotation to enable JPA Auditing in the application
+@EnableJpaAuditing(auditorAwareRef = "auditorAware") // adding this annotation to enable JPA Auditing in the application
 @EnableAspectJAutoProxy // adding this annotation to enable AspectJ support in the application
 @EnableAsync // adding this annotation to enable Spring’s ability to run @Async methods in a background thread pool
 public class GamindieApiApplication {

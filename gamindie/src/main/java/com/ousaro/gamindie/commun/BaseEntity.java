@@ -32,7 +32,7 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue
-    private Integer Id;
+    private Integer id;
 
 
     @CreatedDate // Annotation that will be used to mark the field that will store the creation date of the entity
