@@ -12,6 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ousaro.gamindie.exeption.OperationNotPermittedException;
+
 import jakarta.mail.MessagingException;
 
 @RestControllerAdvice // This annotation is used to handle exceptions globally in the application.
@@ -74,6 +76,18 @@ public class GlobalExceptionHandler {
         
     }
 
+    @ExceptionHandler(OperationNotPermittedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(OperationNotPermittedException exp) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                        ExceptionResponse.builder()
+                            .error(exp.getMessage())
+                            .build()
+                        );
+        
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException exp) {
             Set<String> errors = new HashSet<>();
@@ -91,6 +105,7 @@ public class GlobalExceptionHandler {
                         );
         
     }
+
 
 
     @ExceptionHandler(Exception.class)

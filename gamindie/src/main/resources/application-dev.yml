@@ -37,5 +37,12 @@ application: # to set the application properties
   mailing:
     frontend:
       activation-url: http://localhost:4200/activate-account # to set the activation URL for the frontend
+  file:
+    upload:
+      images-path: ./uploads/images/ # to set the images path
+      videos-path: ./uploads/videos/ # to set the videos path
+      audios-path: ./uploads/audios/ # to set the audios path
+      documents-path: ./uploads/documents/ # to set the documents path
+      
 server:
   port: 8088 # to set the server port
