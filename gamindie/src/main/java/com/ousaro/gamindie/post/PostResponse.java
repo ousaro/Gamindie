@@ -1,5 +1,9 @@
 package com.ousaro.gamindie.post;
 
+import java.util.List;
+
+import com.ousaro.gamindie.attachment.AttachmentResponse;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +20,7 @@ public class PostResponse {
     private Integer id;
     private String Content;
     private String owner;
+    private List<AttachmentResponse> attachments;
+    
 
 }

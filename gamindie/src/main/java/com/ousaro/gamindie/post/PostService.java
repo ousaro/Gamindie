@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.ousaro.gamindie.attachment.Attachment;
+import com.ousaro.gamindie.attachment.AttachmentRepository;
 import com.ousaro.gamindie.commun.PageResponse;
 import com.ousaro.gamindie.user.User;
 
@@ -23,12 +25,30 @@ public class PostService {
     
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final AttachmentRepository attachmentRepository;
 
-     public Integer create(PostRequest request, Authentication connectedUser) {
+    public Integer create(PostRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
-        Post post = postMapper.toPost(request);
+
+        List<Attachment> attachments = null;
+        if(request.attachmentIds() != null && !request.attachmentIds().isEmpty()) {
+            attachments = attachmentRepository.findAllById(request.attachmentIds());
+        }
+        
+        Post post = postMapper.toPost(request, attachments);
         post.setOwner(user);
-        return postRepository.save(post).getId();
+         // Save the post
+        Post savedPost = postRepository.save(post);
+
+        // Update the attachments to associate them with the saved post
+        if (attachments != null) {
+            for (Attachment attachment : attachments) {
+                attachment.setPost(savedPost);
+            }
+            attachmentRepository.saveAll(attachments);
+        }
+
+        return savedPost.getId();
     }
 
     public PostResponse findById(Integer postId) {

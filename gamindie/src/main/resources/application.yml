@@ -7,7 +7,9 @@ spring:
     active: dev # to set the active profile to dev
   servlet:
     multipart:
+      enabled: true
       max-file-size: 50MB # to set the maximum file size
+      max-request-size: 50MB
 
 stringdoc:
   default-produces-media-type: application/json # to set the default media type for the API

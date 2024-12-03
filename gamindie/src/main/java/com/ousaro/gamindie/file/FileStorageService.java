@@ -41,15 +41,26 @@ public class FileStorageService {
         @Nonnull Integer userId
     ) {
         final String fileUploadSubPath = "users" + File.separator + userId;
-        return uploadFile(sourceFile, fileUploadSubPath);
+        return uploadFile(sourceFile,fileType, fileUploadSubPath);
     }
         
         
     private String uploadFile(
         @Nonnull MultipartFile sourceFile, 
+        @Nonnull String fileType,
         @Nonnull String fileUploadSubPath) {
         
-        final String finalUploadPath = imagesUploadPath + File.separator + fileUploadSubPath;
+        String typeUploadPath = "";
+
+        switch(fileType){
+            case "image" -> typeUploadPath = imagesUploadPath;
+            case "video" -> typeUploadPath = videosUploadPath;
+            case "audio" -> typeUploadPath = audiosUploadPath;
+            case "document" -> typeUploadPath = documentsUploadPath;
+            default -> log.warn("Unsupported file type");
+        }
+        
+        final String finalUploadPath = typeUploadPath + File.separator + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);
         if(!targetFolder.exists()){
             boolean folderCreated = targetFolder.mkdirs();

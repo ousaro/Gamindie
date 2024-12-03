@@ -1,15 +1,18 @@
-package com.ousaro.gamindie.file;
+package com.ousaro.gamindie.attachment;
 
-import java.util.Set;
+import java.util.Map;
+
 
 import com.ousaro.gamindie.commun.BaseEntity;
 import com.ousaro.gamindie.post.Post;
 
-
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.MapKeyColumn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +28,14 @@ import lombok.experimental.SuperBuilder;
 public class Attachment extends BaseEntity {
 
     private String name;
-    private AttachmentType type;
+    private String type;
     private String url;
-    
-    @OneToMany(mappedBy = "attachment")
-    private Set<AttachmentMetadata> metadata;
+    @ElementCollection
+    @CollectionTable(name = "attachment_metadata", joinColumns = @JoinColumn(name = "attachment_id"))
+    @MapKeyColumn(name = "key")
+    @Column(name = "value")
+    private Map<String, String> metadata;
+
 
 
     @ManyToOne

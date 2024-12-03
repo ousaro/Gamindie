@@ -10,6 +10,7 @@ public record PostRequest(
     @NotNull(message = "Content is required")
     @NotEmpty(message = "Content is required")
     String Content, 
-    List<String> tags) {
+    List<String> tags,
+    List<Integer> attachmentIds){
 
 }

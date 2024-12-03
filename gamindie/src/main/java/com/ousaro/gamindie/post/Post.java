@@ -2,12 +2,13 @@ package com.ousaro.gamindie.post;
 
 import java.util.List;
 
+import com.ousaro.gamindie.attachment.Attachment;
 import com.ousaro.gamindie.commun.BaseEntity;
 import com.ousaro.gamindie.feedback.Comment;
 import com.ousaro.gamindie.feedback.Likes;
-import com.ousaro.gamindie.file.Attachment;
 import com.ousaro.gamindie.user.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -34,9 +35,10 @@ public class Post extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "owner_id") // this annotation is used to specify the column name of the foreign key in the database table.
     private User owner;
-
-    @OneToMany(mappedBy="post")
+ 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // cascade is used to propagate the delete operation to the associated entities.
     private List<Attachment> attachments;
+
     
     @OneToMany(mappedBy="post")
     private List<Comment> comments;

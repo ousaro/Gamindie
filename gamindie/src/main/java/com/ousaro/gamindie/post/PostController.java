@@ -26,7 +26,6 @@ public class PostController {
 
     @PostMapping("/")
     public ResponseEntity<Integer> createPost(@Valid @RequestBody PostRequest request, Authentication connectedUser) {
-        System.out.println("request: " + request);
         return ResponseEntity.ok(service.create(request, connectedUser));
     }
 

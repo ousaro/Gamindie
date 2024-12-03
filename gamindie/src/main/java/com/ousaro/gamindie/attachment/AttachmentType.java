@@ -1,4 +1,4 @@
-package com.ousaro.gamindie.file;
+package com.ousaro.gamindie.attachment;
 
 public enum AttachmentType {
 
