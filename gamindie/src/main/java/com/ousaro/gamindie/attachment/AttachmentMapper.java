@@ -14,11 +14,12 @@ public class AttachmentMapper {
             .build();
     }
 
-    public Attachment toAttachment(AttachmentRequest attachmentRequest) {
+    public Attachment toAttachment(AttachmentRequest attachmentRequest, String fileUrl) {
         return Attachment.builder()
             .name(attachmentRequest.name())
             .type(attachmentRequest.type())
             .metadata(attachmentRequest.metadata())
+            .url(fileUrl)
             .build();
     }
 }

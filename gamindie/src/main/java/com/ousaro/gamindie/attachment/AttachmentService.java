@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class AttachmentService {
 
     private final FileStorageService fileStorageService;
+    private final AttachmentMapper attachmentMapper;
     private final AttachmentRepository attachmentRepository;
 
      public Integer uploadAttachment(AttachmentRequest request, Authentication connectedUser) {
@@ -22,16 +23,10 @@ public class AttachmentService {
         String fileUrl = fileStorageService.saveFile(request.sourceFile(), request.type(), user.getId());
 
         // Create and save the attachment entity
-        Attachment attachment = Attachment.builder()
-            .name(request.name())
-            .type(request.type())
-            .url(fileUrl)
-            .build();
+        Attachment attachment = attachmentMapper.toAttachment(request, fileUrl);
 
-        Attachment savedAttachment = attachmentRepository.save(attachment);
-
-                // Return the response
-        return savedAttachment.getId();
+        // Return the response
+        return attachmentRepository.save(attachment).getId();
     }
            
 
