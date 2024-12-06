@@ -10,6 +10,7 @@ import com.ousaro.gamindie.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -36,14 +37,14 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "owner_id") // this annotation is used to specify the column name of the foreign key in the database table.
     private User owner;
  
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true) // cascade is used to propagate the delete operation to the associated entities.
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) // cascade is used to propagate the delete operation to the associated entities.
     private List<Attachment> attachments;
 
     
-    @OneToMany(mappedBy="post")
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy="post")
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Likes> likes;
     
 

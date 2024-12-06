@@ -11,7 +11,7 @@ services:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: gamindie_db
     volumes:
-      - data:/data/postgres
+      - data:/var/lib/postgresql/data # Ensure the volume maps to the correct directory
     networks:
       -  gamindie_network
     restart: unless-stopped

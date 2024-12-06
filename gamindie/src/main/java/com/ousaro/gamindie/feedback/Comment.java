@@ -6,7 +6,9 @@ import com.ousaro.gamindie.commun.BaseEntity;
 import com.ousaro.gamindie.post.Post;
 import com.ousaro.gamindie.user.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -27,7 +29,7 @@ public class Comment extends BaseEntity {
     private String content;
     
     // this twos are added to make the comment reply to another comment
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> replies;
 
     @ManyToOne

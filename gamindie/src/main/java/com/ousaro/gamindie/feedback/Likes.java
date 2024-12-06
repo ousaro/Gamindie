@@ -22,10 +22,10 @@ import lombok.experimental.SuperBuilder;
 public class Likes extends BaseEntity{
     
     @ManyToOne
-    @JoinColumn(name = "owner_id") // this annotation is used to specify the column name of the foreign key in the database table.
+    @JoinColumn(name = "owner_id", nullable=false) // this annotation is used to specify the column name of the foreign key in the database table.
     private User owner;
 
     @ManyToOne
-    @JoinColumn(name = "post_id") // this annotation is used to specify the column name of the foreign key in the database table.
+    @JoinColumn(name = "post_id", nullable=false) // this annotation is used to specify the column name of the foreign key in the database table.
     private Post post;
 }
