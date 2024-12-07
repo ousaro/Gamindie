@@ -1,19 +1,19 @@
 package com.ousaro.gamindie.friendship;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("friendships")
@@ -47,10 +47,25 @@ public class FriendShipController {
         return ResponseEntity.ok(friends);
     }
 
+
     // Get pending friend requests for a user
     @GetMapping("/pending")
     public ResponseEntity<List<FriendShip>> getPendingRequests(Authentication connectedUser) {
         List<FriendShip> pendingRequests = friendShipService.getPendingRequests(connectedUser);
         return ResponseEntity.ok(pendingRequests);
+    }
+
+     // Get pending friend requests for a user
+     @GetMapping("/accepted")
+    public ResponseEntity<List<FriendShip>> getAcceptedRequests(Authentication connectedUser) {
+        List<FriendShip> acceptedRequests = friendShipService.getAcceptedRequests(connectedUser);
+        return ResponseEntity.ok(acceptedRequests);
+    }
+
+    // Detete a friend request
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFriendRequest(@PathVariable Integer id) {
+        friendShipService.deleteFriendRequest(id);
+        return ResponseEntity.noContent().build();
     }
 }

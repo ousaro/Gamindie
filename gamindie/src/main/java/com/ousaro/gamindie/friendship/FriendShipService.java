@@ -31,7 +31,7 @@ public class FriendShipService {
         FriendShip friendShip = FriendShip.builder()
                 .sender(sender)
                 .receiver(receiver)
-                .status(FriendShipStatus.PENDING)
+                .status(FriendShipStatus.PENDING.toString())
                 .build();
 
         return friendShipRepository.save(friendShip).getId();
@@ -68,6 +68,17 @@ public class FriendShipService {
     public List<FriendShip> getPendingRequests(Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
 
-        return friendShipRepository.findPendingRequestsByReceiver(user);
+        return friendShipRepository.findByStatusFriendShips(user, FriendShipStatus.PENDING.toString());
+    }
+
+    // Get accepted friend requests for a user
+    public List<FriendShip> getAcceptedRequests(Authentication connectedUser) {
+        User user = ((User) connectedUser.getPrincipal());
+
+        return friendShipRepository.findByStatusFriendShips(user, FriendShipStatus.ACCEPTED.toString());
+    }
+
+    public void deleteFriendRequest(Integer id) {
+        friendShipRepository.deleteById(id);
     }
 }

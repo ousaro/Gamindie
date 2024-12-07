@@ -15,5 +15,8 @@ public interface FriendShipRepository extends JpaRepository<FriendShip, Integer>
     @Query("SELECT f FROM FriendShip f WHERE f.sender = :user OR f.receiver = :user")
     List<FriendShip> findFriendsByUser(@Param("user") User user);
 
-    List<FriendShip> findPendingRequestsByReceiver(User receiver);
+    @Query("SELECT f FROM FriendShip f WHERE (f.sender = :user OR f.receiver = :user) AND f.status = :status")
+    List<FriendShip> findByStatusFriendShips(@Param("user") User user,@Param("status") String status);
+
+
 }

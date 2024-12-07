@@ -1,6 +1,7 @@
 package com.ousaro.gamindie.attachment;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ousaro.gamindie.commun.BaseEntity;
 import com.ousaro.gamindie.post.Post;
 
@@ -31,6 +32,7 @@ public class Attachment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "post_id") // this annotation is used to specify the column name of the foreign key in the database table.
+    @JsonBackReference
     private Post post;
     
 }

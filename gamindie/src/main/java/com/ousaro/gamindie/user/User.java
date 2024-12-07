@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ousaro.gamindie.feedback.Comment;
 import com.ousaro.gamindie.feedback.Likes;
+import com.ousaro.gamindie.friendship.FriendShip;
 import com.ousaro.gamindie.post.Post;
 import com.ousaro.gamindie.role.Role;
 
@@ -68,13 +70,24 @@ public class User implements UserDetails, Principal {
     private List<Role> roles;
 
     @OneToMany(mappedBy="owner", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference // Prevent infinite recursion
     private List<Post> posts;
 
     @OneToMany(mappedBy="owner", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference // Prevent infinite recursion
     private List<Comment> comments;
 
     @OneToMany(mappedBy="owner", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference // Prevent infinite recursion
     private List<Likes> likes;
+
+    @OneToMany(mappedBy = "sender", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<FriendShip> sentFriendships;
+
+    @OneToMany(mappedBy = "receiver", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<FriendShip> receivedFriendships;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

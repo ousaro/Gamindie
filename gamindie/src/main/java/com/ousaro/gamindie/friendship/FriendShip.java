@@ -1,5 +1,6 @@
 package com.ousaro.gamindie.friendship;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ousaro.gamindie.commun.BaseEntity;
 import com.ousaro.gamindie.user.User;
 
@@ -25,27 +26,30 @@ import lombok.experimental.SuperBuilder;
 })
 public class FriendShip extends BaseEntity {
     
-    FriendShipStatus status;
+    String status;
 
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
+    @JsonBackReference // Prevent infinite recursion
     private User sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id", nullable = false)
+    @JsonBackReference // Prevent infinite recursion
     private User receiver;
+    
 
     public void accept() {
-        if (status == FriendShipStatus.PENDING) {
-            status = FriendShipStatus.ACCEPTED;
+        if (status.equals(FriendShipStatus.PENDING.toString())) {
+            status = FriendShipStatus.ACCEPTED.toString();
         } else {
             throw new IllegalStateException("Invalid status transition.");
         }
     }
 
     public void cancel() {
-        if (status == FriendShipStatus.PENDING) {
-            status = FriendShipStatus.CANCELED;
+        if (status.equals(FriendShipStatus.PENDING.toString())) {
+            status = FriendShipStatus.CANCELED.toString();
         } else {
             throw new IllegalStateException("Cannot cancel non-pending friendship.");
         }
