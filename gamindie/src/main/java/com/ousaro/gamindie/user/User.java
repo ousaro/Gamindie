@@ -10,13 +10,15 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ousaro.gamindie.chat.ChatRoom;
+import com.ousaro.gamindie.chat.Message;
 import com.ousaro.gamindie.feedback.Comment;
 import com.ousaro.gamindie.feedback.Likes;
 import com.ousaro.gamindie.friendship.FriendShip;
 import com.ousaro.gamindie.post.Post;
 import com.ousaro.gamindie.role.Role;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -88,6 +90,21 @@ public class User implements UserDetails, Principal {
     @OneToMany(mappedBy = "receiver", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<FriendShip> receivedFriendships;
+
+
+    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ChatRoom> initiatedChats;
+    
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ChatRoom> receivedChats;
+    
+
+    // Messages sent by this user
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Message> messages;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
