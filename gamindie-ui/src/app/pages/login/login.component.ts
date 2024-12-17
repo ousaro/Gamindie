@@ -36,13 +36,12 @@ export class LoginComponent {
           this.router.navigate(['home']);
         },
         error: (error: HttpErrorResponse) => {
-          console.log(error);
           console.log(error.error);
           if(error.error.validationErrors){
             this.errorMsg = error.error.validationErrors;
           }
           else{
-            this.errorMsg.push(error.error.errorMsg);
+            this.errorMsg.push(error.error.error);
           }
           
         }
