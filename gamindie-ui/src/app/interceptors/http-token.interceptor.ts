@@ -1,6 +1,6 @@
 import { HttpHeaders, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { TokenService } from '../token/token.service';
+import { TokenService } from '../services/token/token.service';
 
 export const httpTokenInterceptor: HttpInterceptorFn = (req, next) => {
   if(req.url.includes("/auth")){

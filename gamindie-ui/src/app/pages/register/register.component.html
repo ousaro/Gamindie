@@ -1,35 +1,131 @@
-<div class="container-fluid card login-container">
-    <h3 class="text-center">Create an account</h3>
-    <hr>
-    <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
-        <p *ngFor="let msg of errorMsg">{{msg}}</p>
+<div class="min-h-[100vh] grid place-items-center py-5">
+  <div class="min-w-[90vw] md:min-w-[30vw] lg:min-w-[20vw] min-h-[80vh] ">
+    <div class="max-w-96 mx-auto mb-10">
+      <app-svg-icon name="longLogo"></app-svg-icon>
     </div>
-    <div class="mb-3">
-        <label for="firstName" class="form-label">First Name</label>
-        <input [(ngModel)]="registerRequest.firstname" type="text" class="form-control" id="firstName" placeholder="First Name">
-    </div>
-    <div class="mb-3">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input [(ngModel)]="registerRequest.lastname" type="text" class="form-control" id="lastName" placeholder="Last Name">
-    </div>
-    <div class="mb-3">
-        <label for="login" class="form-label ">Email address</label>
-        <input [(ngModel)]="registerRequest.email" type="email" class="form-control" id="login" placeholder="name@example.com">
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Email address</label>
-        <input [(ngModel)]="registerRequest.password" type="password" class="form-control" id="password" placeholder="password">
-    </div>
-
-    <div class="d-flex justify-content-between mb-3">
-        <button (click)="register()" type="button" class="btn btn-primary">
-            <em class="fas fa-sign-in-alt">&nbsp;Create an account</em>
-        </button>
+    <div class="mx-auto">
+      <h3
+        class="mb-10 text-center font-aahawow text-4xl dark:text-primaryText-dark flex flex-col md:flex-row md:gap-3 items-center justify-center"
+      >
+        <span>
+            Create
+        </span>
+        <span>
+            an account
+        </span>
+      </h3>
+      <div class="flex items-center my-4">
+        <div
+          class="flex-grow border-t border-1 sm:border-2 dark:border-primaryText-dark"
+        ></div>
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
+        <p *ngFor="let msg of errorMsg">{{ msg }}</p>
+      </div>
+      <div class="mb-3">
+        <label for="firstName" class="form-label dark:text-primaryText-dark"
+          >First Name</label
+        >
+        <input
+          [(ngModel)]="registerRequest.firstname"
+          type="text"
+          class="form-control input-style"
+          id="firstName"
+          placeholder="Ousaro"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label dark:text-primaryText-dark"
+          >Last Name</label
+        >
+        <input
+          [(ngModel)]="registerRequest.lastname"
+          type="text"
+          class="form-control input-style"
+          id="lastName"
+          placeholder="Ouldaro"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="login" class="form-label dark:text-primaryText-dark"
+          >Email address</label
+        >
+        <input
+          [(ngModel)]="registerRequest.email"
+          type="email"
+          class="form-control input-style"
+          id="login"
+          placeholder="name@example.com"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label dark:text-primaryText-dark"
+          >Password</label
+        >
+        <input
+          [(ngModel)]="registerRequest.password"
+          type="password"
+          class="form-control input-style"
+          id="password"
+          placeholder="password"
+        />
+      </div>
+      <div class="mb-3">
+        <label
+          for="confirmPassword"
+          class="form-label dark:text-primaryText-dark"
+          >Confirm Password</label
+        >
+        <input
+          [(ngModel)]="registerRequest.password"
+          type="confirm password"
+          class="form-control input-style"
+          id="confirm password"
+          placeholder="confirm password"
+        />
+      </div>
+      <button
+        (click)="register()"
+        type="button"
+        class="mt-8 form-control dark:bg-secondary-dark border-none"
+      >
+        <span class="dark:text-primary-dark font-aahawow text-md sm:text-xl"
+          >Create an account</span
+        >
+      </button>
+      <div class="flex items-center my-10">
+        <div
+          class="flex-grow border-t border-1 sm:border-2 dark:border-primaryText-dark"
+        ></div>
+        <span class="mx-4 dark:text-primaryText-dark font-aahawow">or</span>
+        <div
+          class="flex-grow border-t border-1 sm:border-2 dark:border-primaryText-dark"
+        ></div>
+      </div>
+      <button
+        (click)="loginWithProvider()"
+        type="button"
+        class="my-8 form-control border-none flex items-center justify-center gap-2"
+      >
+        <app-svg-icon name="google"></app-svg-icon>
+        <span class="dark:text-primary-dark font-aahawow text-md sm:text-xl mt-2"
+          >Sign up with google</span
+        >
+      </button>
+      <div
+        class="d-flex justify-content-center mb-3 dark:text-primaryText-dark"
+      >
         <div>
-            Already have an account? 
-            <button (click)="login()" type="button" class="btn btn-link">
-                Login
-            </button>
+          Already have an account?
+          <button
+            (click)="login()"
+            type="button"
+            class="dark:text-secondary-dark font-aahawow no-underline"
+          >
+            Log In!
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 </div>

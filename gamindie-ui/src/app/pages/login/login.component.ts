@@ -6,18 +6,23 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../services/token/token.service';
-import { AuthenticationResponse } from '../../services/models/authentication-response';
+import { SvgIconComponent } from "../../svg-icon/svg-icon.component";
+
 
 @Component({
   selector: 'app-login',
   imports: [
     FormsModule,
     CommonModule,
-  ],
+    SvgIconComponent
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+loginWithProvider() {
+throw new Error('Method not implemented.');
+}
 
   authRequest: AuthenticationRequest = {email: '', password: ''};
   errorMsg: Array<string> = [];
@@ -58,4 +63,5 @@ export class LoginComponent {
   register(){
     this.router.navigate(['register']);
   }
+
 }

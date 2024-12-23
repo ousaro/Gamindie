@@ -4,17 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/services';
+import { SvgIconComponent } from "../../svg-icon/svg-icon.component";
 
 @Component({
   selector: 'app-register',
-  imports:[
-      FormsModule,
-      CommonModule,
-    ],
+  imports: [
+    FormsModule,
+    CommonModule,
+    SvgIconComponent
+],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+loginWithProvider() {
+throw new Error('Method not implemented.');
+}
 
   registerRequest: RegistrationRequest = {email: '', firstname: '', lastname: '', password: ''};
   errorMsg: Array<string> = [];

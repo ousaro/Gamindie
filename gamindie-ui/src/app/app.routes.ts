@@ -5,6 +5,11 @@ import { ActivateAccountComponent } from './pages/activate-account/activate-acco
 
 export const routes: Routes = [
     {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full', // ensures that the redirect only triggers when the full path is empty
+    },
+    {
         path: 'login',
         component: LoginComponent,
 
