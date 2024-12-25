@@ -3,9 +3,9 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { JsonContentTypeInterceptor } from './interceptors/json-content-type.interceptor';
-import { httpTokenInterceptor } from './interceptors/http-token.interceptor';
-import { DarkModeService } from './services/theme/dark-mode.service';
+import { JsonContentTypeInterceptor } from './shared/interceptors/json-content-type.interceptor';
+import { httpTokenInterceptor } from './shared/interceptors/http-token.interceptor';
+import { DarkModeService } from './core/services/theme/dark-mode.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -1,0 +1,48 @@
+<div class="container dark:text-primaryText-dark" *ngIf="submitted; else codeForm">
+  <div class="activate-message" *ngIf="isOkay; else activationError">
+    <h1 class="text-2xl font-bold mb-3">Account activated</h1>
+    <p>
+      Your account has been activated successfully. You can now login to your
+      account.
+    </p>
+    <button
+      (click)="redirectToLogin()"
+      type="button"
+      class="mt-8 form-control dark:bg-secondary-dark border-none"
+    >
+      <span class="dark:text-primary-dark font-aahawow text-md sm:text-xl"
+        >Go to Login</span
+      >
+    </button>
+  </div>
+  <ng-template #activationError>
+    <div class="activate-error">
+      <h1 class="text-2xl font-bold mb-3">Activation failed</h1>
+      <p>{{ message }}</p>
+      <button
+        (click)="submitted = false"
+        type="button"
+        class="mt-8 form-control dark:bg-secondary-dark border-none"
+      >
+        <span class="dark:text-primary-dark font-aahawow text-md sm:text-xl"
+          >Try again</span
+        >
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #codeForm>
+  <div class="container dark:text-primaryText-dark">
+    <div class="text-center" style="width: 400px">
+      <h1 class="text-2xl font-bold mb-3">Type your activation code</h1>
+      <code-input
+        [isCodeHidden]="false"
+        [codeLength]="6"
+        [code]="'number'"
+        (codeCompleted)="onCodeCompleted($event)"
+        class="dark:text-primaryText-dark font-aahawow text-4xl"
+      ></code-input>
+    </div>
+  </div>
+</ng-template>

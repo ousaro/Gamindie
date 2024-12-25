@@ -1,3 +1,31 @@
-<div class="dark:bg-primary-dark bg-primary-light min-h-[100vh] font-merriweather">
-    <router-outlet />
-</div>
+<div Class="dark:bg-primary-dark bg-primary-light min-h-[100vh] font-merriweather">
+    <!-- Conditional Rendering -->
+    <ng-container *ngIf="isAuthenticated; else authContent">
+      <!-- Top Bar (Fixed) -->
+      <!-- <app-top-bar></app-top-bar> -->
+      <div class="main-layout">
+        <!-- Left Sidebar (Fixed) -->
+        <!-- <app-left-sidebar></app-left-sidebar> -->
+  
+        <!-- Dynamic Content -->
+        <main class="grid grid-flow-row">
+          <!-- Center Content -->
+          <section class="">
+            <router-outlet name="primary"></router-outlet>
+          </section>
+  
+          <!-- Right Sidebar -->
+          <section class="">
+            <router-outlet name="secondary"></router-outlet>
+          </section>
+        </main>
+      </div>
+    </ng-container>
+  
+    <!-- Auth Content -->
+    <ng-template #authContent>
+      <router-outlet></router-outlet>
+    </ng-template>
+
+  </div>
+  
