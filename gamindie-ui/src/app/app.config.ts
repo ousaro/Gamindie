@@ -6,12 +6,14 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { JsonContentTypeInterceptor } from './shared/interceptors/json-content-type.interceptor';
 import { httpTokenInterceptor } from './shared/interceptors/http-token.interceptor';
 import { DarkModeService } from './core/services/theme/dark-mode.service';
+import { provideAngularSvgIcon } from 'angular-svg-icon';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
     provideHttpClient(withInterceptors([JsonContentTypeInterceptor,httpTokenInterceptor])),
+    provideAngularSvgIcon(),
     DarkModeService,
   ]
 };

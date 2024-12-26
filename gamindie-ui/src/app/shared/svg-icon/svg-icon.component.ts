@@ -10,9 +10,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class SvgIconComponent implements OnChanges {
 
-  @Input()
-  public name?: string;
-
+  @Input() public name?: string;
+  @Input() class = '';
+  
   public svgIcon: any;
 
   constructor(
@@ -31,7 +31,6 @@ export class SvgIconComponent implements OnChanges {
       .subscribe({
         next: value => {
           this.svgIcon = this.sanitizer.bypassSecurityTrustHtml(value);
-          console.log(this.svgIcon);
         },
         error: err => {
           console.error(`Error loading SVG: ${err}`);
