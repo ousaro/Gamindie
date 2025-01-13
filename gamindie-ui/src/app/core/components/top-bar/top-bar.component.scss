@@ -1,3 +1,31 @@
+.custom-icon{
+    width: 2rem;
+    height: 2rem;
+}
 .custom-icon path {
-    stroke: #8F8E8C;
+    stroke: #fff;
+}
+
+.toggle-button {
+    @apply dark:text-secondary-dark dark:bg-primary_3-dark
+}
+
+.toggle-tab{
+    @apply  w-32 h-9 flex items-center justify-center  font-bold text-xl hover:cursor-pointer rounded-[10px]
+}
+
+.toggle-tab-hover {
+    @apply   hover:dark:bg-primary_5-dark transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md;
+}
+
+.active-right-tab {
+    @apply  dark:bg-secondary-dark
+}
+
+.inactive-right-tab {
+    @apply  dark:bg-primary_4-dark hover:dark:bg-primary_3-dark
+}
+
+.right-tab{
+    @apply  p-1 rounded-full
 }

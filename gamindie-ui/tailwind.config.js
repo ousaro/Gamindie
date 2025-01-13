@@ -27,6 +27,10 @@ module.exports = {
           light: '',
           dark: '#2A2731',
         },
+        primary_5:{
+          light: '',
+          dark: '#3B3745',
+        },
         primaryText: {
           light: '',
           dark: '#8F8E8C',

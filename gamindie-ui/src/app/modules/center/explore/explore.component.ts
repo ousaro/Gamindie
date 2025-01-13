@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-explore',
@@ -7,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './explore.component.scss'
 })
 export class ExploreComponent {
+
+  constructor(private route: ActivatedRoute) { }
+
 
 }

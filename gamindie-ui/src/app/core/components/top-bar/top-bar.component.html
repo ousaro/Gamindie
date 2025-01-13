@@ -1,18 +1,79 @@
 <div class="dark:bg-primary_2-dark h-[8vh]  border-b dark:border-primary_4-dark grid grid-flow-col">
-    <div class="bg-white grid grid-flow-col">
-        <div class="bg-blue-800">
-            <div class="flex items-center justify-start">
-                <svg-icon name='home' [svgStyle]="{ 'width.px': 90 ,'height.px':90 }"
-                [svgClass]="'custom-icon'"></svg-icon>
-                <p class="font-aahawow text-2xl dark:text-primaryText-dark">Home</p>
+    <div class="grid grid-flow-col">
+        <div class="flex items-center justify-start">
+            <div class="flex items-center justify-start pl-4">
+                <p class="font-aahawow text-2xl dark:text-white">{{sectionName}}</p>
             </div>
         </div>
-        <div class="bg-yellow-600">
-
+        <div class="flex items-center justify-center" *ngIf="isExplorePath()">
+            <div class="flex items-center justify-center p-[2px] dark:bg-primary_4-dark rounded-[10px] dark:text-primaryText-dark">
+                <div class="toggle-tab" 
+                    [ngClass]="{
+                        'toggle-button': !isMyFeed(),
+                        'toggle-tab-hover': isMyFeed()
+                    }" 
+                    [class.active]="!isMyFeed()"
+                    (click)="navigateToExplore()">
+                    Explore
+                </div>
+                <div class="toggle-tab" 
+                    [ngClass]="{
+                        'toggle-button': isMyFeed(),
+                        'toggle-tab-hover': !isMyFeed()}" 
+                    [class.active]="isMyFeed()"
+                    (click)="navigateToMyFeed()">
+                    My feed
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="bg-red-700">
+    <div class="flex items-center justify-end pr-4 space-x-4">
+        <!-- Friend Request Icon -->
+        <button 
+            class="right-tab"
+            [ngClass]="{
+                'active-right-tab': isFriendActive(),
+                'inactive-right-tab': !isFriendActive()
+            }" 
+            [class.active]="isFriendActive()"
+            (click)="navigateToFriend()">
+            <svg-icon name='user-add' [svgClass]="'custom-icon'"></svg-icon>
+        </button>
 
+        <!-- Chat Icon -->
+        <button 
+            class="right-tab"
+            [ngClass]="{
+                'active-right-tab': isChatActive(),
+                'inactive-right-tab': !isChatActive()
+
+            }" 
+            [class.active]="isChatActive()"
+            (click)="navigateToChat()">
+            <svg-icon name='messanger' [svgClass]="'custom-icon'"></svg-icon>
+        </button>
+
+        <!-- Notification Icon -->
+        <button 
+            class="right-tab"
+            [ngClass]="{
+                'active-right-tab': isNotificationActive(),
+                'inactive-right-tab': !isNotificationActive()
+            }" 
+            [class.active]="isNotificationActive()"
+            (click)="navigateToNotification()">
+            <svg-icon name='notification' [svgClass]="'custom-icon'"></svg-icon>
+        </button>
+
+        <!-- User Name and Profile Icon -->
+        <div class="flex items-center space-x-2">
+            <p class="text-white text-xl">Oussama O.</p>
+            <button class="right-tab inactive-right-tab">
+                <svg-icon name='user' [svgClass]="'custom-icon'"></svg-icon>
+            </button>
+        </div>
     </div>
+
+    
 </div>

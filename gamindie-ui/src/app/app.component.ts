@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterOutlet } from '@angular/router';
 import { DarkModeService } from './core/services/theme/dark-mode.service';
 import { CommonModule } from '@angular/common';
 import { TokenService } from './core/services/token/token.service';
@@ -24,13 +24,13 @@ export class AppComponent implements OnInit {
   svg_names = ['home','edit','attack','bookmark','comment','delete',
     'dot-menu','google','heart','logo','logout','longLogo','menu',
     'search','settings-gear','share','show','user','messanger','notification',
-    'plus-add','send','store','user-add'
+    'create','send','store','user-add'
   ];
 
   constructor(
     private darkModeService: DarkModeService,
     private tokenService: TokenService,
-    private iconReg: SvgIconRegistryService
+    private iconReg: SvgIconRegistryService,
   ) {
   }
 
@@ -40,6 +40,7 @@ export class AppComponent implements OnInit {
     this.svg_names.forEach(name => {
       this.iconReg.loadSvg(`Icons/${name}.svg`, name);
     });
+
 
   }
 
