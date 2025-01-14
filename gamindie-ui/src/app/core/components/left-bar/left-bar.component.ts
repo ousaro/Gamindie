@@ -1,12 +1,61 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 
 @Component({
   selector: 'app-left-bar',
-  imports: [AngularSvgIconModule],
+  imports: [AngularSvgIconModule, CommonModule],
   templateUrl: './left-bar.component.html',
   styleUrl: './left-bar.component.scss'
 })
-export class LeftBarComponent {
+export class LeftBarComponent implements OnInit {
+  currentUrl: string = '';
+  activeSection: string = '';
 
+  constructor(
+    private routeTrackerService: RouteTrackerService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.routeTrackerService.currentUrl$.subscribe((url) => {
+      this.currentUrl = url;
+      this.updateActiveSection();
+    });
+  }
+
+  isActive(section: string): boolean {
+    return this.activeSection === section;
+  }
+
+
+  updateActiveSection(): void {
+    if (this.currentUrl.includes('explore')) {
+      this.activeSection = 'explore';
+    } else if (this.currentUrl.includes('create')) {
+      this.activeSection = 'create';
+    } else if (this.currentUrl.includes('store')) {
+      this.activeSection = 'store';
+    } else if (this.currentUrl.includes('saved')) {
+      this.activeSection = 'saved';
+    } else if (this.currentUrl.includes('profile')) {
+      this.activeSection = 'profile';
+    } else {
+      this.activeSection = '';
+    }
+  }
+
+  navigateToSection(section: string): void {
+    const updatedUrl = this.currentUrl.replace(
+      /\(center\/[^/]+(?:\/[^/]+)?\/\//, 
+      `(center/${section}//`
+    );
+    this.router.navigateByUrl(updatedUrl);
+  }
+
+
+
+  
 }

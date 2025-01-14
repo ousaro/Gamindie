@@ -6,12 +6,18 @@
     stroke: #fff;
 }
 
+.logo-icon{
+    @apply w-[3rem] h-7
+}
+
+
 .toggle-button {
-    @apply dark:text-secondary-dark dark:bg-primary_3-dark
+    @apply dark:text-secondary-dark dark:bg-primary_3-dark transition-all ease-linear
 }
 
 .toggle-tab{
-    @apply  w-32 h-9 flex items-center justify-center  font-bold text-xl hover:cursor-pointer rounded-[10px]
+    @apply w-1/2 h-7 sm:w-20 md:w-20 lg:w-32 lg:h-9 flex items-center justify-center  font-bold text-lg lg:text-xl 
+    hover:cursor-pointer rounded-[6px] sm:rounded-[10px]
 }
 
 .toggle-tab-hover {
@@ -19,10 +25,14 @@
 }
 
 .active-right-tab {
-    @apply  dark:bg-secondary-dark
+    @apply hidden lg:flex dark:bg-secondary-dark
 }
 
 .inactive-right-tab {
+    @apply hidden lg:flex dark:bg-primary_4-dark hover:dark:bg-primary_3-dark
+}
+
+.profile-right-tab {
     @apply  dark:bg-primary_4-dark hover:dark:bg-primary_3-dark
 }
 

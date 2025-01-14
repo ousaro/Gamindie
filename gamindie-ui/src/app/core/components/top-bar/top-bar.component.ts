@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './top-bar.component.scss'
 })
 export class TopBarComponent implements OnInit {
+
   sectionName: string = '';
   currentUrl: string = '';
   
@@ -22,79 +23,44 @@ export class TopBarComponent implements OnInit {
   ngOnInit(): void {
     this.routeTrackerService.currentUrl$.subscribe((url) => {
       this.currentUrl = url;
-      
-      // extract the subpath of center
-      const centerMatch = this.currentUrl.match(/\/\(center\/([^/]+)/);
-      if (centerMatch) {
-        this.updateIcon(centerMatch[1]);
-      } else {
-        console.log('No match found for center path');
-      }
+      this.updateSection();
     });
   }
 
-  isExplorePath(): boolean {
-    return this.sectionName === 'explore';
-  }
-
-  isMyFeed(): boolean {
-    return this.currentUrl.includes('myfeed');
-  }
-  
-  navigateToExplore(): void {
-    const updatedUrl = this.currentUrl.replace(/\/explore(\/myfeed)?/, '/explore');
-    this.router.navigateByUrl(updatedUrl);
-  }
-  
-  navigateToMyFeed(): void {
-    const updatedUrl = this.currentUrl.includes('/explore/myfeed')
-      ? this.currentUrl
-      : this.currentUrl.replace('/explore', '/explore/myfeed');
+  centerNavigateTo(section: string): void {
+    const updatedUrl = this.currentUrl.replace(
+      /\(center\/[^/]+(?:\/[^/]+)?\/\//, 
+      `(center/${section}//`
+    );
     this.router.navigateByUrl(updatedUrl);
   }
 
-  updateIcon(subPath: string):void {
-    switch(subPath) {
-      case 'explore':
-        this.sectionName = 'explore';
-        break; 
-      case 'create':
-        this.sectionName = 'create';
-        break;
-      default:
-        this.sectionName = 'home';
+
+  updateSection():void {
+    if (this.currentUrl.includes('explore')) {
+      this.sectionName = 'explore';
+    } else if (this.currentUrl.includes('create')) {
+      this.sectionName = 'create';
+    } else if (this.currentUrl.includes('store')) {
+      this.sectionName = 'store';
+    } else if (this.currentUrl.includes('saved')) {
+      this.sectionName = 'saved';
+    } else if (this.currentUrl.includes('profile')) {
+      this.sectionName = 'profile';
+    } else {
+      this.sectionName = 'explore';
     }
+   
   }
 
-
-  isFriendActive(): boolean {
-    return this.currentUrl.includes('friend-requests');
+  isActive(section: string): boolean {
+    return this.currentUrl.includes(section);
   }
 
-  isChatActive(): boolean {
-    return this.currentUrl.includes('chat');
-  }
-
-  isNotificationActive(): boolean {
-    return this.currentUrl.includes('notifications');
-  }
-
-  navigateToFriend(): void {
-    const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, ':right/friend-requests');
+  rightNavigateTo(section: string): void {
+    const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, `:right/${section}`);
     this.router.navigateByUrl(updatedUrl);
   }
-
-  navigateToChat(): void {
-    const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, ':right/chat');
-    console.log('updatedUrl', updatedUrl);
-    this.router.navigateByUrl(updatedUrl);
-  }
-
-  navigateToNotification(): void {
-    const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, ':right/notifications');
-    this.router.navigateByUrl(updatedUrl);
-  }
-
 
 
 }

@@ -1,52 +1,110 @@
-<div class="dark:bg-primary_2-dark h-[6vh] md:min-h-[100vh] border-t md:border-r dark:border-primary_4-dark">
-    <!-- Logo Section -->
-    <div class="flex items-center justify-center py-3 px-1">
-      <h1 class="text-xl font-bold">
-        <svg-icon name='longLogo' [svgClass]="'logo-icon'"></svg-icon>
-      </h1>
-    </div>
-  
+<div class="flex flex-col dark:bg-primary_2-dark h-[6vh] md:min-h-[100vh] border-t md:border-r dark:border-primary_4-dark 
+ font-aahawow dark:text-primaryText-dark">
+  <!-- Logo Section -->
+  <div class="hidden md:flex items-center justify-center py-3 px-1">
+    <h1 class="text-xl font-bold">
+      <svg-icon name="longLogo" [svgClass]="'logo-icon'"></svg-icon>
+    </h1>
+  </div>
+
     <!-- Search Bar -->
-    <div class="px-4 mb-4">
-      <input
+    <div class="hidden md:block md:px-3 xl:px-4 mb-4 font-merriweather">
+      <div class="w-full rounded-md dark:bg-primary_4-dark text-white flex items-center gap-[0.10rem]">
+        <div class="cursor-pointer pl-2">
+          <svg-icon name='search' [svgClass]="'custom-icon'"></svg-icon>
+        </div>
+        <input
         type="text"
         placeholder="Explore Gamindie..."
-        class="w-full p-2 rounded-md bg-[#1e1e1e] text-white focus:outline-none placeholder-gray-400"
+        class="w-full p-2 rounded-md dark:bg-primary_4-dark focus:outline-none dark:placeholder-primaryText-dark"
       />
+      </div> 
     </div>
-  
-    <!-- Navigation Links -->
-    <nav class="flex-1 px-4">
-      <ul class="space-y-2">
-        <li class="flex items-center gap-2 p-2 rounded-md hover:bg-[#2b2b2b] cursor-pointer">
-          <svg-icon name='notification' [svgClass]="'custom-icon'"></svg-icon>
-          <span>Home</span>
-        </li>
-        <li class="flex items-center gap-2 p-2 rounded-md hover:bg-[#2b2b2b] cursor-pointer">
-          <svg-icon src="/assets/icons/create.svg" class="w-5 h-5"></svg-icon>
-          <span>Create</span>
-        </li>
-        <li class="flex items-center gap-2 p-2 rounded-md hover:bg-[#2b2b2b] cursor-pointer">
-          <svg-icon src="/assets/icons/store.svg" class="w-5 h-5"></svg-icon>
-          <span>Store</span>
-        </li>
-        <li class="flex items-center gap-2 p-2 rounded-md hover:bg-[#2b2b2b] cursor-pointer">
-          <svg-icon src="/assets/icons/saved.svg" class="w-5 h-5"></svg-icon>
-          <span>Saved</span>
-        </li>
-        <li class="flex items-center gap-2 p-2 rounded-md hover:bg-[#2b2b2b] cursor-pointer">
-          <svg-icon src="/assets/icons/profile.svg" class="w-5 h-5"></svg-icon>
-          <span>Profile</span>
-        </li>
-      </ul>
-    </nav>
-  
-    <!-- Settings -->
-    <div class="px-4 py-2">
-      <div class="flex items-center gap-2 p-2 rounded-md hover:bg-[#2b2b2b] cursor-pointer">
-        <svg-icon src="/assets/icons/settings.svg" class="w-5 h-5"></svg-icon>
-        <span>Settings</span>
-      </div>
+
+  <!-- Navigation Links -->
+  <nav class="flex-auto md:px-3 xl:px-4 text-lg md:text-xl lg:text-2xl">
+    <ul class="pt-1 md:space-y-2 flex md:block justify-around items-center md:py-2 px-1">
+      <li
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('explore'),
+          'nav-li-el': !isActive('explore')
+        }" 
+        [class.active]="isActive('explore')"
+        (click)="navigateToSection('explore')"
+      >
+        <svg-icon name="home" [svgClass]="isActive('explore') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span  class="hidden md:block">Home</span>
+      </li>
+      <li
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('create'),
+          'nav-li-el': !isActive('create')
+        }" 
+        [class.active]="isActive('create')"
+        (click)="navigateToSection('create')"
+      >
+        <svg-icon name="create" [svgClass]="isActive('create') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span  class="hidden md:block">Create</span>
+      </li>
+      <li
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('store'),
+          'nav-li-el': !isActive('store')
+        }" 
+        [class.active]="isActive('store')"
+        (click)="navigateToSection('store')"
+      >
+        <svg-icon name="store" [svgClass]="isActive('store') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span class="hidden md:block">Store</span>
+      </li>
+      <li
+        [ngClass]="{
+          'active-nav-el-hide nav-li-hide': isActive('saved'),
+          'nav-li-hide': !isActive('saved'),
+        }" 
+        [class.active]="isActive('saved')"
+        (click)="navigateToSection('saved')"
+      >
+        <svg-icon name="bookmark" [svgClass]="isActive('saved') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span class="hidden md:block">Saved</span>
+      </li>
+      <li
+        [ngClass]="{
+          'active-nav-el-hide nav-li-hide': isActive('profile'),
+          'nav-li-hide': !isActive('profile')
+        }" 
+        (click)="navigateToSection('profile')"
+      >
+        <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
+        <span  class="hidden md:block">Profile</span>
+      </li>
+      <li 
+      class="nav-li-el nav-li-hide-md"
+      >
+      <svg-icon 
+        name="setting" 
+        [svgClass]="'nav-icons'"
+      ></svg-icon>
+      </li>
+      <li 
+      class="nav-li-el nav-li-hide-md"
+      >
+      <svg-icon 
+        name="menu" 
+        [svgClass]="'nav-icons'"
+      ></svg-icon>
+      </li>
+
+    </ul>
+  </nav>
+
+  <!-- Settings -->
+  <div class="hidden md:flex px-4 py-2 border-t-[3px] dark:border-primary_4-dark text-2xl">
+    <div class="nav-li-el">
+      <svg-icon name="setting" [svgClass]="'nav-icons'"></svg-icon>
+      <span class="hidden md:block">Settings</span>
     </div>
   </div>
-  
+</div>
+
+

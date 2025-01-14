@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   isAuthenticated : boolean = false;
   svg_names = ['home','edit','attack','bookmark','comment','delete',
     'dot-menu','google','heart','logo','logout','longLogo','menu',
-    'search','settings-gear','share','show','user','messanger','notification',
+    'search','setting','share','show','user','messanger','notification',
     'create','send','store','user-add'
   ];
 

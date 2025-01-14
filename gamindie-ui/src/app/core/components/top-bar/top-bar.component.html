@@ -1,79 +1,116 @@
-<div class="dark:bg-primary_2-dark h-[8vh]  border-b dark:border-primary_4-dark grid grid-flow-col">
-    <div class="grid grid-flow-col">
-        <div class="flex items-center justify-start">
-            <div class="flex items-center justify-start pl-4">
-                <p class="font-aahawow text-2xl dark:text-white">{{sectionName}}</p>
-            </div>
+<header class="dark:bg-primary_2-dark h-[8vh] border-b dark:border-primary_4-dark grid grid-flow-col">
+    <nav class="grid grid-flow-col">
+        <!-- Section Name -->
+        <div class="flex items-center justify-start pl-4">
+            <h1 class="font-aahawow text-lg sm:text-2xl dark:text-white">{{sectionName}}</h1>
         </div>
-        <div class="flex items-center justify-center" *ngIf="isExplorePath()">
-            <div class="flex items-center justify-center p-[2px] dark:bg-primary_4-dark rounded-[10px] dark:text-primaryText-dark">
-                <div class="toggle-tab" 
-                    [ngClass]="{
-                        'toggle-button': !isMyFeed(),
-                        'toggle-tab-hover': isMyFeed()
-                    }" 
-                    [class.active]="!isMyFeed()"
-                    (click)="navigateToExplore()">
-                    Explore
-                </div>
-                <div class="toggle-tab" 
-                    [ngClass]="{
-                        'toggle-button': isMyFeed(),
-                        'toggle-tab-hover': !isMyFeed()}" 
-                    [class.active]="isMyFeed()"
-                    (click)="navigateToMyFeed()">
-                    My feed
-                </div>
-            </div>
-        </div>
-    </div>
 
+        <!-- Explore and My Feed Toggle (Visible on larger screens) -->
+        <div class="hidden sm:flex items-center justify-center" *ngIf="isActive('explore')">
+            <div class="flex items-center justify-center p-[2px] dark:bg-primary_4-dark rounded-[6px] sm:rounded-[10px] dark:text-primaryText-dark">
+                <button 
+                    class="toggle-tab" 
+                    [ngClass]="{
+                        'toggle-button': !isActive('myfeed'),
+                        'toggle-tab-hover': isActive('myfeed')
+                    }" 
+                    [class.active]="!isActive('myfeed')"
+                    (click)="centerNavigateTo('explore')"
+                    aria-label="Explore">
+                    Explore
+                </button>
+                <button 
+                    class="toggle-tab" 
+                    [ngClass]="{
+                        'toggle-button': isActive('myfeed'),
+                        'toggle-tab-hover': !isActive('myfeed')
+                    }" 
+                    [class.active]="isActive('myfeed')"
+                    (click)="centerNavigateTo('explore/myfeed')"
+                    aria-label="My Feed">
+                    My Feed
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Right Navigation Buttons -->
     <div class="flex items-center justify-end pr-4 space-x-4">
         <!-- Friend Request Icon -->
         <button 
-            class="right-tab"
+            class="right-tab" 
             [ngClass]="{
-                'active-right-tab': isFriendActive(),
-                'inactive-right-tab': !isFriendActive()
+                'active-right-tab': isActive('friend-requests'),
+                'inactive-right-tab': !isActive('friend-requests')
             }" 
-            [class.active]="isFriendActive()"
-            (click)="navigateToFriend()">
-            <svg-icon name='user-add' [svgClass]="'custom-icon'"></svg-icon>
+            [class.active]="isActive('friend-requests')"
+            (click)="rightNavigateTo('friend-requests')"
+            aria-label="Friend Requests">
+            <svg-icon name="user-add" [svgClass]="'custom-icon'"></svg-icon>
         </button>
 
         <!-- Chat Icon -->
         <button 
-            class="right-tab"
+            class="right-tab" 
             [ngClass]="{
-                'active-right-tab': isChatActive(),
-                'inactive-right-tab': !isChatActive()
-
+                'active-right-tab': isActive('chat'),
+                'inactive-right-tab': !isActive('chat')
             }" 
-            [class.active]="isChatActive()"
-            (click)="navigateToChat()">
-            <svg-icon name='messanger' [svgClass]="'custom-icon'"></svg-icon>
+            [class.active]="isActive('chat')"
+            (click)="rightNavigateTo('chat')"
+            aria-label="Chat">
+            <svg-icon name="messanger" [svgClass]="'custom-icon'"></svg-icon>
         </button>
 
         <!-- Notification Icon -->
         <button 
-            class="right-tab"
+            class="right-tab" 
             [ngClass]="{
-                'active-right-tab': isNotificationActive(),
-                'inactive-right-tab': !isNotificationActive()
+                'active-right-tab': isActive('notifications'),
+                'inactive-right-tab': !isActive('notifications')
             }" 
-            [class.active]="isNotificationActive()"
-            (click)="navigateToNotification()">
-            <svg-icon name='notification' [svgClass]="'custom-icon'"></svg-icon>
+            [class.active]="isActive('notifications')"
+            (click)="rightNavigateTo('notifications')"
+            aria-label="Notifications">
+            <svg-icon name="notification" [svgClass]="'custom-icon'"></svg-icon>
         </button>
 
-        <!-- User Name and Profile Icon -->
+        <!-- Profile Section -->
         <div class="flex items-center space-x-2">
-            <p class="text-white text-xl">Oussama O.</p>
-            <button class="right-tab inactive-right-tab">
-                <svg-icon name='user' [svgClass]="'custom-icon'"></svg-icon>
+            <span class="text-white hidden md:flex text-xl">Oussama O.</span>
+            <button class="right-tab profile-right-tab" (click)="centerNavigateTo('profile')" aria-label="Profile">
+                <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
             </button>
         </div>
     </div>
+</header>
 
-    
-</div>
+<!-- Mobile Navigation Toggle -->
+<nav class="sm:hidden dark:bg-primary_2-dark h-[4vh] border-b dark:border-primary_4-dark grid grid-flow-col"  *ngIf="isActive('explore')">
+    <div class="flex items-center justify-center" *ngIf="isActive('explore')">
+        <div class="flex-1 flex flex-row  items-center justify-around p-[2px] dark:bg-primary_4-dark dark:text-primaryText-dark">
+            <button 
+                class="toggle-tab" 
+                [ngClass]="{
+                    'toggle-button': !isActive('myfeed'),
+                    'toggle-tab-hover': isActive('myfeed')
+                }" 
+                [class.active]="!isActive('myfeed')"
+                (click)="centerNavigateTo('explore')"
+                aria-label="Explore">
+                Explore
+            </button>
+            <button 
+                class="toggle-tab" 
+                [ngClass]="{
+                    'toggle-button': isActive('myfeed'),
+                    'toggle-tab-hover': !isActive('myfeed')
+                }" 
+                [class.active]="isActive('myfeed')"
+                (click)="centerNavigateTo('explore/myfeed')"
+                aria-label="My Feed">
+                My Feed
+            </button>
+        </div>
+    </div>
+</nav>

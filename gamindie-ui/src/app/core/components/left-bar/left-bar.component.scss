@@ -1,3 +1,50 @@
 .logo-icon{
-    @apply w-[18rem] h-16
+    @apply w-[12rem] h-10 lg:w-[13rem] lg:h-12 xl:w-[18rem] xl:h-14
+}
+
+
+.custom-icon{
+    @apply w-8 h-8 transition-all ease-linear hover:w-9 hover:h-9
+}
+
+.custom-icon:hover path{
+    @apply stroke-white
+}
+
+.nav-icons{
+    @apply w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10  transition-all ease-linear 
+}
+
+.nav-icons path{
+    @apply dark:stroke-primaryText-dark
+}
+
+.active-nav-icons path{
+    @apply  dark:stroke-secondary-dark
+}
+  
+
+.nav-li-el {
+    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md;
+    @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
+}
+  
+.active-nav-el {
+    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md;
+    @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
+}
+  
+.nav-li-hide {
+    @apply hidden md:flex items-center gap-3 p-2 rounded-md;
+    @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
+}
+
+.active-nav-el-hide {
+    @apply hidden md:flex items-center gap-3 p-2 rounded-md;
+    @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
+}
+  
+
+.nav-li-hide-md{
+    @apply flex md:hidden
 }

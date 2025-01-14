@@ -1,7 +1,5 @@
-<svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" 
-d="M17.1131 22.0339C17.1131 20.2224 18.5815 18.7539 20.3931 18.7539C22.2046 18.7539 23.6731 20.2224 23.6731 22.0339C23.6731 23.8455 22.2046 25.3139 20.3931 25.3139C19.5232 25.3139 18.6889 24.9684 18.0738 24.3532C17.4586 23.738 17.1131 22.9038 17.1131 22.0339Z" 
-stroke="#C6D300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M12.4013 12.3135L16.8818 9.82072C19.0668 8.61054 21.721 8.61054 23.9059 9.82072L28.3864 12.3135C30.5246 13.4824 31.8598 15.72 31.8731 18.1568V25.0153C31.8155 28.8601 28.6526 31.9303 24.8079 31.8737H15.9782C12.1335 31.9303 8.9706 28.8601 8.91306 25.0153V18.1568C8.92665 15.7196 10.2625 13.482 12.4013 12.3135Z"
- stroke="#C6D300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M15 18H9" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
