@@ -12,7 +12,7 @@
 }
 
 .nav-icons{
-    @apply w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10  transition-all ease-linear 
+    @apply w-7 h-7  lg:w-9 lg:h-9 xl:w-10 xl:h-10  transition-all ease-linear 
 }
 
 .nav-icons path{
@@ -25,9 +25,27 @@
   
 
 .nav-li-el {
+    transition: transform 0.2s, background-color 0.2s;
     @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md;
     @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
 }
+
+.nav-li-el:hover {
+    transform: scale(1.05);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-li-right-el {
+    transition: transform 0.2s, background-color 0.2s;
+    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
+    @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
+}
+
+.active-nav-right-el {
+    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
+    @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
+}
+  
   
 .active-nav-el {
     @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md;
@@ -48,3 +66,22 @@
 .nav-li-hide-md{
     @apply flex md:hidden
 }
+
+  
+  /* Modal animation */
+  .menu-modal {
+    animation: fadeInUp 0.3s ease-in-out;
+  }
+
+
+  /* Keyframes for fade-in and slide-up */
+@keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

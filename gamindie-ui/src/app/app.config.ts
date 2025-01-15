@@ -15,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([JsonContentTypeInterceptor,httpTokenInterceptor])),
     provideAngularSvgIcon(),
     DarkModeService,
+
   ]
 };

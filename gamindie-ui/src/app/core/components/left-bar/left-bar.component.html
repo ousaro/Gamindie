@@ -78,23 +78,42 @@
         <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Profile</span>
       </li>
+      <li
+        [ngClass]="{
+          'nav-li-right-el active-nav-right-el': isActive('friends-requests'),
+          'nav-li-right-el': !isActive('friends-requests')
+        }" 
+       (click)="navigateToSection('friends-requests')">
+        <svg-icon name="user-add" [svgClass]="isActive('friends-requests') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span  class="hidden md:block">Requests</span>
+      </li>
       <li 
-      class="nav-li-el nav-li-hide-md"
-      >
-      <svg-icon 
-        name="setting" 
-        [svgClass]="'nav-icons'"
-      ></svg-icon>
+        [ngClass]="{
+          'nav-li-right-el active-nav-right-el': isActive('chat'),
+          'nav-li-right-el': !isActive('chat')
+        }"  
+        (click)="navigateToSection('chat')">
+        <svg-icon name="messanger" [svgClass]="isActive('chat') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span  class="hidden md:block">Chat</span>
+      </li>
+      <li 
+        [ngClass]="{
+          'nav-li-right-el active-nav-right-el ': isActive('notifications'),
+          'nav-li-right-el': !isActive('notifications')
+        }"        
+        (click)="navigateToSection('notifications')">
+        <svg-icon name="notification" [svgClass]="isActive('notifications') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+        <span  class="hidden md:block">Notifications</span>
       </li>
       <li 
       class="nav-li-el nav-li-hide-md"
+      (click)="toggleMenuModal()"
       >
       <svg-icon 
         name="menu" 
         [svgClass]="'nav-icons'"
       ></svg-icon>
       </li>
-
     </ul>
   </nav>
 
@@ -105,6 +124,66 @@
       <span class="hidden md:block">Settings</span>
     </div>
   </div>
+
+
+  <!-- Menu Modal -->
+  <div *ngIf="isMenuModalOpen" 
+  class="absolute bottom-[6vh] right-0 bg-primary_2-dark py-4 px-2 shadow-lg rounded-md menu-modal"
+  >
+    <ul class="space-y-2">
+      <li
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('friends-requests'),
+          'nav-li-el': !isActive('friends-requests')
+        }" 
+       (click)="rightNavigateTo('friends-requests')">
+        <svg-icon name="user-add" [svgClass]="isActive('friends-requests') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+      </li>
+      <li 
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('chat'),
+          'nav-li-el': !isActive('chat')
+        }"  
+        (click)="rightNavigateTo('chat')">
+        <svg-icon name="messanger" [svgClass]="isActive('chat') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+      </li>
+      <li 
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('notifications'),
+          'nav-li-el': !isActive('notifications')
+        }"        
+        (click)="rightNavigateTo('notifications')">
+        <svg-icon name="notification" [svgClass]="isActive('notifications') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+      </li>
+      <li
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('saved'),
+          'nav-li-el': !isActive('saved'),
+        }" 
+        (click)="rightNavigateTo('saved')"
+      >
+        <svg-icon name="bookmark" [svgClass]="isActive('saved') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
+      </li>
+      <li
+        [ngClass]="{
+          'nav-li-el active-nav-el': isActive('profile'),
+          'nav-li-el': !isActive('profile')
+        }" 
+        (click)="rightNavigateTo('profile')"
+      >
+        <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
+      </li>
+      <li 
+        class="nav-li-el nav-li-hide-md"
+        >
+        <svg-icon 
+          name="setting" 
+          [svgClass]="'nav-icons'"
+        ></svg-icon>
+      </li>
+    </ul>
+  </div>
+
 </div>
 
 

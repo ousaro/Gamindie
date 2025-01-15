@@ -5,6 +5,10 @@ import { MyfeedComponent } from './myfeed/myfeed.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SavedPostComponent } from './saved-post/saved-post.component';
 import { StoreComponent } from './store/store.component';
+import { NotificationsComponent } from '../right/notifications/notifications.component';
+import { ChatComponent } from '../right/chat/chat.component';
+import { FriendRequestsComponent } from '../right/friend-requests/friend-requests.component';
+import { mobileOnlyGuardGuard } from '../../shared/guards/mobile-only-guard.guard';
 
 
 export const CENTER_ROUTES: Routes = [
@@ -37,4 +41,20 @@ export const CENTER_ROUTES: Routes = [
     path: 'profile',
     component: ProfileComponent,
   },
+  {
+    path: 'friends-requests',
+    component: FriendRequestsComponent,
+    canActivate: [mobileOnlyGuardGuard],
+  }
+  ,
+  {
+    path: 'chat',
+    component: ChatComponent,
+    canActivate: [mobileOnlyGuardGuard],
+  },
+  {
+    path: 'notifications',
+    component: NotificationsComponent,
+    canActivate: [mobileOnlyGuardGuard],
+  }
 ];
