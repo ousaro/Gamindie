@@ -119,10 +119,10 @@
 
   <!-- Settings -->
   <div class="hidden md:flex px-4 py-2 border-t-[3px] dark:border-primary_4-dark text-2xl">
-    <div class="nav-li-el">
+    <button class="nav-li-el" (click)="toggleSettingsModal()">
       <svg-icon name="setting" [svgClass]="'nav-icons'"></svg-icon>
       <span class="hidden md:block">Settings</span>
-    </div>
+    </button>
   </div>
 
 
@@ -175,11 +175,45 @@
       </li>
       <li 
         class="nav-li-el nav-li-hide-md"
+        (click)="toggleSettingsModal()"
         >
         <svg-icon 
           name="setting" 
           [svgClass]="'nav-icons'"
         ></svg-icon>
+      </li>
+    </ul>
+  </div>
+
+
+  <!-- settings-modal -->
+  <div *ngIf="isSettingsModalOpen" 
+      class="absolute bottom-[2rem] right-[3.8rem] md:bottom-0 md:left-[14rem] w-[12rem] dark:bg-primary_2-dark px-1 py-[0.5rem] shadow-lg rounded-md z-[1000] setting-modal text-lg md:text-xl lg:text-2xl">
+    <ul class="flex flex-col gap-1">
+      <li class="setting-item"
+          [ngClass]="{'setting-item-active': isMenuItemActive('logout'),
+              'setting-item' : !isMenuItemActive('logout')
+          }"
+          (click)="selectMenuItem('logout')">
+        <svg-icon name="logout" 
+                  [svgClass]="isMenuItemActive('logout') ? 'nav-icons active-nav-icons' : 'nav-icons'">
+        </svg-icon>
+        <span >Logout</span>
+      </li>
+      <li
+          [ngClass]="{'setting-item-delete': isMenuItemActive('delete'),
+            'setting-item' : !isMenuItemActive('delete')
+          }"
+          (click)="selectMenuItem('delete')">
+        <svg-icon name="delete" 
+                  [svgClass]="isMenuItemActive('delete') ? 'del-icons active-del-icons' : 'del-icons'">
+        </svg-icon>
+        <span
+        [ngClass]="{'dark:text-white': isMenuItemActive('delete'),
+          'dark:text-secondary_2-dark' : !isMenuItemActive('delete')
+        }">
+          Delete
+        </span>
       </li>
     </ul>
   </div>

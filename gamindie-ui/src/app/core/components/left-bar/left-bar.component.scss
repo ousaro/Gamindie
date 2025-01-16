@@ -37,12 +37,12 @@
 
 .nav-li-right-el {
     transition: transform 0.2s, background-color 0.2s;
-    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
+    @apply hidden md:flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
     @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
 }
 
 .active-nav-right-el {
-    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
+    @apply hidden md:flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
     @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
 }
   
@@ -68,13 +68,10 @@
 }
 
   
-  /* Modal animation */
   .menu-modal {
     animation: fadeInUp 0.3s ease-in-out;
   }
 
-
-  /* Keyframes for fade-in and slide-up */
 @keyframes fadeInUp {
     0% {
       opacity: 0;
@@ -84,4 +81,50 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+.setting-item{
+    @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md ;
+    @apply transition-all duration-200 ease-linear;
+    @apply hover:dark:bg-primary_3-dark
+  }
+
+  .setting-item-active{
+    @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md ;
+    @apply transition-all duration-200 ease-linear;
+    @apply hover:dark:bg-primary_3-dark dark:bg-primary_4-dark
+  }
+
+.setting-item-delete{
+    @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md ;
+    @apply transition-all duration-200 ease-linear;
+    @apply dark:bg-secondary_2-dark
+  }
+
+.del-icons{
+    @apply w-7 h-7 lg:w-9 lg:h-9 xl:w-10 xl:h-10  transition-all ease-linear 
+}
+
+.del-icons path{
+    @apply dark:stroke-secondary_2-dark
+}
+
+.active-del-icons path{
+    @apply  dark:stroke-white
+}
+
+  /* Keyframes for fade-in and slide-up */
+  @keyframes fadeSideLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+  .setting-modal {
+    animation: fadeSideLeft 0.3s ease-in-out;
   }

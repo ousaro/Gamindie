@@ -15,6 +15,10 @@ module.exports = {
           light: '',
           dark: '#C6D300',
         },
+        secondary_2:{
+          light: '',
+          dark: '#EB1010',
+        },
         primary_2:{
           light: '',
           dark: '#18171B',

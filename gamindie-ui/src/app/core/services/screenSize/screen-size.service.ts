@@ -12,7 +12,7 @@ export class ScreenSizeService {
 
   constructor(private breakpointObserver: BreakpointObserver) {
     this.isMobile$ = this.breakpointObserver
-      .observe([Breakpoints.Handset,Breakpoints.Medium])
+      .observe([Breakpoints.Handset, Breakpoints.Small])
       .pipe(map(result => result.matches));
   }
 }

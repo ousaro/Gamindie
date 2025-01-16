@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Subscription } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-left-bar',
@@ -14,13 +16,17 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class LeftBarComponent implements OnInit {
 
   isMenuModalOpen: boolean = false;
+  isSettingsModalOpen: boolean = false;
   currentUrl: string = '';
   activeSection: string = '';
+  activeMenuItem: string | null = null;
 
+  private breakpointSubscription: Subscription | undefined;
 
   constructor(
     private routeTrackerService: RouteTrackerService,
-    private router: Router
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit(): void {
@@ -28,10 +34,23 @@ export class LeftBarComponent implements OnInit {
       this.currentUrl = url;
       this.updateActiveSection();
     });
+
+    this.breakpointSubscription = this.breakpointObserver
+          .observe([Breakpoints.Handset, Breakpoints.Medium])
+          .subscribe(result => {
+            if (!result.matches) {
+              this.isMenuModalOpen = false;
+              this.isSettingsModalOpen = false;
+            } 
+    });
   }
 
   isActive(section: string): boolean {
     return this.activeSection === section;
+  }
+
+  isMenuItemActive(item: string): boolean {
+    return this.activeMenuItem === item;
   }
 
 
@@ -69,10 +88,29 @@ export class LeftBarComponent implements OnInit {
   toggleMenuModal() {
     this.isMenuModalOpen = !this.isMenuModalOpen;
   }
+  
+  toggleSettingsModal() {
+    this.isSettingsModalOpen = !this.isSettingsModalOpen;
+  }
 
+  selectMenuItem(item: string) {
+    this.activeMenuItem = item;
+    
+    switch(item) {
+      case 'logout':
+        console.log('Logging out...');
+        break;
+      case 'delete':
+        console.log('Deleting...');
+        break;
+    }
+
+    this.toggleSettingsModal();
+  }
 
   rightNavigateTo(section: string) {
-    this.toggleMenuModal(); // Close modal after navigating
+    this.toggleSettingsModal();
+    this.toggleMenuModal();
     this.navigateToSection(section);
    
   }
