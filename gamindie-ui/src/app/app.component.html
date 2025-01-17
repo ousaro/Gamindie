@@ -20,16 +20,16 @@
 
         <!-- Main Layout -->
         <main
-          class="grid grid-cols-1 lg:grid-cols-[1.4fr,1fr] xl:grid-cols-[2fr,1fr] gap-5 p-4 flex-1 place-items-center"
+          class="grid grid-cols-1 lg:grid-cols-[1.4fr,1fr] xl:grid-cols-[2fr,1fr] gap-3 p-2 place-items-center"
         >
           <!-- Primary Content -->
-          <section class="dark:bg-primary_2-dark rounded w-full min-h-[85vh]">
+          <section class="dark:bg-primary_2-dark shadow-md  rounded p-1 w-full min-h-[90vh]">
             <router-outlet name="primary"></router-outlet>
           </section>
 
           <!-- Secondary Content -->
           <section
-            class="dark:bg-primary_2-dark rounded shadow-md p-4 hidden w-full lg:block min-h-[85vh]"
+            class="dark:bg-primary_2-dark rounded shadow-md p-1  hidden w-full lg:block h-[90vh]"
           >
             <router-outlet name="secondary"></router-outlet>
           </section>

@@ -109,7 +109,7 @@ export class LeftBarComponent implements OnInit {
   }
 
   rightNavigateTo(section: string) {
-    this.toggleSettingsModal();
+    this.isSettingsModalOpen = false;
     this.toggleMenuModal();
     this.navigateToSection(section);
    

@@ -1,0 +1,55 @@
+<div class="flex flex-col bg-transparent h-[90vh] bg-gray-900 text-white">
+    <!-- Header -->
+    <div class="flex items-center p-4 border-b border-gray-700">
+      <button class="mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <div class="flex items-center">
+        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+          <span class="text-sm">{{getInitials(otherUser)}}</span>
+        </div>
+        <span class="ml-2 font-semibold">{{otherUser}}</span>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-4">
+      <ng-container *ngFor="let message of messages">
+        <div class="flex" [class.justify-end]="message.sender === 'user'">
+          <div class="max-w-[70%] rounded-2xl px-4 py-2"
+               [class.bg-gray-700]="message.sender === 'other'"
+               [class.bg-blue-600]="message.sender === 'user'">
+            <p>{{message.text}}</p>
+            <div class="text-xs text-gray-400 mt-1" *ngIf="message.seen">
+              seen
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-4 border-t border-gray-700">
+      <div class="flex items-center bg-gray-800 rounded-full px-4 py-2">
+        <button class="mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+          </svg>
+        </button>
+        <input 
+          type="text" 
+          [(ngModel)]="newMessage"
+          (keyup.enter)="sendMessage()"
+          class="flex-1 bg-transparent outline-none"
+          placeholder="Type a message..."
+        >
+        <button class="ml-2" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" [class.text-yellow-400]="newMessage.trim()" [class.text-gray-600]="!newMessage.trim()" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>

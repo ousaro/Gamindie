@@ -1,1 +1,45 @@
-<p>chat works!</p>
+<div class="w-full bg-transparent text-white font-merriweather px-[1px] sm:px-1  lg:px-2">
+    <!-- Header -->
+    <div class="py-2 font-aahawow flex flex-col items-center">
+        <h2 class="text-xl sm:text-3xl md:text-3xl tracking-wide sm:tracking-wider">
+        Chatrooms
+      </h2>
+      <div class="h-0.5 w-full dark:bg-primary_4-dark mt-2 sm:mt-3"></div>
+    </div>
+
+     <!-- Search Bar -->
+     <div class=" py-2  mb-4 font-merriweather">
+        <div class="w-full rounded-md dark:bg-primary_4-dark text-white flex items-center gap-[0.10rem]">
+          <div class="cursor-pointer pl-2">
+            <svg-icon name='search' [svgClass]="'custom-icon'"></svg-icon>
+          </div>
+          <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search for friend..."
+          class="w-full h-12 p-2 rounded-md dark:bg-primary_4-dark focus:outline-none dark:placeholder-primaryText-dark"
+        />
+        </div> 
+      </div>
+
+    <!-- Friend Requests List -->
+    <div class="flex flex-col max-h-[70vh] sm:max-h-[77vh] gap-2 w-full mt-4 overflow-y-auto scrollbar-none px-1 sm:px-2">
+      <div *ngFor="let user of users"
+           class="py-1 px-2 dark:bg-primary_4-dark rounded-lg flex items-center justify-between hover:dark:bg-primary_3-dark transition-colors duration-200"
+           (click)="openChatroom(user)">
+        
+        <!-- User Info -->
+        <div class="flex items-center gap-3">
+          <div class="w-14 h-14 rounded-full p-2 bg-zinc-700 flex items-center justify-center">
+            <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+          </div>
+          <span class="text-md">{{ user.name }}</span>
+        </div>
+        
+        <!-- message number -->
+        <div *ngIf="user.messagesNB > 0" class="flex items-center w-8 h-8 dark:bg-secondary-dark text-black p-1 rounded-full text-xs font-aahawow">
+            {{ user.messagesNB }}
+          </div>
+      </div>
+    </div>
+  </div>

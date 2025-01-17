@@ -80,6 +80,7 @@ export class TopBarComponent implements OnInit {
   rightNavigateTo(section: string): void {
     const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, `:right/${section}`);
     this.router.navigateByUrl(updatedUrl);
+  
   }
 
 

@@ -1,1 +1,31 @@
-<p>notifications works!</p>
+<div class="w-full bg-transparent text-white font-merriweather px-[1px] sm:px-1  lg:px-2">
+    <!-- Header -->
+    <div class="py-2 font-aahawow flex flex-col items-center">
+      <h2 class="text-xl sm:text-3xl md:text-4xl tracking-wide sm:tracking-wider">
+        Notifications
+      </h2>
+      <div class="h-0.5 w-full dark:bg-primary_4-dark mt-2 sm:mt-3"></div>
+    </div>
+  
+    <!-- Notification List -->
+    <div class="flex flex-col max-h-[70vh] sm:max-h-[77vh] gap-2 w-full mt-4 overflow-y-auto scrollbar-none px-1 sm:px-2">
+      <div *ngFor="let notification of notifications; let i = index"
+           (click)="handleNotificationClick(i)"
+           [ngClass]="!notification.isSeen ? 'dark:bg-primary_4-dark' : 'dark:bg-primary_3-dark'"
+           class="p-2 sm:p-4 transition-colors duration-200 cursor-pointer flex items-start gap-3 rounded-lg shadow-md sm:shadow-lg hover:scale-[1.02] active:scale-100">
+        
+        <!-- Icon -->
+        <div class="mt-1 dark:text-primaryText-dark text-lg sm:text-xl">
+          <i class="fas" [ngClass]="notification.type === 'follow' ? 'fa-user-plus' : 'fa-envelope'"></i>
+        </div>
+  
+        <!-- Content -->
+        <div class="flex-1">
+          <p class="text-base sm:text-lg md:text-xl text-white break-words">
+            {{ notification.text }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
