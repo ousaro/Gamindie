@@ -21,10 +21,10 @@ import { SvgIconRegistryService } from 'angular-svg-icon';
 export class AppComponent implements OnInit {
   title = 'gamindie-ui';
   isAuthenticated : boolean = false;
-  svg_names = ['home','edit','attack','bookmark','comment','delete',
+  svg_names = ['home','edit','attach','bookmark','comment','delete',
     'dot-menu','google','heart','logo','logout','longLogo','menu',
     'search','setting','share','show','user','messanger','notification',
-    'create','send','store','user-add'
+    'create','send','store','user-add','clock'
   ];
 
   constructor(

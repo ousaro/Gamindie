@@ -1,1 +1,48 @@
-<p>create works!</p>
+<div class="w-full dark:bg-primary_2-dark text-white rounded font-merriweather px-[1px]">
+    <!-- Post Card -->
+    <div class="flex flex-col max-h-[70vh] sm:max-h-[77vh] gap-2 w-full mt-4 px-1">
+      <div
+        class="py-3 px-4 dark:bg-primary_2-dark rounded-lg flex flex-col gap-4 transition-colors duration-200"
+      >
+        <!-- User Info -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full dark:bg-primary_5-dark flex items-center justify-center">
+            <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+          </div>
+          <span class="text-lg">Oussama Ouldrhila</span>
+        </div>
+  
+        <!-- Text Area with POST Button and Attachment Icon -->
+        <div
+          class="flex flex-col md:flex-row gap-2 w-full bg-transparent border border-zinc-600 text-white p-3 rounded-md 
+          focus-within:ring focus-within:ring-secondary-dark"
+        >
+          <textarea
+            [(ngModel)]="postContent"
+            class="w-full bg-transparent text-white resize-none border-none outline-none focus:outline-none
+             dark:placeholder-primaryText-dark pr-3 overflow-y-auto scrollbar-none"
+            placeholder="What's in your mind?"
+            rows="4"
+          ></textarea>
+         <div class="flex items-center justify-end gap-2">
+              <!-- Attachment Icon -->
+            <button
+            (click)="handleAttachmentClick()"
+            class="bg-transparent hover:opacity-80 transition-all ease-linear hover:scale-95 rounded-md"
+            >
+                <svg-icon name="attach" [svgClass]="'custom-icon'"></svg-icon>
+            </button>
+            <!-- Post Button -->
+            <button
+            (click)="submitPost()"
+            class=" dark:text-secondary-dark rounded-md text-xs sm:text-sm font-aahawow 
+            hover:opacity-80 transition-all ease-linear hover:scale-95"
+            >
+                POST
+            </button>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

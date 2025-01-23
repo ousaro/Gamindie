@@ -1,0 +1,77 @@
+<div
+  class="w-full dark:bg-primary_2-dark rounded-md font-merriweather shadow-lg shadow-white"
+>
+  <!-- Post Card -->
+  <div
+    class="flex flex-col gap-2 dark:bg-primary_2-dark rounded-lg p-3 "
+  >
+    <!-- User Info -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 rounded-full dark:bg-primary_5-dark flex items-center justify-center"
+        >
+          <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+        </div>
+        <div>
+          <span class="text-lg font-semibold">{{ post.user }}</span>
+          <div class="flex items-center gap-2">
+            <svg-icon name="clock" [svgClass]="'clock-icon'"></svg-icon>
+            <p class="text-sm dark:text-primaryText-dark">{{ post.time }}</p>
+          </div>
+        </div>
+      </div>
+     <div class="flex items-center gap-2">
+        <button
+        class="text-black font-aahawow text-sm dark:bg-secondary-dark p-2 rounded-lg"
+        >
+          FOLLOW
+        </button>
+        <button class="transition-all ease-linear hover:scale-95">
+          <svg-icon name="dot-menu" [svgClass]="'custom-icon'"></svg-icon>
+        </button>
+     </div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="text-sm leading-relaxed font-sans mt-3">{{ post.content }}</div>
+
+    <!-- Post Image -->
+    <div class="overflow-hidden">
+      <img
+        [src]="post.imageUrl"
+        alt="Post Image"
+        class="w-full object-cover"
+      />
+    </div>
+
+   <!-- Actions (Like, Comment, Share) -->
+    <div class="grid grid-flow-col grid-cols-3  justify-between items-center dark:text-primaryText-dark">
+      <div class="flex items-center justify-center gap-1 ">
+        <button
+          class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
+        >
+          <svg-icon name="heart" [svgClass]="'feedback-icon'"></svg-icon>
+          <span>LIKE</span>
+        </button>
+      </div>
+      <div class="flex items-center justify-center gap-1 ">
+        <button
+          class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
+        >
+          <svg-icon name="comment" [svgClass]="'comment-icon'"></svg-icon>
+          <span>COMMENT</span>
+        </button>
+      </div>
+      <div class="flex items-center justify-center gap-1 ">
+        <button
+          class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
+        >
+          <svg-icon name="share" [svgClass]="'feedback-icon'"></svg-icon>
+          <span>SHARE</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

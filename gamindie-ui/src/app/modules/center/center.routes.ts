@@ -20,6 +20,7 @@ export const CENTER_ROUTES: Routes = [
   },
   {
     path: 'explore',
+    // component: ExploreComponent,
     component: ExploreComponent,
   },
   {
