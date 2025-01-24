@@ -1,0 +1,92 @@
+<div
+  class="w-full h-[86vh] md:h-[89vh] max-w-xl mx-auto p-3 dark:bg-primary_2-dark rounded-lg 
+  shadow-lg text-primaryText-dark 
+  font-merriweather overflow-y-auto scrollbar-none"
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-3 text-white">
+    <button class="text-lg font-semibold hover:text-secondary-dark flex items-center gap-2" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Back</span>
+    </button>
+    <span class="text-xl font-semibold">Edit Post</span>
+  </div>
+
+  <!-- User Info -->
+  <div class="flex items-center mb-4">
+    <div
+      class="w-12 h-12 rounded-full flex items-center justify-center dark:bg-primary_5-dark"
+    >
+      <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+    </div>
+    <div class="ml-3 text-white">
+      <p class="text-lg font-bold">Oussama O.</p>
+      <p class="text-sm text-gray-400">Posted 2 hours ago</p>
+    </div>
+  </div>
+
+<div>
+    <div class="flex justify-end gap-1 font-merriweather text-sm">
+        <!-- Toggle Edit Mode -->
+        <button
+          (click)="toggleEditMode()"
+          class="mb-1 p-1 rounded-md dark:text-secondary-dark"
+        >
+          {{ isEditing ? 'Cancel Edit' : 'Edit Post' }}
+        </button>
+        <button
+          (click)="deletePost()"
+          class="p-1 rounded-md dark:text-secondary_2-dark"
+        >
+          Delete Post
+        </button>
+    </div>
+  
+    <!-- Editable or Read-Only Content -->
+    <div *ngIf="isEditing; else viewMode">
+      <!-- Editable Textarea -->
+      <textarea
+        [(ngModel)]="post.content"
+        class="w-full dark:bg-primary_4-dark text-primaryText-dark rounded-md p-3 text-sm 
+        leading-relaxed font-sans resize-none mb-2 overflow-y-auto scrollbar-none"
+        rows="5"
+        placeholder="Write your post here..."
+      ></textarea>
+    </div>
+    <ng-template #viewMode>
+        <!-- View Mode Text -->
+        <p
+          class="w-full text-sm leading-relaxed font-sans dark:text-primaryText-dark mb-2 break-words overflow-hidden"
+        >
+          {{ post.content }}
+        </p>
+    </ng-template>
+
+
+</div>
+  
+
+  <!-- Post Image -->
+  <div class="relative mb-4">
+    <img
+      [src]="post.imageUrl"
+      alt="Post Image"
+      class="w-full object-cover rounded-md"
+    />
+  </div>
+
+  <!--  Buttons -->
+  <div class="flex justify-end">
+   
+    <button
+        (click)="submitPost()"
+        class="w-1/3  dark:bg-secondary-dark text-black font-bold text-lg py-2 rounded-md mb-2 transition"
+    >
+        SUBMIT
+    </button>
+
+  </div>
+  
+</div>

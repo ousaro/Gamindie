@@ -10,6 +10,7 @@ import { ChatComponent } from '../right/chat/chat.component';
 import { FriendRequestsComponent } from '../right/friend-requests/friend-requests.component';
 import { mobileOnlyGuardGuard } from '../../shared/guards/mobile-only-guard.guard';
 import { ChatroomComponent } from '../right/chatroom/chatroom.component';
+import { PostDetailsComponent } from './post-details/post-details.component';
 
 
 export const CENTER_ROUTES: Routes = [
@@ -42,6 +43,10 @@ export const CENTER_ROUTES: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+  },
+  {
+      path: 'post/:id',
+      component: PostDetailsComponent,
   },
   {
     path: 'friends-requests',
