@@ -1,0 +1,59 @@
+<div class="dark:bg-primary_2-dark p-5 rounded-md h-[90vh] overflow-y-auto scrollbar-none">
+    <h3 class="text-lg font-semibold dark:text-primaryText-dark">Comments</h3>
+  
+    <!-- Input for Adding a Comment -->
+    <div class="flex items-start gap-2 mt-4">
+      <svg-icon name="user" class="w-8 h-8"></svg-icon>
+      <textarea
+        [(ngModel)]="newCommentContent"
+        placeholder="Write a comment..."
+        class="w-full dark:bg-primary_2-dark rounded-lg p-2"
+      ></textarea>
+      <button
+        class="dark:bg-secondary-dark p-2 rounded-lg text-white"
+        (click)="addComment()"
+      >
+        Post
+      </button>
+    </div>
+  
+    <!-- Display Comments -->
+    <div *ngFor="let comment of comments" class="mt-4">
+      <div class="flex items-start gap-3">
+        <svg-icon name="user" class="w-8 h-8"></svg-icon>
+        <div class="flex-1">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold">{{ comment.user }}</span>
+            <small class="text-xs text-gray-400">
+              {{ comment.timestamp | date: 'short' }}
+            </small>
+          </div>
+          <p class="text-sm mt-1">{{ comment.content }}</p>
+        </div>
+      </div>
+  
+      <!-- Replies -->
+      <div class="ml-8 mt-2" *ngIf="comment.replies?.length">
+        <app-comment-section
+          [comments]="comment.replies"
+          (addReply)="addReplyToComment(comment.id)"
+        ></app-comment-section>
+      </div>
+  
+      <!-- Reply Input -->
+      <div class="flex items-start gap-2 mt-2 ml-8">
+        <textarea
+          [(ngModel)]="replyContent[comment.id]"
+          placeholder="Write a reply..."
+          class="w-full dark:bg-primary_2-dark rounded-lg p-2"
+        ></textarea>
+        <button
+          class="dark:bg-secondary-dark p-2 rounded-lg text-white"
+          (click)="addReplyToComment(comment.id)"
+        >
+          Reply
+        </button>
+      </div>
+    </div>
+  </div>
+  

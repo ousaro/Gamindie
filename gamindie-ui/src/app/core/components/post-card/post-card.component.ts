@@ -4,14 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
+import { Comment, CommentSectionComponent } from '../comment-section/comment-section.component';
 
 @Component({
   selector: 'app-post-card',
-   imports: [CommonModule, FormsModule, AngularSvgIconModule],
+   imports: [CommonModule, FormsModule, AngularSvgIconModule, CommentSectionComponent],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.scss'
 })
 export class PostCardComponent implements OnInit {
+
   @Input() post!: {
     id: number;
     user: string;
@@ -21,9 +23,22 @@ export class PostCardComponent implements OnInit {
   };
 
   @Input() isMyFeed: boolean = false;
+  @Input() isMyProfile: boolean = false;
 
   isMenuOpen: boolean = false;
   currentUrl: string = '';
+
+  openPostId: number | null = null;
+
+  comments: Comment[] =  [
+    { id: "1", user: 'User1', content: 'Great post!',timestamp: new Date(), replies: [] },
+    { id: "2", user: 'User2', content: 'Thanks for sharing!',timestamp: new Date(), replies: [] },
+  ];
+
+
+  toggleCommentSection(postId: number): void {
+    this.openPostId = this.openPostId === postId ? null : postId;
+  }
 
   constructor( 
     private routeTrackerService: RouteTrackerService,
@@ -77,5 +92,9 @@ export class PostCardComponent implements OnInit {
 
   navigateToPostDetails(postId: number): void {
     this.centerNavigateTo(`post/${postId}`);
+  }
+
+  handleAddReply($event: { reply: Comment; parentId: string; }) {
+    throw new Error('Method not implemented.');
   }
 }

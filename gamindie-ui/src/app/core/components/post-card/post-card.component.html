@@ -23,21 +23,23 @@
         </div>
       </div>
      <div class="flex items-center gap-2">
-        <button
-        *ngIf="!isMyFeed; else myFeed"
-          class="text-black font-aahawow text-sm dark:bg-secondary-dark p-2 rounded-lg"
-        >
-          FOLLOW
-        </button>
-      
-        <ng-template #myFeed>
+        <ng-container *ngIf="!isMyProfile">
           <button
-            class="dark:text-secondary-dark font-aahawow text-sm dark:bg-primary_3-dark p-2 rounded-lg "
-            disabled
+            *ngIf="!isMyFeed; else myFeed"
+            class="text-black font-aahawow text-sm dark:bg-secondary-dark p-2 rounded-lg"
           >
-            following
+            FOLLOW
           </button>
-        </ng-template>
+        
+          <ng-template #myFeed>
+            <button
+              class="dark:text-secondary-dark font-aahawow text-sm dark:bg-primary_3-dark p-2 rounded-lg"
+              disabled
+            >
+              following
+            </button>
+          </ng-template>
+        </ng-container>
         <div class="relative">
           <button class="transition-all ease-linear hover:scale-95"
             (click)="toggleMenu()">
@@ -99,6 +101,7 @@
       <div class="flex items-center justify-center gap-1 ">
         <button
           class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
+          (click)="toggleCommentSection(post.id)"
         >
           <svg-icon name="comment" [svgClass]="'comment-icon'"></svg-icon>
           <span>COMMENT</span>
@@ -119,3 +122,10 @@
 
 
 
+<!-- Comment Section -->
+<div *ngIf="openPostId === post.id" class="mt-4">
+  <app-comment-section
+          [comments]="comments"
+          (addReply)="handleAddReply($event)"
+  ></app-comment-section>
+</div>

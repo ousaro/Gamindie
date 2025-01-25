@@ -1,1 +1,80 @@
-<p>profile works!</p>
+<div class="w-full  h-[82vh] md:h-[88vh] overflow-y-auto scrollbar-none rounded-md font-merriweather shadow-lg  md:px-20 lg:px-10 xl:px-32">
+    <!-- Profile Header -->
+    <div class="flex flex-wrap items-center gap-6 p-6 rounded-b-lg ">
+    <!-- Avatar -->
+    <div class="w-24 h-24 rounded-full flex items-center justify-center dark:bg-primary_5-dark sm:w-20 sm:h-20">
+      <svg-icon name="user" [svgClass]="'custom-icon'" aria-label="User Avatar"></svg-icon>
+    </div>
+  
+    <!-- User Info -->
+    <div class="flex flex-col gap-4 dark:text-primaryText-dark w-full sm:w-auto">
+      <div class="text-start">
+        <h1 class="text-xl font-bold text-white sm:text-lg">{{ user.name }}</h1>
+      </div>
+      <div class="flex flex-wrap gap-4 text-white sm:justify-between">
+        <div class="flex items-center gap-1">
+          <p class="text-lg font-semibold sm:text-base">{{ user.postsCount }}</p>
+          <p class="text-lg sm:text-base">posts</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <p class="text-lg font-semibold sm:text-base">{{ user.followers }}</p>
+          <p class="text-lg sm:text-base">followers</p>
+        </div>
+        <div class="flex items-center gap-1">
+          <p class="text-lg font-semibold sm:text-base">{{ user.following }}</p>
+          <p class="text-lg sm:text-base">following</p>
+        </div>
+      </div>
+      <div class="text-center sm:text-left">
+        <p class="text-sm">{{ user.name }}, a game developer</p>
+      </div>
+    </div>
+  
+    <!-- Edit Profile Button -->
+    <div class="w-full sm:w-auto text-center mt-4 sm:mt-0">
+      <button
+        class="px-4 py-2 text-sm dark:bg-secondary-dark dark:text-black rounded-lg 
+        hover:scale-105 transition"
+        (click)="editProfile()"
+      >
+        Edit Profile
+      </button>
+    </div>
+    </div>
+  
+  
+    <!-- Profile Tabs -->
+    <div class="grid grid-flow-col mb-2 grid-cols-[1fr,1px,1fr] py-1 ">
+      <button
+        (click)="setActiveTab('posts')"
+        [ngClass]="{
+          'text-lg font-bold dark:text-secondary-dark border-b dark:border-secondary-dark': activeTab === 'posts',
+          'text-md font-medium dark:text-primaryText-dark': activeTab !== 'posts'
+        }"
+      >
+        POSTS
+      </button>
+      <div class=" border-r dark:border-secondary-dark"></div>
+      <button
+        (click)="setActiveTab('saved')"
+        [ngClass]="{
+          'text-lg font-bold dark:text-secondary-dark border-b dark:border-secondary-dark': activeTab === 'saved',
+          'text-md font-medium dark:text-primaryText-dark': activeTab !== 'saved'
+        }"
+      >
+        SAVED
+      </button>
+    </div>
+  
+    <!-- Posts or Saved Content -->
+    <div *ngIf="activeTab === 'posts'" 
+    class="w-full  flex flex-col gap-10  text-white rounded-md ">
+      <div *ngFor="let post of posts" class="dark:bg-primary_2-dark rounded-lg mb-6">
+       <app-post-card [post]="post" [isMyProfile]="true"></app-post-card>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'saved'" class="p-4">
+      <p class="text-center text-sm dark:text-secondary-dark">No saved posts yet.</p>
+    </div>
+  </div>
+  

@@ -1,0 +1,19 @@
+textarea {
+    resize: none;
+    outline: none;
+    border: 1px solid #ccc;
+    font-family: inherit;
+  }
+  
+  textarea:focus {
+    border: 1px solid #007bff;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+   
+  .dark .comment-section {
+    background-color: #1e1e1e;
+  }
+  
