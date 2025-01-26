@@ -1,7 +1,7 @@
 <div class="w-full bg-transparent text-white font-merriweather px-[1px] sm:px-1  lg:px-2">
     <!-- Header -->
     <div class="py-2 font-aahawow flex flex-col items-center">
-        <h2 class="text-xl sm:text-3xl md:text-3xl tracking-wide sm:tracking-wider">
+        <h2 class="text-xl tracking-wide sm:tracking-wider">
         Chatrooms
       </h2>
       <div class="h-0.5 w-full dark:bg-primary_4-dark mt-2 sm:mt-3"></div>
@@ -24,21 +24,26 @@
 
     <!-- Friend Requests List -->
     <div class="flex flex-col max-h-[70vh] sm:max-h-[77vh] gap-2 w-full mt-4 overflow-y-auto scrollbar-none px-1 sm:px-2">
-      <div *ngFor="let user of users"
+      <div *ngFor="let chatRoom of chatRooms"
            class="py-1 px-2 dark:bg-primary_4-dark rounded-lg flex items-center justify-between hover:dark:bg-primary_3-dark transition-colors duration-200"
-           (click)="openChatroom(user)">
+           (click)="openChatroom(chatRoom)">
         
         <!-- User Info -->
         <div class="flex items-center gap-3">
-          <div class="w-14 h-14 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
-            <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+          <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
+            <ng-container *ngIf="chatRoom.user2?.profilePicture; else defaultIcon">
+              <img [src]="chatRoom.user2?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+            </ng-container>
+            <ng-template #defaultIcon>
+                <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+            </ng-template>
           </div>
-          <span class="text-md">{{ user.name }}</span>
+          <span class="text-md">{{ chatRoom.user2?.username }}</span>
         </div>
         
         <!-- message number -->
-        <div *ngIf="user.messagesNB > 0" class="flex items-center w-8 h-8 dark:bg-secondary-dark text-black p-1 rounded-full text-xs font-aahawow">
-            {{ user.messagesNB }}
+        <div *ngIf="chatRoom.messages?.length" class="flex items-center justify-center w-8 h-8 dark:bg-secondary-dark text-black p-1 rounded-full text-xs font-bold">
+            {{ chatRoom.messages?.length }}
           </div>
       </div>
     </div>

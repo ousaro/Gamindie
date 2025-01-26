@@ -5,6 +5,36 @@ import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { Comment, CommentSectionComponent } from '../comment-section/comment-section.component';
+import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
+
+// export interface Attachment {
+//   createdBy?: number;
+//   createdData?: string;
+//   id?: number;
+//   lastModifiedBy?: number;
+//   lastModifiedDate?: string;
+//   message?: Message;
+//   metadata?: string;
+//   name?: string;
+//   post?: Post;
+//   type?: string;
+//   url?: string;
+// }
+
+// export interface Post {
+//   attachments?: Array<Attachment>;
+//   comments?: Array<Comment>;
+//   content?: string;
+//   createdBy?: number;
+//   createdData?: string;
+//   id?: number;
+//   lastModifiedBy?: number;
+//   lastModifiedDate?: string;
+//   likes?: Array<Likes>;
+//   owner?: User;
+//   tags?: Array<string>;
+// }
+
 
 @Component({
   selector: 'app-post-card',
@@ -36,23 +66,25 @@ export class PostCardComponent implements OnInit {
   ];
 
 
-  toggleCommentSection(postId: number): void {
-    this.openPostId = this.openPostId === postId ? null : postId;
-  }
-
+ 
   constructor( 
     private routeTrackerService: RouteTrackerService,
     private router: Router
   ){}
 
-   ngOnInit(): void {
-      this.routeTrackerService.currentUrl$.subscribe((url) => {
-        this.currentUrl = url;
-      });
+  ngOnInit(): void {
+    this.routeTrackerService.currentUrl$.subscribe((url) => {
+    this.currentUrl = url;
+    });
   
       
-    }
+  }
 
+
+  toggleCommentSection(postId: number): void {
+    this.openPostId = this.openPostId === postId ? null : postId;
+  }
+  
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -65,33 +97,9 @@ export class PostCardComponent implements OnInit {
     this.isMenuOpen = false;
   }
 
-  centerNavigateTo(section: string): void {
-    try {
-      // Find the base part of the URL before (center/
-      const baseUrlMatch = this.currentUrl.match(/(.*?\(center\/)/);
-      if (!baseUrlMatch) {
-        console.error('Could not find center pattern in URL');
-        return;
-      }
-
-      // Extract the trailing part after the double slash
-      const trailingMatch = this.currentUrl.match(/\/\/([^)]*)/);
-      const trailing = trailingMatch ? trailingMatch[1] : '';
-
-      // Construct the new URL
-      const baseUrl = baseUrlMatch[1];
-      const newUrl = `${baseUrl}${section}//${trailing}`;
-      
-      
-      this.router.navigateByUrl(newUrl);
-    } catch (error) {
-      console.error('Error in centerNavigateTo:', error);
-      console.error('Current URL:', this.currentUrl);
-    }
-  }
-
   navigateToPostDetails(postId: number): void {
-    this.centerNavigateTo(`post/${postId}`);
+    const path:string = `post/${postId}`;
+    centerNavigateTo(path,this.currentUrl,this.router);
   }
 
   handleAddReply($event: { reply: Comment; parentId: string; }) {

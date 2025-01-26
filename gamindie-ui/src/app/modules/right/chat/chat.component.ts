@@ -6,12 +6,10 @@ import { RouteTrackerService } from '../../../core/services/routeTracker/route-t
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ChatRoom } from '../../../core/services/models';
+import { centerNavigateTo, rightNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
 
-interface ChatUser {
-  id: number;
-  name: string;
-  messagesNB: number;
-}
+
 
 @Component({
   selector: 'app-chat',
@@ -26,10 +24,66 @@ export class ChatComponent implements OnInit, OnDestroy {
   isCenterRoute: boolean = false;
   private subscriptions: Subscription[] = [];
 
-  users: ChatUser[] = [
-    { id: 1, name: 'Oussama O.', messagesNB: 1000 },
-    { id: 2, name: 'Oussama O.', messagesNB: 1000 }
-  ];
+  chatRooms: ChatRoom[] = [
+    {
+      name: 'Alice',
+      id: 1,
+      user1: {
+        id: 1,
+        username: 'Alice',
+        profilePicture: ''
+      },
+      user2: {
+        id: 2,
+        username: 'Bob',
+        profilePicture: ''
+      },
+      messages: [
+        {
+          content: 'Hello Bob',
+          createdBy: 1,
+          sentAt: '2021-06-01T00:00:00',
+          status: 'SENT'
+        },
+        {
+          content: 'Hello Alice',
+          createdBy: 2,
+          sentAt: '2021-06-01T00:00:01',
+          status: 'SENT'
+        }
+      ]
+
+    },
+    {
+      name: 'Bob',
+      id: 2,
+      user1: {
+        id: 2,
+        username: 'Bob',
+        profilePicture: ''
+      },
+      user2: {
+        id: 1,
+        username: 'Alice',
+        profilePicture: ''
+      },
+      messages: [
+        {
+          content: 'Hello Alice',
+          createdBy: 2,
+          sentAt: '2021-06-01T00:00:01',
+          status: 'SENT'
+        },
+        {
+          content: 'Hello Bob',
+          createdBy: 1,
+          sentAt: '2021-06-01T00:00:00',
+          status: 'SENT'
+        }
+      ]
+    },
+    
+  ]
 
   constructor(
     private routeTrackerService: RouteTrackerService,
@@ -57,56 +111,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  rightNavigateTo(section: string): void {
-    try {
-      if (this.currentUrl.includes(':right')) {
-        const baseUrl = this.currentUrl.split(':right')[0];
-        const newUrl = `${baseUrl}:right/${section}`;
-        this.router.navigateByUrl(newUrl);
-      }
-    } catch (error) {
-      console.error('Error in rightNavigateTo:', error);
-    }
-  }
-
-  centerNavigateTo(section: string): void {
-    try {
-      // Find the base part of the URL before (center/
-      const baseUrlMatch = this.currentUrl.match(/(.*?\(center\/)/);
-      if (!baseUrlMatch) {
-        console.error('Could not find center pattern in URL');
-        return;
-      }
-
-      // Extract the trailing part after the double slash
-      const trailingMatch = this.currentUrl.match(/\/\/([^)]*)/);
-      const trailing = trailingMatch ? trailingMatch[1] : '';
-
-      // Construct the new URL
-      const baseUrl = baseUrlMatch[1];
-      const newUrl = `${baseUrl}${section}//${trailing}`;
-      
-      
-      this.router.navigateByUrl(newUrl);
-    } catch (error) {
-      console.error('Error in centerNavigateTo:', error);
-      console.error('Current URL:', this.currentUrl);
-    }
-  }
-
-  openChatroom(user: ChatUser): void {
-    const chatPath = `chat/chatroom/${user.id}`;
+  openChatroom(chatRoom: ChatRoom): void {
+    const chatPath = `chat/chatroom/${chatRoom.id}`;
 
     if (this.isCenterRoute) {
-      this.centerNavigateTo(chatPath);
+      centerNavigateTo(chatPath, this.currentUrl, this.router);
     } else {
-      this.rightNavigateTo(chatPath);
+      rightNavigateTo(chatPath, this.currentUrl, this.router);
     }
   }
 
-  get filteredUsers(): ChatUser[] {
-    return this.users.filter(user =>
-      user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
-  }
 }

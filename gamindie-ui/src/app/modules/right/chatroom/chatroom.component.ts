@@ -6,13 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
-
-interface Message {
-  text: string;
-  sender: 'user' | 'other';
-  seen?: boolean;
-  timestamp: Date;
-}
+import { ChatRoom } from '../../../core/services/models';
+import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
 
 @Component({
   selector: 'app-chatroom',
@@ -22,20 +17,36 @@ interface Message {
 })
 export class ChatroomComponent implements OnInit {
 
-  otherUser = 'Oussama O.';
-  messages: Message[] = [
-    {
-      text: 'Hello !',
-      sender: 'other',
-      timestamp: new Date()
+  chatRoom: ChatRoom = {
+    name: 'Alice',
+    id: 1,
+    user1: {
+      id: 1,
+      username: 'Alice',
+      profilePicture: ''
     },
-    {
-      text: 'Hi',
-      sender: 'user',
-      seen: true,
-      timestamp: new Date()
-    }
-  ];
+    user2: {
+      id: 2,
+      username: 'Bob',
+      profilePicture: ''
+    },
+    messages: [
+      {
+        content: 'Hello Bob',
+        createdBy: 1,
+        sentAt: '2021-06-01T00:00:00',
+        status: 'SENT'
+      },
+      {
+        content: 'Hello Alice',
+        createdBy: 2,
+        sentAt: '2021-06-01T00:00:01',
+        status: 'SENT'
+      }
+    ]
+
+  }
+ 
   newMessage = '';
   currentUrl: string = '';
   isCenterRoute: boolean = false;
@@ -62,65 +73,19 @@ export class ChatroomComponent implements OnInit {
       
     }
 
-  getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase();
-  }
-
   sendMessage() {
     if (this.newMessage.trim()) {
-      this.messages.push({
-        text: this.newMessage,
-        sender: 'user',
-        timestamp: new Date()
+      this.chatRoom.messages?.push({
+        content: this.newMessage,
+        createdBy: 1,
+        sentAt: new Date().toISOString(),
       });
       this.newMessage = '';
     }
   }
 
-  closeChat() {
-
-    if(this.isCenterRoute){
-      console.log('center');
-      this.centerNavigateTo('chat');
-    }else{
-      console.log('right');
-      this.rightNavigateTo('chat');
-    }
-    
-  }
-
-  rightNavigateTo(section: string): void {
-    const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, `:right/${section}`);
-    this.router.navigateByUrl(updatedUrl);
-  }
-
-  centerNavigateTo(section: string): void {
-    try {
-      // Find the base part of the URL before (center/
-      const baseUrlMatch = this.currentUrl.match(/(.*?\(center\/)/);
-      if (!baseUrlMatch) {
-        console.error('Could not find center pattern in URL');
-        return;
-      }
-
-      // Extract the trailing part after the double slash
-      const trailingMatch = this.currentUrl.match(/\/\/([^)]*)/);
-      const trailing = trailingMatch ? trailingMatch[1] : '';
-
-      // Construct the new URL
-      const baseUrl = baseUrlMatch[1];
-      const newUrl = `${baseUrl}${section}//${trailing}`;
-      
-      
-      this.router.navigateByUrl(newUrl);
-    } catch (error) {
-      console.error('Error in centerNavigateTo:', error);
-      console.error('Current URL:', this.currentUrl);
-    }
+  goBack() {
+    window.history.back();
   }
 
   

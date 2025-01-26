@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
+import { centerNavigateTo, rightNavigateTo } from '../../services/commun_fn/Navigation_fn';
+import { User } from '../../services/models';
 
 
 @Component({
@@ -15,6 +17,7 @@ import { Subscription } from 'rxjs';
 })
 export class TopBarComponent implements OnInit {
 
+  user : User | undefined = {username: 'test', profilePicture: './Imgs/postImgs.JPG'};
   sectionName: string = '';
   currentUrl: string = '';
 
@@ -33,7 +36,7 @@ export class TopBarComponent implements OnInit {
     });
 
     this.breakpointSubscription = this.breakpointObserver
-      .observe([Breakpoints.Handset, Breakpoints.Medium])
+      .observe([Breakpoints.Handset,Breakpoints.Small, Breakpoints.Medium])
       .subscribe(result => {
         if (!result.matches) {
           this.router.navigateByUrl("/");
@@ -41,14 +44,13 @@ export class TopBarComponent implements OnInit {
       });
   }
 
-  centerNavigateTo(section: string): void {
-    const updatedUrl = this.currentUrl.replace(
-      /\(center\/[^/]+(?:\/[^/]+)?\/\//, 
-      `(center/${section}//`
-    );
-    this.router.navigateByUrl(updatedUrl);
+  center_NavigateTo(section: string): void {
+   centerNavigateTo(section, this.currentUrl, this.router);
   }
 
+  right_NavigateTo(section: string): void {
+    rightNavigateTo(section,this.currentUrl, this.router);
+  }
 
   updateSection():void {
     if (this.currentUrl.includes('explore')) {
@@ -77,11 +79,7 @@ export class TopBarComponent implements OnInit {
     return this.currentUrl.includes(section);
   }
 
-  rightNavigateTo(section: string): void {
-    const updatedUrl = this.currentUrl.replace(/:right(\/[^]*)?/, `:right/${section}`);
-    this.router.navigateByUrl(updatedUrl);
-  
-  }
+ 
 
 
 }

@@ -6,6 +6,7 @@ import { RouteTrackerService } from '../../services/routeTracker/route-tracker.s
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
 
 @Component({
   selector: 'app-left-bar',
@@ -78,15 +79,19 @@ export class LeftBarComponent implements OnInit {
   }
 
   navigateToSection(section: string): void {
-    const updatedUrl = this.currentUrl.replace(
-      /\(center\/[^/]+(?:\/[^/]+)?\/\//, 
-      `(center/${section}//`
-    );
-    this.router.navigateByUrl(updatedUrl);
+    centerNavigateTo(section,this.currentUrl,this.router);
+  }
+
+  rightNavigateTo(section: string) {
+    this.isSettingsModalOpen = false;
+    this.toggleMenuModal();
+    this.navigateToSection(section);
+   
   }
 
   toggleMenuModal() {
     this.isMenuModalOpen = !this.isMenuModalOpen;
+    this.isSettingsModalOpen = false;
   }
   
   toggleSettingsModal() {
@@ -108,12 +113,7 @@ export class LeftBarComponent implements OnInit {
     this.toggleSettingsModal();
   }
 
-  rightNavigateTo(section: string) {
-    this.isSettingsModalOpen = false;
-    this.toggleMenuModal();
-    this.navigateToSection(section);
-   
-  }
+
 
   
 }

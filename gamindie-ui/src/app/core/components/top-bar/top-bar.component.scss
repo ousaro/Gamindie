@@ -16,12 +16,12 @@
 }
 
 .toggle-tab{
-    @apply w-1/2 h-7 sm:w-20 md:w-20 lg:w-32 lg:h-9 flex items-center justify-center  font-bold text-lg lg:text-xl 
+    @apply w-1/2 h-7 sm:w-20 lg:w-28  flex items-center justify-center font-bold text-lg
     hover:cursor-pointer rounded-[6px] sm:rounded-[10px]
 }
 
 .toggle-tab-hover {
-    @apply   hover:dark:bg-primary_5-dark transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md;
+    @apply  hover:dark:bg-primary_5-dark transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-md;
 }
 
 .active-right-tab {
@@ -32,10 +32,12 @@
     @apply hidden lg:flex dark:bg-primary_4-dark hover:dark:bg-primary_3-dark
 }
 
-.profile-right-tab {
-    @apply  dark:bg-primary_4-dark hover:dark:bg-primary_3-dark
-}
-
 .right-tab{
     @apply  p-1 rounded-full
 }
+
+.profile-right-tab {
+    @apply rounded-full dark:bg-primary_4-dark hover:dark:bg-primary_3-dark
+}
+
+

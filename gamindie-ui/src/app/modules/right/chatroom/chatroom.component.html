@@ -1,39 +1,43 @@
-<div class="flex flex-col w-full h-[90vh] bg-transparent text-white font-merriweather">
+<div class="flex flex-col w-full h-[85vh] md:h-[90vh] bg-transparent text-white font-merriweather">
     <!-- Header -->
     <div class="flex items-center p-2 border-b dark:border-primary_4-dark dark:bg-primary_3-dark">
-      <button class="mr-4" (click)="closeChat()">
+      <button class="mr-4" (click)="goBack()">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
       <div class="flex items-center">
         <div class="w-10 h-10 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
-          <span class="text-sm">{{getInitials(otherUser)}}</span>
-          <!-- image here-->
+          <ng-container *ngIf="chatRoom.user2?.profilePicture; else defaultIcon">
+            <img [src]="chatRoom.user2?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+          </ng-container>
+          <ng-template #defaultIcon>
+              <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+          </ng-template>
         </div>
-        <span class="ml-2 font-semibold">{{otherUser}}</span>
+        <span class="ml-2 font-semibold">{{chatRoom.user2?.username}}</span>
       </div>
     </div>
 
     <!-- Chat Messages Template -->
     <div class="flex-1 overflow-y-auto scrollbar-none p-2 space-y-4 dark:bg-primary_4-dark flex flex-col items-center">
-      <ng-container *ngFor="let message of messages">
+      <ng-container *ngFor="let message of chatRoom.messages">
         <div class="flex w-full" 
-            [class.justify-end]="message.sender === 'user'"
-            [class.justify-start]="message.sender === 'other'"
+            [class.justify-end]="message.createdBy === 1"
+            [class.justify-start]="message.createdBy === 2"
             [class.items-end]="true">
           <div class="flex flex-col max-w-[70%] w-full">
             <div class="rounded-2xl px-3 py-2 break-words"
-                [class.dark:bg-primary_5-dark]="message.sender === 'other'"
-                [class.dark:bg-secondary-dark]="message.sender === 'user'"
-                [class.self-end]="message.sender === 'user'"
-                [class.self-start]="message.sender === 'other'">
-              <p>{{message.text}}</p>
+                [class.dark:bg-primary_5-dark]="message.createdBy === 2"
+                [class.dark:bg-secondary-dark]="message.createdBy === 1"
+                [class.self-end]="message.createdBy === 1"
+                [class.self-start]="message.createdBy === 2">
+              <p>{{message.content}}</p>
             </div>
             <div class="text-xs dark:text-primaryText-dark mt-1 text-right" 
-                *ngIf="message.seen"
-                [class.self-end]="message.sender === 'user'"
-                [class.self-start]="message.sender === 'other'">
+                *ngIf="message.status === 'SENT'"
+                [class.self-end]="message.createdBy === 1"
+                [class.self-start]="message.createdBy === 2">
               seen
             </div>
           </div>

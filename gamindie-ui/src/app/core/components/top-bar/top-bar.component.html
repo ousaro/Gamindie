@@ -14,8 +14,7 @@
                         'toggle-button': !isActive('myfeed'),
                         'toggle-tab-hover': isActive('myfeed')
                     }" 
-                    [class.active]="!isActive('myfeed')"
-                    (click)="centerNavigateTo('explore')"
+                    (click)="center_NavigateTo('explore')"
                     aria-label="Explore">
                     Explore
                 </button>
@@ -26,7 +25,7 @@
                         'toggle-tab-hover': !isActive('myfeed')
                     }" 
                     [class.active]="isActive('myfeed')"
-                    (click)="centerNavigateTo('explore/myfeed')"
+                    (click)="center_NavigateTo('explore/myfeed')"
                     aria-label="My Feed">
                     My Feed
                 </button>
@@ -44,7 +43,7 @@
                 'inactive-right-tab': !isActive('friend-requests')
             }" 
             [class.active]="isActive('friend-requests')"
-            (click)="rightNavigateTo('friend-requests')"
+            (click)="right_NavigateTo('friend-requests')"
             aria-label="Friend Requests">
             <svg-icon name="user-add" [svgClass]="'custom-icon'"></svg-icon>
         </button>
@@ -57,7 +56,7 @@
                 'inactive-right-tab': !isActive('chat')
             }" 
             [class.active]="isActive('chat')"
-            (click)="rightNavigateTo('chat')"
+            (click)="right_NavigateTo('chat')"
             aria-label="Chat">
             <svg-icon name="messanger" [svgClass]="'custom-icon'"></svg-icon>
         </button>
@@ -70,16 +69,21 @@
                 'inactive-right-tab': !isActive('notifications')
             }" 
             [class.active]="isActive('notifications')"
-            (click)="rightNavigateTo('notifications')"
+            (click)="right_NavigateTo('notifications')"
             aria-label="Notifications">
             <svg-icon name="notification" [svgClass]="'custom-icon'"></svg-icon>
         </button>
 
         <!-- Profile Section -->
         <div class="flex items-center space-x-2">
-            <span class="text-white hidden md:flex text-xl">Oussama O.</span>
-            <button class="right-tab profile-right-tab" (click)="centerNavigateTo('profile')" aria-label="Profile">
-                <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+            <span class="text-white hidden md:flex text-xl">{{user?.username}}</span>
+            <button class="profile-right-tab" (click)="center_NavigateTo('profile')" aria-label="Profile">
+                <ng-container *ngIf="user?.profilePicture; else defaultIcon">
+                    <img [src]="user?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+                </ng-container>
+                <ng-template #defaultIcon>
+                    <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+                </ng-template>
             </button>
         </div>
     </div>
@@ -96,7 +100,7 @@
                     'toggle-tab-hover': isActive('myfeed')
                 }" 
                 [class.active]="!isActive('myfeed')"
-                (click)="centerNavigateTo('explore')"
+                (click)="center_NavigateTo('explore')"
                 aria-label="Explore">
                 Explore
             </button>
@@ -107,7 +111,7 @@
                     'toggle-tab-hover': !isActive('myfeed')
                 }" 
                 [class.active]="isActive('myfeed')"
-                (click)="centerNavigateTo('explore/myfeed')"
+                (click)="center_NavigateTo('explore/myfeed')"
                 aria-label="My Feed">
                 My Feed
             </button>

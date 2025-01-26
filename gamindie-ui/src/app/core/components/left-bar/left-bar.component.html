@@ -1,5 +1,4 @@
-<div class="flex flex-col dark:bg-primary_2-dark h-[6vh] md:min-h-[100vh] border-t md:border-r dark:border-primary_4-dark 
- font-aahawow dark:text-primaryText-dark">
+<div class="flex flex-col dark:bg-primary_2-dark h-[6vh] md:h-[100vh] border-t md:border-r dark:border-primary_4-dark font-aahawow dark:text-primaryText-dark">
   <!-- Logo Section -->
   <div class="hidden md:flex items-center justify-center py-3 px-1">
     <h1 class="text-xl font-bold">
@@ -22,85 +21,65 @@
     </div>
 
   <!-- Navigation Links -->
-  <nav class="flex-auto md:px-3 xl:px-4 text-lg md:text-xl lg:text-2xl">
-    <ul class="pt-1 md:space-y-2 flex md:block justify-around items-center md:py-2 px-1">
+  <nav class="flex-auto md:px-3 text-lg">
+    <ul class="flex md:block md:space-y-2 justify-around items-center">
       <li
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('explore'),
-          'nav-li-el': !isActive('explore')
-        }" 
-        [class.active]="isActive('explore')"
+        class="nav-li-el"
+        [class.active-nav-el]="isActive('explore')"
         (click)="navigateToSection('explore')"
       >
         <svg-icon name="home" [svgClass]="isActive('explore') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Home</span>
       </li>
       <li
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('create'),
-          'nav-li-el': !isActive('create')
-        }" 
-        [class.active]="isActive('create')"
+        class="nav-li-el"
+        [class.active-nav-el]="isActive('create')"
         (click)="navigateToSection('create')"
       >
         <svg-icon name="create" [svgClass]="isActive('create') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Create</span>
       </li>
       <li
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('store'),
-          'nav-li-el': !isActive('store')
-        }" 
-        [class.active]="isActive('store')"
+        class="nav-li-el"
+        [class.active-nav-el]="isActive('store')"
         (click)="navigateToSection('store')"
       >
         <svg-icon name="store" [svgClass]="isActive('store') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span class="hidden md:block">Store</span>
       </li>
       <li
-        [ngClass]="{
-          'active-nav-el-hide nav-li-hide': isActive('saved'),
-          'nav-li-hide': !isActive('saved'),
-        }" 
-        [class.active]="isActive('saved')"
+        class="nav-li-hide"
+        [class.active-nav-el-hide]="isActive('saved')"
         (click)="navigateToSection('saved')"
       >
         <svg-icon name="bookmark" [svgClass]="isActive('saved') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span class="hidden md:block">Saved</span>
       </li>
       <li
-        [ngClass]="{
-          'active-nav-el-hide nav-li-hide': isActive('profile'),
-          'nav-li-hide': !isActive('profile')
-        }" 
+        class="nav-li-hide"
+        [class.active-nav-el-hide]="isActive('profile')"
         (click)="navigateToSection('profile')"
       >
         <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Profile</span>
       </li>
       <li
-        [ngClass]="{
-          'nav-li-right-el active-nav-right-el': isActive('friends-requests'),
-          'nav-li-right-el': !isActive('friends-requests')
-        }" 
-       (click)="navigateToSection('friends-requests')">
+        class="nav-li-right-el"
+        [class.active-nav-right-el]="isActive('friends-requests')"
+        (click)="navigateToSection('friends-requests')">
         <svg-icon name="user-add" [svgClass]="isActive('friends-requests') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Requests</span>
       </li>
       <li 
-        [ngClass]="{
-          'nav-li-right-el active-nav-right-el': isActive('chat'),
-          'nav-li-right-el': !isActive('chat')
-        }"  
+        class="nav-li-right-el"
+        [class.active-nav-right-el]="isActive('chat')"
         (click)="navigateToSection('chat')">
         <svg-icon name="messanger" [svgClass]="isActive('chat') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Chat</span>
       </li>
       <li 
-        [ngClass]="{
-          'nav-li-right-el active-nav-right-el ': isActive('notifications'),
-          'nav-li-right-el': !isActive('notifications')
-        }"        
+        class="nav-li-right-el"
+        [class.active-nav-right-el]="isActive('notifications')"
         (click)="navigateToSection('notifications')">
         <svg-icon name="notification" [svgClass]="isActive('notifications') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Notifications</span>
@@ -118,8 +97,8 @@
   </nav>
 
   <!-- Settings -->
-  <div class="hidden md:flex px-4 py-2 border-t-[3px] dark:border-primary_4-dark text-2xl">
-    <button class="nav-li-el" (click)="toggleSettingsModal()">
+  <div class="hidden md:block md:space-y-2  px-[0.9rem] py-2 border-t-[3px] dark:border-primary_4-dark text-lg">
+    <button class="nav-li-el w-full" (click)="toggleSettingsModal()">
       <svg-icon name="setting" [svgClass]="'nav-icons'"></svg-icon>
       <span class="hidden md:block">Settings</span>
     </button>
@@ -128,47 +107,37 @@
 
   <!-- Menu Modal -->
   <div *ngIf="isMenuModalOpen" 
-  class="absolute bottom-[6vh] right-0 bg-primary_2-dark py-4 px-2 shadow-lg rounded-md menu-modal"
+  class="absolute bottom-[6vh] right-0 bg-primary_2-dark py-4 px-2 shadow-lg rounded-md modal-animation"
   >
     <ul class="space-y-2">
       <li
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('friends-requests'),
-          'nav-li-el': !isActive('friends-requests')
-        }" 
-       (click)="rightNavigateTo('friends-requests')">
+        class="nav-li-el"
+        [class.active-nav-el]='isActive("friends-requests")'
+        (click)="rightNavigateTo('friends-requests')">
         <svg-icon name="user-add" [svgClass]="isActive('friends-requests') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
       </li>
       <li 
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('chat'),
-          'nav-li-el': !isActive('chat')
-        }"  
+        class="nav-li-el"
+        [class.active-nav-el]='isActive("chat")'
         (click)="rightNavigateTo('chat')">
         <svg-icon name="messanger" [svgClass]="isActive('chat') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
       </li>
       <li 
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('notifications'),
-          'nav-li-el': !isActive('notifications')
-        }"        
+        class="nav-li-el"
+        [class.active-nav-el]='isActive("notifications")'
         (click)="rightNavigateTo('notifications')">
         <svg-icon name="notification" [svgClass]="isActive('notifications') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
       </li>
       <li
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('saved'),
-          'nav-li-el': !isActive('saved'),
-        }" 
+        class="nav-li-el"
+        [class.active-nav-el]='isActive("saved")'
         (click)="rightNavigateTo('saved')"
       >
         <svg-icon name="bookmark" [svgClass]="isActive('saved') ? 'nav-icons active-nav-icons' : 'nav-icons'"></svg-icon>
       </li>
       <li
-        [ngClass]="{
-          'nav-li-el active-nav-el': isActive('profile'),
-          'nav-li-el': !isActive('profile')
-        }" 
+        class="nav-li-el"
+        [class.active-nav-el]='isActive("profile")'
         (click)="rightNavigateTo('profile')"
       >
         <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
@@ -188,12 +157,11 @@
 
   <!-- settings-modal -->
   <div *ngIf="isSettingsModalOpen" 
-      class="absolute bottom-[2rem] right-[3.8rem] md:bottom-0 md:left-[14rem] w-[12rem] dark:bg-primary_2-dark px-1 py-[0.5rem] shadow-lg rounded-md z-[1000] setting-modal text-lg md:text-xl lg:text-2xl">
+      class="absolute bottom-[2rem] right-[3.8rem] md:bottom-[3rem] md:left-[1rem] w-[12rem] dark:bg-primary_3-dark px-1 py-[0.5rem] shadow-lg rounded-md z-[1000] modal-animation text-lg">
     <ul class="flex flex-col gap-1">
-      <li class="setting-item"
-          [ngClass]="{'setting-item-active': isMenuItemActive('logout'),
-              'setting-item' : !isMenuItemActive('logout')
-          }"
+      <li 
+          class="setting-item"
+          [class.setting-item-active]="isMenuItemActive('logout')"
           (click)="selectMenuItem('logout')">
         <svg-icon name="logout" 
                   [svgClass]="isMenuItemActive('logout') ? 'nav-icons active-nav-icons' : 'nav-icons'">
@@ -201,9 +169,8 @@
         <span >Logout</span>
       </li>
       <li
-          [ngClass]="{'setting-item-delete': isMenuItemActive('delete'),
-            'setting-item' : !isMenuItemActive('delete')
-          }"
+          class="setting-item"
+          [class.setting-item-delete]="isMenuItemActive('delete')"
           (click)="selectMenuItem('delete')">
         <svg-icon name="delete" 
                   [svgClass]="isMenuItemActive('delete') ? 'del-icons active-del-icons' : 'del-icons'">

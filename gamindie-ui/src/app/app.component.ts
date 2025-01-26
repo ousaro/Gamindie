@@ -19,8 +19,10 @@ import { SvgIconRegistryService } from 'angular-svg-icon';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+  
   title = 'gamindie-ui';
   isAuthenticated : boolean = false;
+
   svg_names = ['home','edit','attach','bookmark','comment','delete',
     'dot-menu','google','heart','logo','logout','longLogo','menu',
     'search','setting','share','show','user','messanger','notification',
@@ -40,8 +42,6 @@ export class AppComponent implements OnInit {
     this.svg_names.forEach(name => {
       this.iconReg.loadSvg(`Icons/${name}.svg`, name);
     });
-
-
   }
 
 }

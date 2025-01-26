@@ -1,130 +1,91 @@
-.logo-icon{
-    @apply w-[12rem] h-10 lg:w-[13rem] lg:h-12 xl:w-[18rem] xl:h-14
+.logo-icon {
+  @apply w-[12rem] h-10 lg:w-[13rem] lg:h-12 xl:w-[18rem] xl:h-14
 }
 
-
-.custom-icon{
-    @apply w-8 h-8 transition-all ease-linear hover:w-9 hover:h-9
+.nav-icons {
+  @apply w-7 h-7 transition-all ease-linear
 }
 
-.custom-icon:hover path{
-    @apply stroke-white
+.nav-icons path {
+  @apply dark:stroke-primaryText-dark
 }
 
-.nav-icons{
-    @apply w-7 h-7  lg:w-9 lg:h-9 xl:w-10 xl:h-10  transition-all ease-linear 
+.active-nav-icons path {
+  @apply dark:stroke-secondary-dark
 }
 
-.nav-icons path{
-    @apply dark:stroke-primaryText-dark
-}
-
-.active-nav-icons path{
-    @apply  dark:stroke-secondary-dark
-}
-  
 
 .nav-li-el {
-    transition: transform 0.2s, background-color 0.2s;
-    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md;
-    @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
+  @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md cursor-pointer dark:bg-none dark:text-primaryText-dark;
+  @apply hover:dark:bg-primary_3-dark hover:transition-transform hover:scale-105 hover:ease-linear;
 }
 
-.nav-li-el:hover {
-    transform: scale(1.05);
-    background-color: rgba(255, 255, 255, 0.1);
+.active-nav-el {
+  @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
 }
 
 .nav-li-right-el {
-    transition: transform 0.2s, background-color 0.2s;
-    @apply hidden md:flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
-    @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
+  @apply hidden md:flex flex-col md:flex-row items-center gap-3 p-2 cursor-pointer rounded-md lg:hidden dark:bg-none dark:text-primaryText-dark;
+  @apply hover:dark:bg-primary_3-dark hover:transition-transform hover:scale-105 hover:ease-linear;
 }
 
 .active-nav-right-el {
-    @apply hidden md:flex flex-col md:flex-row items-center gap-3 p-2 rounded-md lg:hidden;
-    @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
+  @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
 }
-  
-  
-.active-nav-el {
-    @apply flex flex-col md:flex-row items-center gap-3 p-2 rounded-md;
-    @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
-}
-  
+
+
 .nav-li-hide {
-    @apply hidden md:flex items-center gap-3 p-2 rounded-md;
-    @apply hover:dark:bg-primary_3-dark cursor-pointer dark:bg-none dark:text-primaryText-dark;
+  @apply hidden md:flex items-center gap-3 p-2 rounded-md cursor-pointer dark:bg-none dark:text-primaryText-dark;
+  @apply hover:dark:bg-primary_3-dark hover:transition-transform hover:scale-105 hover:ease-linear;
 }
 
 .active-nav-el-hide {
-    @apply hidden md:flex items-center gap-3 p-2 rounded-md;
-    @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
-}
-  
-
-.nav-li-hide-md{
-    @apply flex md:hidden
+  @apply dark:bg-primary_3-dark dark:text-secondary-dark transition-all ease-linear;
 }
 
-  
-  .menu-modal {
-    animation: fadeInUp 0.3s ease-in-out;
-  }
+
+.nav-li-hide-md {
+  @apply flex md:hidden
+}
+
+
+.modal-animation {
+  animation: fadeInUp 0.3s ease-in-out;
+}
 
 @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
 
-.setting-item{
-    @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md ;
-    @apply transition-all duration-200 ease-linear;
-    @apply hover:dark:bg-primary_3-dark
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-
-  .setting-item-active{
-    @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md ;
-    @apply transition-all duration-200 ease-linear;
-    @apply hover:dark:bg-primary_3-dark dark:bg-primary_4-dark
-  }
-
-.setting-item-delete{
-    @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md ;
-    @apply transition-all duration-200 ease-linear;
-    @apply dark:bg-secondary_2-dark
-  }
-
-.del-icons{
-    @apply w-7 h-7 lg:w-9 lg:h-9 xl:w-10 xl:h-10  transition-all ease-linear 
 }
 
-.del-icons path{
-    @apply dark:stroke-secondary_2-dark
+.setting-item {
+  @apply flex items-center gap-1 px-1 py-1 cursor-pointer rounded-md;
+  @apply hover:dark:bg-primary_4-dark hover:transition-all hover:duration-200 hover:ease-linear
 }
 
-.active-del-icons path{
-    @apply  dark:stroke-white
+.setting-item-active {
+  @apply hover:dark:bg-primary_3-dark dark:bg-primary_4-dark hover:transition-all hover:duration-200 hover:ease-linear
 }
 
-  /* Keyframes for fade-in and slide-up */
-  @keyframes fadeSideLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0px);
-    }
-  }
+.setting-item-delete {
+  @apply dark:bg-secondary_2-dark hover:transition-all hover:duration-200 hover:ease-linear
+}
 
-  .setting-modal {
-    animation: fadeSideLeft 0.3s ease-in-out;
-  }
+.del-icons {
+  @apply w-7 h-7 transition-all ease-linear
+}
+
+.del-icons path {
+  @apply dark:stroke-secondary_2-dark
+}
+
+.active-del-icons path {
+  @apply dark:stroke-white
+}
