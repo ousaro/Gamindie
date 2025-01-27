@@ -4,36 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
-import { Comment, CommentSectionComponent } from '../comment-section/comment-section.component';
 import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
-
-// export interface Attachment {
-//   createdBy?: number;
-//   createdData?: string;
-//   id?: number;
-//   lastModifiedBy?: number;
-//   lastModifiedDate?: string;
-//   message?: Message;
-//   metadata?: string;
-//   name?: string;
-//   post?: Post;
-//   type?: string;
-//   url?: string;
-// }
-
-// export interface Post {
-//   attachments?: Array<Attachment>;
-//   comments?: Array<Comment>;
-//   content?: string;
-//   createdBy?: number;
-//   createdData?: string;
-//   id?: number;
-//   lastModifiedBy?: number;
-//   lastModifiedDate?: string;
-//   likes?: Array<Likes>;
-//   owner?: User;
-//   tags?: Array<string>;
-// }
+import { Comment, Post } from '../../services/models';
+import { CommentSectionComponent } from "../comment-section/comment-section.component";
 
 
 @Component({
@@ -44,29 +17,25 @@ import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
 })
 export class PostCardComponent implements OnInit {
 
-  @Input() post!: {
-    id: number;
-    user: string;
-    time: string;
-    content: string;
-    imageUrl: string;
-  };
+
+  @Input() post!: Post;
 
   @Input() isMyFeed: boolean = false;
   @Input() isMyProfile: boolean = false;
 
   isMenuOpen: boolean = false;
   currentUrl: string = '';
-
   openPostId: number | null = null;
+  isModalOpen:boolean = false;
+  selectedImage: string | null = null;
+  isCommentSectionOpen:boolean = false;
+  isLiked :boolean = false;
+  maxLength:number = 100; // Maximum length of text before truncating
+  isExpanded:boolean = false; // State to track whether content is expanded
 
-  comments: Comment[] =  [
-    { id: "1", user: 'User1', content: 'Great post!',timestamp: new Date(), replies: [] },
-    { id: "2", user: 'User2', content: 'Thanks for sharing!',timestamp: new Date(), replies: [] },
-  ];
-
-
+  
  
+
   constructor( 
     private routeTrackerService: RouteTrackerService,
     private router: Router
@@ -80,9 +49,35 @@ export class PostCardComponent implements OnInit {
       
   }
 
+  openModal(imageUrl: string|undefined): void {
+    if(imageUrl === undefined) return;
+    this.selectedImage = imageUrl;
+    this.isModalOpen = true;
+  }
 
-  toggleCommentSection(postId: number): void {
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.selectedImage = null;
+  }
+
+  toggleExpanded(): void {
+    this.isExpanded = !this.isExpanded;
+  }
+
+
+  toggleCommentSection(postId: number|undefined): void {
+    if(postId === undefined) return;
     this.openPostId = this.openPostId === postId ? null : postId;
+    this.isCommentSectionOpen = !this.isCommentSectionOpen;
+  }
+
+  toggleLike(postId: number|undefined) {
+    this.isLiked = !this.isLiked;
+    console.log("like");
+  }
+
+  sharePost(postId: number|undefined) {
+    console.log("share");
   }
   
   toggleMenu() {
@@ -93,16 +88,12 @@ export class PostCardComponent implements OnInit {
     this.isMenuOpen = false; 
   }
 
-  editPost() {
-    this.isMenuOpen = false;
-  }
-
-  navigateToPostDetails(postId: number): void {
+  navigateToPostDetails(postId: number | undefined): void {
     const path:string = `post/${postId}`;
     centerNavigateTo(path,this.currentUrl,this.router);
   }
 
-  handleAddReply($event: { reply: Comment; parentId: string; }) {
-    throw new Error('Method not implemented.');
+  handleAddReply($event: { reply: Comment; parentId: number; }) {
+    console.log($event);
   }
 }

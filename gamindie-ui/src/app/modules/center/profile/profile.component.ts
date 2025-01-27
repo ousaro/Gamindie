@@ -5,49 +5,237 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PostCardComponent } from "../../../core/components/post-card/post-card.component";
 import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 import { Router } from '@angular/router';
+import { Post, User } from '../../../core/services/models';
+import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
 
 @Component({
   selector: 'app-profile',
-  imports: [AngularSvgIconModule, CommonModule, FormsModule, PostCardComponent],
+  imports: [AngularSvgIconModule, CommonModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
   // User data
-  user = {
-    name: 'Oussama Ouldrhila',
-    postsCount: 1,
-    followers: 10,
-    following: 10,
+  user:User = {
+    id: 1,
+    username: 'johnwill22',
+    profilePicture: './Imgs/postImgs.JPG'
   };
 
+  postsCount: number = 1;
+  followers: number = 10;
+  following: number = 10;
+ 
   // Posts data
-  posts = [
-    {
-      id: 1,
-      user: 'Oussama Ouldrhila',
-      time: '12 minutes ago',
-      content:
-        'This is my first 2D game using Unity. I want to share it with you guys and get some feedback.',
-      imageUrl: './Imgs/postImgs.JPG',
-    },
-    {
-      id: 2,
-      user: 'Jane Doe',
-      time: '30 minutes ago',
-      content:
-        'Just finished my first pixel art piece! What do you think?',
-      imageUrl: './Imgs/postImgs.JPG',
-    },
-    {
-      id: 3,
-      user: 'John Smith',
-      time: '1 hour ago',
-      content:
-        'Sharing a sneak peek of my game! Looking forward to your thoughts.',
-      imageUrl: './Imgs/postImgs.JPG',
-    },
-  ];
+   posts:Post[] = [
+      {
+        id: 1,
+        content: 'This is an example post content that exceeds the maximum length for display purposes.This is an example post content that exceeds the maximum length for display purposes.This is an example post content that exceeds the maximum length for display purposes.This is an example post content that exceeds the maximum length for display purposes.',
+        createdBy: 1,
+        createdData: '2021-09-01',
+        lastModifiedBy: 1,
+        lastModifiedDate: '2021-09-01',
+        likes: [],
+        owner: {
+          id: 1,
+          email: 'johnwill22@gmail.com',
+          firstname: 'John',
+          lastname: 'Will',
+          username: 'johnwill22',
+          password: 'password',
+          lastModifiedDate: '2021-09-01',
+          profilePicture: './Imgs/postImgs.JPG'
+        },
+        tags: ['tag1', 'tag2'],
+        attachments: [
+          {
+            id: 1,
+            createdBy: 1,
+            createdData: '2021-09-01',
+            lastModifiedBy: 1,
+            lastModifiedDate: '2021-09-01',
+            metadata: 'metadata',
+            name: 'attachment1',
+            type: 'image',
+            url: './Imgs/postImgs.JPG'
+          }
+        ],
+        comments: [
+          {
+            id:1,
+            content: 'This is a comment',
+            createdBy: 1,
+            createdData: '2021-09-01',
+            lastModifiedBy: 1,
+            lastModifiedDate: '2021-09-01',
+            owner: {
+              id: 1,
+              email: 'jogonwil@gmail.com',
+              firstname: 'John',
+              lastname: 'Will',
+              username: 'johnwill22',
+              profilePicture: "./Imgs/postImgs.JPG"
+            },
+            replies: [
+              {
+                content: 'This is a reply This is a reply This is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              },
+              {
+                content: 'This is a reply This is a reply This is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a replyThis is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              }, {
+                content: 'This is a reply',
+                createdBy: 1,
+                createdData: '2021-09-01',
+                id: 2,
+                lastModifiedBy: 1,
+                lastModifiedDate: '2021-09-01',
+                owner: {
+                  id: 1,
+                  email: 'jogonwil@gmail.com',
+                  firstname: 'John',
+                  lastname: 'Will',
+                  username: 'johnwill22',
+                  profilePicture: './Imgs/postImgs.JPG'
+                },
+              },
+            ],
+            
+          }
+        ]
+      },
+      
+    ]
 
   // Tab state
   activeTab: 'posts' | 'saved' = 'posts';
@@ -68,6 +256,11 @@ export class ProfileComponent implements OnInit {
     });
 
     
+  }
+
+  navigateToPostDetails(postId: number | undefined): void {
+      const path:string = `post/${postId}`;
+      centerNavigateTo(path,this.currentUrl,this.router);
   }
 
   // Switch between Posts and Saved tabs

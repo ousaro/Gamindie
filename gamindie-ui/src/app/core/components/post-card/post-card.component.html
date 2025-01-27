@@ -3,37 +3,42 @@
 >
   <!-- Post Card -->
   <div
-    class="flex flex-col gap-2 dark:bg-primary_2-dark rounded-lg p-3 "
+    class="flex flex-col gap-2 dark:bg-primary_2-dark rounded-lg p-3"
     
   >
     <!-- User Info -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-3">
         <div
           class="w-12 h-12 rounded-full dark:bg-primary_5-dark flex items-center justify-center"
         >
-          <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+          <ng-container *ngIf="post.owner?.profilePicture; else defaultIcon">
+              <img [src]="post.owner?.profilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
+          </ng-container>
+          <ng-template #defaultIcon>
+              <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+          </ng-template>
         </div>
         <div class="hover:cursor-pointer" (click)="navigateToPostDetails(post.id)">
-          <span class="text-lg font-semibold">{{ post.user }}</span>
+          <span class="text-md sm:text-lg font-semibold">{{ post.owner?.username }}</span>
           <div class="flex items-center gap-2">
             <svg-icon name="clock" [svgClass]="'clock-icon'"></svg-icon>
-            <p class="text-sm dark:text-primaryText-dark">{{ post.time }}</p>
+            <p class="text-xs sm:text-sm dark:text-primaryText-dark">{{ post.createdData }}</p>
           </div>
         </div>
       </div>
-     <div class="flex items-center gap-2">
+     <div class="flex items-center gap-1">
         <ng-container *ngIf="!isMyProfile">
           <button
             *ngIf="!isMyFeed; else myFeed"
-            class="text-black font-bold text-sm dark:bg-secondary-dark p-2 rounded-lg"
+            class="text-black font-bold text-xs sm:text-sm dark:bg-secondary-dark p-2 rounded-lg"
           >
             FOLLOW
           </button>
         
           <ng-template #myFeed>
             <button
-              class="dark:text-secondary-dark font-aahawow text-sm dark:bg-primary_3-dark p-2 rounded-lg"
+              class="dark:text-secondary-dark text-xs sm:text-sm dark:bg-primary_3-dark p-2 rounded-lg"
               disabled
             >
               following
@@ -59,15 +64,7 @@
                 >
                 Save
                 </button>
-              </li>
-              <li>
-                <button
-                  (click)="editPost()"
-                  class="w-full text-left p-2 text-md  rounded-md dark:text-primaryText-dark dark:hover:text-white dark:hover:bg-secondary-dark"
-                >
-                  Edit
-                </button>
-              </li>
+              </li> 
             </ul>
           </div>
 
@@ -76,46 +73,100 @@
      </div>
     </div>
 
-    <!-- Post Content -->
-    <div class="text-sm leading-relaxed font-sans mt-3">{{ post.content }}</div>
+   <!-- Post Content -->
+    <div class="text-sm leading-relaxed font-sans mt-3">
+      <span>
+        {{ isExpanded || (post.content?.length || 0) <= maxLength ? post.content : (post.content | slice: 0:maxLength) + '...' }}
+      </span>
+      <button
+        *ngIf="(post.content?.length || 0) > maxLength"
+        (click)="toggleExpanded()"
+        class="dark:text-secondary-dark font-medium ml-2 hover:underline"
+      >
+        {{ isExpanded ? 'Show Less' : 'Show More' }}
+      </button>
+    </div>
 
-    <!-- Post Image -->
-    <div class="overflow-hidden">
+
+    <!-- Post Images -->
+    <div *ngFor="let attachment of post.attachments" class="overflow-hidden">
       <img
-        [src]="post.imageUrl"
+        [src]="attachment.url"
         alt="Post Image"
-        class="w-full object-cover"
+        class="w-full object-cover cursor-pointer"
+        (click)="openModal(attachment.url)"
       />
     </div>
 
-   <!-- Actions (Like, Comment, Share) -->
-    <div class="grid grid-flow-col grid-cols-3  justify-between items-center dark:text-primaryText-dark">
-      <div class="flex items-center justify-center gap-1 ">
+    <!-- Modal -->
+    <div
+      *ngIf="isModalOpen"
+      class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+    >
+      <div class="relative dark:bg-primary_2-dark rounded-2xl p-4 max-w-4xl w-full">
         <button
-          class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
+          (click)="closeModal()"
+          class="absolute top-2 right-2 bg-gray-800 text-white p-2 rounded-full"
         >
-          <svg-icon name="heart" [svgClass]="'feedback-icon'"></svg-icon>
-          <span>LIKE</span>
+          ✕
         </button>
-      </div>
-      <div class="flex items-center justify-center gap-1 ">
-        <button
-          class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
-          (click)="toggleCommentSection(post.id)"
-        >
-          <svg-icon name="comment" [svgClass]="'comment-icon'"></svg-icon>
-          <span>COMMENT</span>
-        </button>
-      </div>
-      <div class="flex items-center justify-center gap-1 ">
-        <button
-          class="flex items-center gap-1 text-sm hover:dark:text-secondary-dark transition"
-        >
-          <svg-icon name="share" [svgClass]="'feedback-icon'"></svg-icon>
-          <span>SHARE</span>
-        </button>
+        <img
+          [src]="selectedImage"
+          alt="Selected Post Image"
+          class="w-full max-h-[90vh] object-contain"
+        />
       </div>
     </div>
+
+
+ <!-- Actions (Like, Comment, Share) -->
+<div
+  class="grid grid-flow-col grid-cols-3 justify-between items-center dark:text-primaryText-dark"
+>
+    <!-- Like Button -->
+    <div class="flex items-center justify-center gap-1">
+      <button
+        class="flex items-center gap-1 text-sm transition-all duration-200 hover:dark:text-secondary-dark"
+        [class.dark:text-secondary-dark]="isLiked"
+        (click)="toggleLike(post.id)"
+      >
+        <svg-icon
+          name="heart"
+          [svgClass]="isLiked ? 'feedback-icon feedback-icon-hover' : 'feedback-icon hover:feedback-icon-hover'"
+        ></svg-icon>
+        <span class="inline-block">{{ post.likes?.length }}</span>
+      </button>
+    </div>
+
+    <!-- Comment Button -->
+    <div class="flex items-center justify-center gap-1">
+      <button
+        class="flex items-center gap-1 text-sm transition-all duration-200 hover:text-secondary-dark"
+        [class.dark:text-secondary-dark]="isCommentSectionOpen"
+        (click)="toggleCommentSection(post.id)"
+      >
+        <svg-icon
+          name="comment"
+          [svgClass]="isCommentSectionOpen ? 'comment-icon comment-icon-hover' : 'comment-icon hover:comment-icon-hove'"
+        ></svg-icon>
+        <span class="inline-block">{{ post.comments?.length }}</span>
+      </button>
+    </div>
+
+    <!-- Share Button -->
+    <div class="flex items-center justify-center gap-1">
+      <button
+        class="flex items-center gap-1 text-sm transition-all duration-200 hover:text-secondary-dark active:scale-95"
+        (click)="sharePost(post.id)"
+      >
+        <svg-icon
+          name="share"
+          [svgClass]="'feedback-icon hover:feedback-icon-hover'"
+        ></svg-icon>
+      </button>
+    </div>
+  </div>
+
 
   </div>
 </div>
@@ -123,9 +174,9 @@
 
 
 <!-- Comment Section -->
-<div *ngIf="openPostId === post.id" class="mt-4">
+<div *ngIf="openPostId === post.id" class="mt-4 p-2">
   <app-comment-section
-          [comments]="comments"
+          [comments]="post.comments"
           (addReply)="handleAddReply($event)"
   ></app-comment-section>
 </div>

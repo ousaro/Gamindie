@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { User } from '../../../core/services/models';
 
 @Component({
   selector: 'app-post-card',
@@ -11,6 +12,11 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 })
 export class CreateComponent {
   postContent: string = '';
+   user: User = {
+      id: 1,
+      username: 'johnwill22',
+      profilePicture: './Imgs/postImgs.JPG'
+    }
 
   submitPost() {
     if (this.postContent.trim()) {

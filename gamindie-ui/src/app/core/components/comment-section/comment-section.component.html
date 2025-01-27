@@ -1,59 +1,68 @@
-<div class="dark:bg-primary_2-dark p-5 rounded-md h-[90vh] overflow-y-auto scrollbar-none">
-    <h3 class="text-lg font-semibold dark:text-primaryText-dark">Comments</h3>
-  
-    <!-- Input for Adding a Comment -->
-    <div class="flex items-start gap-2 mt-4">
-      <svg-icon name="user" class="w-8 h-8"></svg-icon>
-      <textarea
-        [(ngModel)]="newCommentContent"
-        placeholder="Write a comment..."
-        class="w-full dark:bg-primary_2-dark rounded-lg p-2"
-      ></textarea>
-      <button
-        class="dark:bg-secondary-dark p-2 rounded-lg text-white"
-        (click)="addComment()"
-      >
-        Post
-      </button>
-    </div>
-  
-    <!-- Display Comments -->
-    <div *ngFor="let comment of comments" class="mt-4">
-      <div class="flex items-start gap-3">
-        <svg-icon name="user" class="w-8 h-8"></svg-icon>
-        <div class="flex-1">
-          <div class="flex items-center justify-between">
-            <span class="font-semibold">{{ comment.user }}</span>
-            <small class="text-xs text-gray-400">
-              {{ comment.timestamp | date: 'short' }}
-            </small>
-          </div>
-          <p class="text-sm mt-1">{{ comment.content }}</p>
-        </div>
+<!-- Comment Section -->
+<div *ngFor="let comment of comments" class="mb-6">
+  <div class="flex items-start gap-4">
+    <ng-container *ngIf="comment.owner?.profilePicture; else defaultIcon">
+      <img [src]="comment.owner?.profilePicture" alt="User Photo" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
+    </ng-container>
+    <ng-template #defaultIcon>
+      <svg-icon name="user" [svgClass]="'custom-icon text-gray-400'" class="w-8 h-8 md:w-10 md:h-10"></svg-icon>
+    </ng-template>
+    <div class="flex-1">
+      <div>
+        <span class="font-semibold dark:text-primaryText-dark">{{ comment.owner?.username }}</span>
+        <small class="text-xs text-gray-400 ml-2">{{ comment.createdData | date: 'short' }}</small>
       </div>
-  
-      <!-- Replies -->
-      <div class="ml-8 mt-2" *ngIf="comment.replies?.length">
-        <app-comment-section
-          [comments]="comment.replies"
-          (addReply)="addReplyToComment(comment.id)"
-        ></app-comment-section>
-      </div>
-  
-      <!-- Reply Input -->
-      <div class="flex items-start gap-2 mt-2 ml-8">
-        <textarea
-          [(ngModel)]="replyContent[comment.id]"
-          placeholder="Write a reply..."
-          class="w-full dark:bg-primary_2-dark rounded-lg p-2"
-        ></textarea>
+      <!-- Comment Content -->
+      <div class="text-sm leading-relaxed font-sans mt-2 dark:text-primaryText-dark">
+        <span>
+          {{ isExpandedContent || (comment.content?.length || 0) <= maxLengthContent ? comment.content : (comment.content | slice: 0:maxLengthContent) + '...' }}
+        </span>
         <button
-          class="dark:bg-secondary-dark p-2 rounded-lg text-white"
-          (click)="addReplyToComment(comment.id)"
+          *ngIf="(comment.content?.length || 0) > maxLengthContent"
+          (click)="isExpandedContent = !isExpandedContent"
+          class="dark:text-secondary-dark font-medium ml-2 hover:underline"
         >
-          Reply
+          {{ isExpandedContent ? 'Show Less' : 'Show More' }}
         </button>
       </div>
     </div>
   </div>
-  
+
+  <div class="ml-12 mt-4">
+    <div *ngIf="isExpandedReplies">
+      <app-comment-section [comments]="comment.replies" [isReply]="true"></app-comment-section>
+    </div>
+    <button
+      (click)="toggleReplies(comment)"
+      class="text-secondary-dark text-sm font-medium mt-2 hover:underline"
+    >
+      {{ isExpandedReplies ? 'Hide Replies' : 'See Replies' }}
+    </button>
+  </div>
+
+</div>
+
+ 
+
+<!-- Comment Input -->
+<div class="flex items-center gap-4 mt-6">
+<ng-container *ngIf="user?.profilePicture; else defaultIcon">
+  <img [src]="user.profilePicture" alt="User Photo" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
+</ng-container>
+<ng-template #defaultIcon>
+  <svg-icon name="user" [svgClass]="'custom-icon text-gray-400'" class="w-8 h-8 md:w-10 md:h-10"></svg-icon>
+</ng-template>
+<input
+  type="text"
+  [(ngModel)]="newCommentContent"
+  [placeholder]="isReply ? 'Reply to comment...' : 'Add a comment...'"
+  class="w-full bg-transparent text-sm dark:text-primaryText-dark border-none placeholder-gray-500 focus:ring-0 outline-none"
+/>
+<button
+  class="text-secondary-dark text-sm font-medium"
+  [disabled]="!newCommentContent"
+  (click)="addComment()"
+>
+  Post
+</button>
+</div>

@@ -7,9 +7,14 @@
         <!-- User Info -->
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-full dark:bg-primary_5-dark flex items-center justify-center">
-            <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+            <ng-container *ngIf="user?.profilePicture; else defaultIcon">
+              <img [src]="user.profilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
+            </ng-container>
+            <ng-template #defaultIcon>
+                <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+            </ng-template>
           </div>
-          <span class="text-lg">Oussama Ouldrhila</span>
+          <span class="text-lg">{{user.username}}</span>
         </div>
   
         <!-- Text Area with POST Button and Attachment Icon -->
