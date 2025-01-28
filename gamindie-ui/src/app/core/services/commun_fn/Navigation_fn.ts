@@ -36,3 +36,17 @@ export function rightNavigateTo(section: string, currentUrl:string, router: Rout
       console.error('Error in rightNavigateTo:', error);
     }
 }
+
+export function navigateTo(section: string, currentUrl: string, router: Router): void {
+  try {
+       // Split the URL into segments
+      const urlSegments = currentUrl.split('/').filter(segment => segment);
+      const baseSegment = urlSegments[0];
+      const newUrl = `/${baseSegment}/${section}`;
+      router.navigateByUrl(newUrl);
+
+  } catch (error) {
+      console.error('Error in navigateTo:', error);
+  }
+}
+

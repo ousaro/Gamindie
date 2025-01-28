@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
-import { Comment, Post } from '../../services/models';
+import { Comment, Post, PostResponse } from '../../services/models';
 import { CommentSectionComponent } from "../comment-section/comment-section.component";
 
 
@@ -18,7 +18,7 @@ import { CommentSectionComponent } from "../comment-section/comment-section.comp
 export class PostCardComponent implements OnInit {
 
 
-  @Input() post!: Post;
+  @Input() post!: PostResponse;
 
   @Input() isMyFeed: boolean = false;
   @Input() isMyProfile: boolean = false;

@@ -12,7 +12,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 
   // Redirect to auth page if not authenticated
-  router.navigate(['/auth']);
+  router.navigate(['/auth/']);
   return false;
 };
 
@@ -25,6 +25,6 @@ export const guestGuard: CanActivateFn = (route, state) => {
   }
 
   // Redirect to auth page if not authenticated
-  router.navigate(['/home']);
+  router.navigate(['/home/']);
   return false;
 };

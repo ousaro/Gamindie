@@ -7,6 +7,8 @@ import { AuthenticationService } from '../../../core/services/services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TokenService } from '../../../core/services/token/token.service';
 import { SvgIconComponent } from "../../../shared/svg-icon/svg-icon.component";
+import { navigateTo } from '../../../core/services/commun_fn/Navigation_fn';
+import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 
 
 @Component({
@@ -20,19 +22,30 @@ import { SvgIconComponent } from "../../../shared/svg-icon/svg-icon.component";
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-loginWithProvider() {
-throw new Error('Method not implemented.');
-}
+
 
   authRequest: AuthenticationRequest = {email: '', password: ''};
   errorMsg: Array<string> = [];
+  currentUrl: string = '';
 
   constructor(
+    private routeTrackerService: RouteTrackerService,
     private router: Router,
     private authService: AuthenticationService,
     private tokenService: TokenService,
   ){
 
+  }
+  
+   ngOnInit(): void {
+      this.routeTrackerService.currentUrl$.subscribe((url) => {
+        this.currentUrl = url;
+      });
+  
+    }
+
+  loginWithProvider() {
+    throw new Error('Method not implemented.');
   }
 
   login() {
@@ -43,6 +56,8 @@ throw new Error('Method not implemented.');
           if (res && res.token) { // Ensure token exists
             this.tokenService.token = res.token; // Save the token
             this.router.navigate(['home']); // Navigate to the home page
+            window.location.reload();
+
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -61,7 +76,7 @@ throw new Error('Method not implemented.');
   }
 
   register(){
-    this.router.navigate(['register']);
+    navigateTo('register', this.currentUrl, this.router);
   }
 
 }

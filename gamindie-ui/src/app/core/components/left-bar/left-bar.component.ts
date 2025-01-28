@@ -6,7 +6,8 @@ import { RouteTrackerService } from '../../services/routeTracker/route-tracker.s
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
+import { centerNavigateTo, navigateTo } from '../../services/commun_fn/Navigation_fn';
+import { TokenService } from '../../services/token/token.service';
 
 @Component({
   selector: 'app-left-bar',
@@ -27,7 +28,8 @@ export class LeftBarComponent implements OnInit {
   constructor(
     private routeTrackerService: RouteTrackerService,
     private router: Router,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -103,7 +105,7 @@ export class LeftBarComponent implements OnInit {
     
     switch(item) {
       case 'logout':
-        console.log('Logging out...');
+        this.logOut();
         break;
       case 'delete':
         console.log('Deleting...');
@@ -111,6 +113,10 @@ export class LeftBarComponent implements OnInit {
     }
 
     this.toggleSettingsModal();
+  }
+
+  logOut() {
+    this.tokenService.logout();
   }
 
 

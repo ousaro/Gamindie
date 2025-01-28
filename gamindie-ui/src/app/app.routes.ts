@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
-  // Redirect to login page
   {
     path: '',
     redirectTo: 'home',
