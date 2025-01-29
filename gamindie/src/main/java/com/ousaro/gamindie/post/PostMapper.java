@@ -28,11 +28,18 @@ public class PostMapper {
         return PostResponse.builder()
             .id(post.getId())
             .Content(post.getContent())
-            .owner(post.getOwner().fullName())
+            .ownerId((post.getOwner().getId()))
+            .ownerFullName(post.getOwner().fullName())
+            .ownerProfilePicture(post.getOwner().getProfilePicture())
             .attachments(post.getAttachments() !=null ?
                 post.getAttachments().stream()
                     .map(AttachmentMapper::toAttachmentResponse)
                     .toList() : null)
+            .createdData(post.getCreatedData())
+            .lastModifiedDate(post.getLastModifiedDate())
+            .tags(post.getTags())
+            .likes(post.getLikes())
+            .comments(post.getComments())
             .build();
     }
 

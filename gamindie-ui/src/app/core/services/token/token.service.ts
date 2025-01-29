@@ -14,6 +14,10 @@ export class TokenService {
     return localStorage.getItem('token') as string;
   }
 
+  removeToken() {
+    localStorage.removeItem('token');
+  }
+
   logout() {
     localStorage.clear();
     window.location.reload();

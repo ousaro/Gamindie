@@ -1,8 +1,11 @@
 package com.ousaro.gamindie.post;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ousaro.gamindie.attachment.AttachmentResponse;
+import com.ousaro.gamindie.feedback.Comment;
+import com.ousaro.gamindie.feedback.Likes;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +22,14 @@ public class PostResponse {
 
     private Integer id;
     private String Content;
-    private String owner;
+    private Integer ownerId;
+    private String ownerFullName;
+    private String ownerProfilePicture;
     private List<AttachmentResponse> attachments;
-    
+    private LocalDateTime createdData; 
+    private LocalDateTime lastModifiedDate;
+    private List<String> tags;
+    private List<Likes> likes;
+    private List<Comment> comments;
 
 }

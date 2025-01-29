@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { CommonModule } from '@angular/common';
@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
 import { centerNavigateTo, rightNavigateTo } from '../../services/commun_fn/Navigation_fn';
-import { User } from '../../services/models';
+import { User, UserResponse } from '../../services/models';
+import { AuthContext } from '../../../shared/contexts/auth-context';
 
 
 @Component({
@@ -16,10 +17,15 @@ import { User } from '../../services/models';
   styleUrl: './top-bar.component.scss'
 })
 export class TopBarComponent implements OnInit {
+  private authContext = inject(AuthContext);
+  
+  // Track both the user and loading state
+  userSignal = this.authContext.user;
+  isLoading = this.authContext.isLoading;
 
-  user : User | undefined = {username: 'test', profilePicture: './Imgs/postImgs.JPG'};
   sectionName: string = '';
   currentUrl: string = '';
+  user: UserResponse | null = null;
 
   private breakpointSubscription: Subscription | undefined;
 
@@ -27,7 +33,12 @@ export class TopBarComponent implements OnInit {
   constructor(
     private routeTrackerService: RouteTrackerService,
     private router: Router,
-    private breakpointObserver: BreakpointObserver) {}
+    private breakpointObserver: BreakpointObserver) {
+      effect(() => {
+        this.getUserValue();
+      });
+    }
+
 
   ngOnInit(): void {
     this.routeTrackerService.currentUrl$.subscribe((url) => {
@@ -42,6 +53,21 @@ export class TopBarComponent implements OnInit {
           this.router.navigateByUrl("/");
         } 
       });
+
+    
+  }
+
+
+  ngOnDestroy(): void {
+    this.breakpointSubscription?.unsubscribe();
+  }
+
+  getUserValue() {
+    if (this.isLoading()) {
+      return;
+    }
+    this.user = this.userSignal();
+
   }
 
   center_NavigateTo(section: string): void {

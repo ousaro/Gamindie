@@ -12,6 +12,7 @@ import { mobileOnlyGuardGuard } from '../../shared/guards/mobile-only-guard.guar
 import { ChatroomComponent } from '../right/chatroom/chatroom.component';
 import { PostDetailsComponent } from './post-details/post-details.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { MyfeedComponent } from './myfeed/myfeed.component';
 
 
 export const CENTER_ROUTES: Routes = [
@@ -24,10 +25,10 @@ export const CENTER_ROUTES: Routes = [
     path: 'explore',
     component: ExploreComponent,
   },
-  // {
-  //   path: "explore/myfeed",
-  //   component: MyfeedComponent,
-  // },
+  {
+    path: "explore/myfeed",
+    component: MyfeedComponent,
+  },
   {
     path: 'create',
     component: CreateComponent,

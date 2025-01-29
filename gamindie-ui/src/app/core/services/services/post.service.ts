@@ -21,7 +21,6 @@ import { findPostById } from '../fn/post/find-post-by-id';
 import { FindPostById$Params } from '../fn/post/find-post-by-id';
 import { PageResponsePostResponse } from '../models/page-response-post-response';
 import { PostResponse } from '../models/post-response';
-import { TokenService } from '../token/token.service';
 
 @Injectable({ providedIn: 'root' })
 export class PostService extends BaseService {

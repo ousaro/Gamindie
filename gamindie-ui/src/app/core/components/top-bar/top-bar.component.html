@@ -76,7 +76,7 @@
 
         <!-- Profile Section -->
         <div class="flex items-center space-x-2">
-            <span class="text-white hidden md:flex text-xl">{{user?.username}}</span>
+            <span class="text-white hidden md:flex text-xl">{{user?.fullName}}</span>
             <button class="profile-right-tab" (click)="center_NavigateTo('profile')" aria-label="Profile">
                 <ng-container *ngIf="user?.profilePicture; else defaultIcon">
                     <img [src]="user?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />

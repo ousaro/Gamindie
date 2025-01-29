@@ -7,6 +7,7 @@ import { JsonContentTypeInterceptor } from './shared/interceptors/json-content-t
 import { httpTokenInterceptor } from './shared/interceptors/http-token.interceptor';
 import { DarkModeService } from './core/services/theme/dark-mode.service';
 import { provideAngularSvgIcon } from 'angular-svg-icon';
+import { AuthContext } from './shared/contexts/auth-context';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([JsonContentTypeInterceptor,httpTokenInterceptor])),
     provideAngularSvgIcon(),
     DarkModeService,
+    AuthContext,
 
   ]
 };

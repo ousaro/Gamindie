@@ -24,3 +24,4 @@ export type { PostResponse } from './models/post-response';
 export type { RegistrationRequest } from './models/registration-request';
 export type { Role } from './models/role';
 export type { User } from './models/user';
+export type { UserResponse } from './models/user-response';
