@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { centerNavigateTo, navigateTo } from '../../services/commun_fn/Navigation_fn';
 import { TokenService } from '../../services/token/token.service';
+import { AuthContext } from '../../../shared/contexts/auth-context';
 
 @Component({
   selector: 'app-left-bar',
@@ -16,6 +17,7 @@ import { TokenService } from '../../services/token/token.service';
   styleUrl: './left-bar.component.scss',
 })
 export class LeftBarComponent implements OnInit {
+  authContext = inject(AuthContext);
 
   isMenuModalOpen: boolean = false;
   isSettingsModalOpen: boolean = false;
@@ -116,7 +118,7 @@ export class LeftBarComponent implements OnInit {
   }
 
   logOut() {
-    this.tokenService.logout();
+    this.authContext.logout();
   }
 
 

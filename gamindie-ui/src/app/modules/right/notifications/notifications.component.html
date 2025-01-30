@@ -9,23 +9,35 @@
   
     <!-- Notification List -->
     <div class="flex flex-col max-h-[70vh] sm:max-h-[77vh] gap-2 w-full mt-4 overflow-y-auto scrollbar-none px-1 sm:px-2">
-      <div *ngFor="let notification of notifications; let i = index"
-           (click)="handleNotificationClick(i)"
-           [ngClass]="!notification.isSeen ? 'dark:bg-primary_4-dark' : 'dark:bg-primary_3-dark'"
-           class="p-2 sm:p-4 transition-colors duration-200 cursor-pointer flex items-start gap-3 rounded-lg shadow-md sm:shadow-lg hover:scale-[1.02] active:scale-100">
-        
-        <!-- Icon -->
-        <div class="mt-1 dark:text-primaryText-dark text-lg sm:text-xl">
-          <i class="fas" [ngClass]="notification.type === 'follow' ? 'fa-user-plus' : 'fa-envelope'"></i>
+      <ng-container *ngIf="notifications.length > 0; else noNotifications">
+        <div *ngFor="let notification of notifications; let i = index"
+              (click)="handleNotificationClick(i)"
+              [ngClass]="!notification.isSeen ? 'dark:bg-primary_4-dark' : 'dark:bg-primary_3-dark'"
+              class="p-2 sm:p-4 transition-colors duration-200 cursor-pointer flex items-start gap-3 rounded-lg shadow-md sm:shadow-lg hover:scale-[1.02] active:scale-100">
+          
+          <!-- Icon -->
+          <div class="mt-1 dark:text-primaryText-dark text-lg sm:text-xl">
+            <i class="fas" [ngClass]="notification.type === 'follow' ? 'fa-user-plus' : 'fa-envelope'"></i>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1">
+            <p class="text-base sm:text-lg md:text-xl text-white break-words">
+              {{ notification.text }}
+            </p>
+          </div>
         </div>
-  
-        <!-- Content -->
-        <div class="flex-1">
-          <p class="text-base sm:text-lg md:text-xl text-white break-words">
-            {{ notification.text }}
+      </ng-container>
+      <ng-template #noNotifications>
+        <div class="flex flex-col items-center justify-center h-full">
+          <h1 class="text-lg sm:text-xl md:text-2xl">
+            No Notifications
+          </h1>
+          <p class="text-sm sm:text-base">
+            Stay tuned for updates!
           </p>
-        </div>
-      </div>
+        </div> 
+      </ng-template>
     </div>
   </div>
   

@@ -50,7 +50,11 @@ export class TopBarComponent implements OnInit {
       .observe([Breakpoints.Handset,Breakpoints.Small, Breakpoints.Medium])
       .subscribe(result => {
         if (!result.matches) {
-          this.router.navigateByUrl("/");
+          if (!sessionStorage.getItem('pageReloaded')) {
+            sessionStorage.setItem('pageReloaded', 'true');
+            window.location.reload();
+          }
+          
         } 
       });
 

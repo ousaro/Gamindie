@@ -32,11 +32,16 @@
       <div
         class="w-12 h-12 rounded-full flex items-center justify-center dark:bg-primary_5-dark"
       >
-        <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
+        <ng-container *ngIf="post?.ownerProfilePicture; else defaultIcon">
+          <img [src]="post?.ownerProfilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
+        </ng-container>
+        <ng-template #defaultIcon>
+          <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+        </ng-template>
       </div>
       <div class="ml-3 text-white">
-        <p class="text-lg font-bold">{{ post.owner?.username }}</p>
-        <p class="text-sm text-gray-400">{{ post.createdData }}</p>
+        <p class="text-lg font-bold">{{ post?.ownerFullName }}</p>
+        <p class="text-sm text-gray-400">{{ getFormattedDate() }}</p>
       </div>
       <div class="relative">
         <button
@@ -70,13 +75,13 @@
       <div class="text-sm leading-relaxed font-sans mt-3">
         <span>
           {{
-            isExpanded || (post.content?.length || 0) <= maxLength
-              ? post.content
-              : (post.content | slice : 0 : maxLength) + "..."
+            isExpanded || (post!.content?.length || 0) <= maxLength
+              ? post?.content
+              : (post?.content | slice : 0 : maxLength) + "..."
           }}
         </span>
         <button
-          *ngIf="(post.content?.length || 0) > maxLength"
+          *ngIf="(post!.content?.length || 0) > maxLength"
           (click)="toggleExpanded()"
           class="dark:text-secondary-dark font-medium ml-2 hover:underline"
         >
@@ -87,9 +92,9 @@
 
     <!-- Post Images -->
     <div class="relative mb-4">
-      <div *ngFor="let attachment of post.attachments">
+      <div *ngFor="let attachment of attachmentsURL">
         <img
-          [src]="attachment.url"
+          [src]="attachment"
           alt="Post Image"
           class="w-full object-cover rounded-md"
         />
@@ -105,7 +110,7 @@
         <button
           class="flex items-center gap-1 text-sm transition-all duration-200 hover:dark:text-secondary-dark"
           [class.dark:text-secondary-dark]="isLiked"
-          (click)="toggleLike(post.id)"
+          (click)="toggleLike(post?.id)"
         >
           <svg-icon
             name="heart"
@@ -115,7 +120,7 @@
                 : 'feedback-icon hover:feedback-icon-hover'
             "
           ></svg-icon>
-          <span class="inline-block">{{ post.likes?.length }}</span>
+          <span class="inline-block">{{ post?.likes?.length }}</span>
         </button>
       </div>
 
@@ -128,7 +133,7 @@
             name="comment"
             [svgClass]="'comment-icon comment-icon-hover'"
           ></svg-icon>
-          <span class="inline-block">{{ post.comments?.length }}</span>
+          <span class="inline-block">{{ post?.comments?.length }}</span>
         </button>
       </div>
 
@@ -136,7 +141,7 @@
       <div class="flex items-center justify-center gap-1">
         <button
           class="flex items-center gap-1 text-sm transition-all duration-200 hover:text-secondary-dark active:scale-95"
-          (click)="sharePost(post.id)"
+          (click)="sharePost(post?.id)"
         >
           <svg-icon
             name="share"
@@ -148,9 +153,9 @@
   </div>
 
   <!-- Comment Section -->
-  <div *ngIf="openPostId === post.id" class="mt-4 p-2">
+  <div *ngIf="openPostId === post?.id" class="mt-4 p-2">
     <app-comment-section
-      [comments]="post.comments"
+      [comments]="post?.comments"
       (addReply)="handleAddReply($event)"
     ></app-comment-section>
   </div>

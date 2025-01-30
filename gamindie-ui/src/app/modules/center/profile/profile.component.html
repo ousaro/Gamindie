@@ -4,17 +4,17 @@
     <!-- Avatar -->
     <div class="w-28 h-28 rounded-full overflow-hidden flex items-center justify-center dark:bg-primary_5-dark">
       <ng-container *ngIf="user?.profilePicture; else defaultIcon">
-        <img [src]="user.profilePicture" alt="User Photo" class="w-full h-full object-cover" />
+        <img [src]="user?.profilePicture" alt="User Photo" class="w-full h-full object-cover" />
       </ng-container>
       <ng-template #defaultIcon>
-        <svg-icon name="user" [svgClass]="'custom-icon text-gray-400'" class="w-full h-full"></svg-icon>
+        <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>
       </ng-template>
     </div>
 
     <!-- User Info -->
     <div class="text-center dark:text-primaryText-dark">
-      <h1 class="text-xl font-bold text-white">{{ user.username }}</h1>
-      <p class="text-sm mt-1">{{ user.username }}, a game developer</p>
+      <h1 class="text-xl font-bold text-white">{{ user?.fullName }}</h1>
+      <p class="text-sm mt-1">{{ user?.fullName }}, a game developer</p>
     </div>
 
     <!-- Stats -->
@@ -71,13 +71,22 @@
 
   <!-- Posts or Saved Content -->
   <div *ngIf="activeTab === 'posts'" class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
-    <div *ngFor="let post of posts" >
-      <img
-        [src]="post.attachments?.[0]?.url"
-        alt="Post Image"
-        class="w-full h-full object-cover cursor-pointer"
-        (click)="navigateToPostDetails(post.id)"
-      />
+    <div *ngFor="let post of posts" class="p-2 rounded-md dark:bg-primary_5-dark shadow-md">
+      <ng-container *ngIf="hasAttachments(post); else textPost">
+        <img
+          [src]="getPostAttachmentURLs(post)[0]"
+          alt="Post Image"
+          class="w-full h-full object-cover cursor-pointer rounded-md"
+          (click)="navigateToPostDetails(post.id)"
+        />
+      </ng-container>
+  
+      <!-- Text-only Post -->
+      <ng-template #textPost>
+        <div class="p-4 dark:text-primaryText-dark cursor-pointer" (click)="navigateToPostDetails(post.id)">
+          <p class="text-sm">{{ post.content | slice:0:150 }}...</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 

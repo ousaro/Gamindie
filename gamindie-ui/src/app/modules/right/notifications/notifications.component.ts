@@ -17,26 +17,26 @@ interface Notification {
 export class NotificationsComponent {
 
   notifications: Notification[] = [
-    {
-      type: 'follow',
-      text: 'Start following you',
-      isSeen: true
-    },
-    {
-      type: 'message',
-      text: 'Send you message',
-      isSeen: true
-    },
-    {
-      type: 'message',
-      text: 'Send you message',
-      isSeen: false
-    },
-    {
-      type: 'message',
-      text: 'Send you message',
-      isSeen: false
-    }
+    // {
+    //   type: 'follow',
+    //   text: 'Start following you',
+    //   isSeen: true
+    // },
+    // {
+    //   type: 'message',
+    //   text: 'Send you message',
+    //   isSeen: true
+    // },
+    // {
+    //   type: 'message',
+    //   text: 'Send you message',
+    //   isSeen: false
+    // },
+    // {
+    //   type: 'message',
+    //   text: 'Send you message',
+    //   isSeen: false
+    // }
     
   ];
 

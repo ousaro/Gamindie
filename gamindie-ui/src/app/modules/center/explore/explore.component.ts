@@ -24,6 +24,10 @@ export class ExploreComponent implements OnInit {
   posts:PostResponse[] = [];
 
   async ngOnInit(): Promise<void> {
+    await this.fetchPosts();
+  }
+
+  fetchPosts = async () => {
     this.posts = await loadPosts(this.postService)
   }
 

@@ -18,10 +18,6 @@ export class TokenService {
     localStorage.removeItem('token');
   }
 
-  logout() {
-    localStorage.clear();
-    window.location.reload();
-  }
 
   isAuthenticated() {
     return this.token ? true : false;

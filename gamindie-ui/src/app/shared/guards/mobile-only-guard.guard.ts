@@ -15,7 +15,6 @@ export const mobileOnlyGuardGuard: CanActivateFn = (route, state) => {
         if (result.matches) {
           return true; // Allow navigation if on mobile screen
         } else {
-          router.navigateByUrl("/"); // Redirect to home if not on mobile
           return false; // Block navigation if not on mobile
         }
       })

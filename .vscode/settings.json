@@ -13,6 +13,7 @@
             "username": "username",
             "database": "gamindie_db"
         }
-    ]
+    ],
+    "makefile.configureOnOpen": false
 
 }
