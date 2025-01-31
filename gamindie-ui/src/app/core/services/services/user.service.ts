@@ -13,13 +13,10 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { getAllUsers } from '../fn/user/get-all-users';
 import { GetAllUsers$Params } from '../fn/user/get-all-users';
-import { getFriendFeed } from '../fn/user/get-friend-feed';
-import { GetFriendFeed$Params } from '../fn/user/get-friend-feed';
 import { getProfile } from '../fn/user/get-profile';
 import { GetProfile$Params } from '../fn/user/get-profile';
 import { getUserById } from '../fn/user/get-user-by-id';
 import { GetUserById$Params } from '../fn/user/get-user-by-id';
-import { Post } from '../models/post';
 import { UserResponse } from '../models/user-response';
 
 @Injectable({ providedIn: 'root' })
@@ -75,31 +72,6 @@ export class UserService extends BaseService {
   getProfile(params?: GetProfile$Params, context?: HttpContext): Observable<UserResponse> {
     return this.getProfile$Response(params, context).pipe(
       map((r: StrictHttpResponse<UserResponse>): UserResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `getFriendFeed()` */
-  static readonly GetFriendFeedPath = '/users/feed';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getFriendFeed()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getFriendFeed$Response(params?: GetFriendFeed$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Post>>> {
-    return getFriendFeed(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getFriendFeed$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getFriendFeed(params?: GetFriendFeed$Params, context?: HttpContext): Observable<Array<Post>> {
-    return this.getFriendFeed$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Post>>): Array<Post> => r.body)
     );
   }
 

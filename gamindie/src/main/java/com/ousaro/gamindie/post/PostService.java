@@ -2,18 +2,21 @@ package com.ousaro.gamindie.post;
 
 
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.ousaro.gamindie.attachment.Attachment;
 import com.ousaro.gamindie.attachment.AttachmentRepository;
 import com.ousaro.gamindie.commun.PageResponse;
+import com.ousaro.gamindie.friendship.FriendShipService;
 import com.ousaro.gamindie.user.User;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -26,6 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final AttachmentRepository attachmentRepository;
+    private final FriendShipService friendShipService;
 
     public Integer create(PostRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
@@ -92,6 +96,45 @@ public class PostService {
             posts.isLast()
         );
     }
+
+    public PageResponse<PostResponse> getFriendFeed(int page, int size, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+    
+        // Get all the user's accepted friendships
+        List<User> friends = friendShipService.getAcceptedRequests(connectedUser)
+                .stream()
+                .map(friendShip -> friendShip.getSender().getId().equals(user.getId()) 
+                    ? friendShip.getReceiver() 
+                    : friendShip.getSender())
+                .collect(Collectors.toList());
+    
+        // Get posts from the user's friends, avoiding duplicates
+        List<Post> friendPosts = friends.stream()
+                .flatMap(friend -> postRepository.findByOwner(friend).stream())
+                .distinct()
+                .sorted(Comparator.comparing(Post::getCreatedData).reversed()) // Sort by latest first
+                .collect(Collectors.toList());
+    
+        // Implement pagination manually
+        int start = Math.min(page * size, friendPosts.size());
+        int end = Math.min(start + size, friendPosts.size());
+        List<Post> pagedPosts = friendPosts.subList(start, end);
+    
+        List<PostResponse> postResponses = pagedPosts.stream()
+                .map(postMapper::toPostResponse)
+                .toList();
+    
+        return new PageResponse<>(
+            postResponses,
+            page,
+            size,
+            friendPosts.size(),
+            (int) Math.ceil((double) friendPosts.size() / size),
+            page == 0,
+            end == friendPosts.size()
+        );
+    }
+    
 
     
 }

@@ -9,8 +9,10 @@ export interface UserResponse {
   dateOfBirth?: string;
   email?: string;
   enabled?: boolean;
+  firstName?: string;
   fullName?: string;
   id?: number;
+  lastName?: string;
   profilePicture?: string;
   savedPosts?: Array<string>;
   socialLinks?: string;

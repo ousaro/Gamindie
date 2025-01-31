@@ -13,11 +13,38 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { uploadAttachment } from '../fn/attachment/upload-attachment';
 import { UploadAttachment$Params } from '../fn/attachment/upload-attachment';
+import { uploadAttachmentPostman } from '../fn/attachment/upload-attachment-postman';
+import { UploadAttachmentPostman$Params } from '../fn/attachment/upload-attachment-postman';
 
 @Injectable({ providedIn: 'root' })
 export class AttachmentService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `uploadAttachmentPostman()` */
+  static readonly UploadAttachmentPostmanPath = '/attachments/postman';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `uploadAttachmentPostman()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  uploadAttachmentPostman$Response(params: UploadAttachmentPostman$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+    return uploadAttachmentPostman(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `uploadAttachmentPostman$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  uploadAttachmentPostman(params: UploadAttachmentPostman$Params, context?: HttpContext): Observable<number> {
+    return this.uploadAttachmentPostman$Response(params, context).pipe(
+      map((r: StrictHttpResponse<number>): number => r.body)
+    );
   }
 
   /** Path part for operation `uploadAttachment()` */

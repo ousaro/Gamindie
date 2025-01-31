@@ -19,6 +19,8 @@ import { findAllPostsByOwner } from '../fn/post/find-all-posts-by-owner';
 import { FindAllPostsByOwner$Params } from '../fn/post/find-all-posts-by-owner';
 import { findPostById } from '../fn/post/find-post-by-id';
 import { FindPostById$Params } from '../fn/post/find-post-by-id';
+import { getFriendFeed } from '../fn/post/get-friend-feed';
+import { GetFriendFeed$Params } from '../fn/post/get-friend-feed';
 import { PageResponsePostResponse } from '../models/page-response-post-response';
 import { PostResponse } from '../models/post-response';
 
@@ -124,6 +126,31 @@ export class PostService extends BaseService {
    */
   findAllPostsByOwner(params?: FindAllPostsByOwner$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
     return this.findAllPostsByOwner$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponsePostResponse>): PageResponsePostResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getFriendFeed()` */
+  static readonly GetFriendFeedPath = '/posts/feed';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getFriendFeed()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getFriendFeed$Response(params?: GetFriendFeed$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
+    return getFriendFeed(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getFriendFeed$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getFriendFeed(params?: GetFriendFeed$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
+    return this.getFriendFeed$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponsePostResponse>): PageResponsePostResponse => r.body)
     );
   }

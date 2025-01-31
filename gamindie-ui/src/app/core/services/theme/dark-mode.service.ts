@@ -8,6 +8,10 @@ export class DarkModeService {
     this.loadTheme();
   }
 
+  setTheme(theme: 'light' | 'dark') {
+    localStorage.setItem('theme', theme);
+  }
+
   loadTheme() {
     const storedTheme = localStorage.getItem('theme');
     if (

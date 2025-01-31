@@ -10,17 +10,17 @@
     <div class="relative">
       <div class="w-28 h-28 rounded-full overflow-hidden flex items-center justify-center dark:bg-primary_5-dark">
         <ng-container *ngIf="user?.profilePicture; else defaultIcon">
-          <img [src]="user.profilePicture" alt="User Photo" class="w-full h-full object-cover" />
+          <img [src]="user?.profilePicture" alt="User Photo" class="w-full h-full object-cover" />
         </ng-container>
         <ng-template #defaultIcon>
-          <svg-icon name="user" [svgClass]="'custom-icon text-gray-400'" class="w-full h-full"></svg-icon>
+          <svg-icon name="user" [svgClass]="'custom-icon '"></svg-icon>
         </ng-template>
       </div>
       <button class="absolute flex items-end justify-center bottom-0 right-0 bg-secondary-dark text-black text-xs p-1 rounded-md" (click)="changePhoto()">
         <svg-icon name="edit" [svgClass]="'edit-icon'"></svg-icon>
       </button>
     </div>
-    <p class="text-xl font-bold text-white">{{user.username}}</p>
+    <p class="text-xl font-bold text-white">{{user?.fullName}}</p>
   </div>
 
   <!-- Form Section -->
@@ -33,11 +33,11 @@
         maxlength="150"
         rows="3"
         class="w-full p-3 rounded-md dark:bg-primary_2-dark dark:text-primaryText-dark resize-none"
-        [(ngModel)]="user.bio"
+        [(ngModel)]="(user || {}).bio"
         (input)="updateBioCount($event)"
         name="bio"
       ></textarea>
-      <p class="text-right text-xs text-secondary-dark">{{user.bio?.length || 0}}/150</p>
+      <p class="text-right text-xs text-secondary-dark">{{user?.bio?.length || 0}}/150</p>
     </div>
 
     <!-- Input Fields -->
@@ -48,7 +48,7 @@
           type="text"
           id="firstName"
           class="w-full p-3 rounded-md dark:bg-primary_2-dark dark:text-primaryText-dark"
-          [(ngModel)]="user.firstname"
+          [(ngModel)]="(user || {}).firstName"
           name="firstName"
         />
       </div>
@@ -58,7 +58,7 @@
           type="text"
           id="lastName"
           class="w-full p-3 rounded-md dark:bg-primary_2-dark dark:text-primaryText-dark"
-          [(ngModel)]="user.lastname"
+          [(ngModel)]="(user || {}).lastName"
           name="lastName"
         />
       </div>
@@ -68,7 +68,7 @@
           type="email"
           id="email"
           class="w-full p-3 rounded-md dark:bg-primary_2-dark dark:text-primaryText-dark"
-          [(ngModel)]="user.email"
+          [(ngModel)]="(user || {}).email"
           name="email"
         />
       </div>

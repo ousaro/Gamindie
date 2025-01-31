@@ -6,7 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PostCardComponent } from '../../../core/components/post-card/post-card.component';
 import { Post, PostResponse } from '../../../core/services/models';
 import { PostService } from '../../../core/services/services';
-import { loadPosts } from '../../../core/services/commun_fn/Post_fn';
+import { loadOwnerFeed, loadPosts } from '../../../core/services/commun_fn/Post_fn';
 
 @Component({
   selector: 'app-myfeed',
@@ -27,7 +27,7 @@ export class MyfeedComponent {
     }
 
     fetchPosts = async () => {
-      this.posts = await loadPosts(this.postService)
+      this.posts = await loadOwnerFeed(this.postService)
     }
 
   

@@ -8,27 +8,44 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { AttachmentRequest } from '../../models/attachment-request';
 
 export interface UploadAttachment$Params {
-  name: string;
-  type: string;
-  metadata?: string;
-      body?: {
-'sourceFile': Blob;
-}
+  request: AttachmentRequest;
+  body?: {
+  'sourceFile': Blob;
+  }
 }
 
 export function uploadAttachment(http: HttpClient, rootUrl: string, params: UploadAttachment$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
   const rb = new RequestBuilder(rootUrl, uploadAttachment.PATH, 'post');
   if (params) {
-    rb.query('name', params.name, {});
-    rb.query('type', params.type, {});
-    rb.query('metadata', params.metadata, {});
-    rb.body(params.body, 'application/json');
+    
+     // Create FormData
+     const formData = new FormData();
+    
+     // Append the file
+     if (params.body?.sourceFile) {
+       formData.append('sourceFile', params.body.sourceFile);
+     }
+     
+     // Append request parameters
+     if (params.request.name) {
+       formData.append('name', params.request.name);
+     }
+    if (params.request.type) {
+        formData.append('type', params.request.type);
+    }
+     if (params.request.metadata) {
+       formData.append('metadata', params.request.metadata);
+     }
+ 
+     // Set the body to the FormData
+     rb.body(formData);
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {

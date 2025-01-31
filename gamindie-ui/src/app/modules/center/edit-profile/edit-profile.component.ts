@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { User } from '../../../core/services/models';
+import { User, UserResponse } from '../../../core/services/models';
+import { AuthContext } from '../../../shared/contexts/auth-context';
 
 @Component({
   selector: 'app-edit-profile',
@@ -11,22 +12,32 @@ import { User } from '../../../core/services/models';
   styleUrl: './edit-profile.component.scss'
 })
 export class EditProfileComponent {
-  
+  private authContext = inject(AuthContext);
+      
+  // Track both the user and loading state
+  userSignal = this.authContext.user;
+  isLoading = this.authContext.isLoading;
 
-   user:User = {
-      id: 1,
-      username: 'johnwill22',
-      firstname: 'John',
-      lastname: 'Williams',
-      profilePicture: './Imgs/postImgs.JPG',
-      bio: 'I love gaming and coding!',
-    };
-  
 
+  user:UserResponse|null = null;
   showPasswordModal = false;
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
+
+  constructor() {
+    effect(() => {
+      this.getUserValue();
+    });
+  }
+
+  getUserValue() {
+    if (this.isLoading()) {
+      return;
+    }
+    this.user = this.userSignal();
+
+  }
 
   // Navigation function to go back
   goBack() {
@@ -47,7 +58,9 @@ export class EditProfileComponent {
   // Function to update the bio character counter
   updateBioCount(event: Event) {
     const bioInput = (event.target as HTMLTextAreaElement).value;
-    this.user.bio = bioInput;
+    if (this.user) {
+      this.user.bio = bioInput;
+    }
   }
 
   openChangePasswordModal() {

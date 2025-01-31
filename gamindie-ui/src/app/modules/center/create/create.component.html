@@ -8,13 +8,13 @@
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-full dark:bg-primary_5-dark flex items-center justify-center">
             <ng-container *ngIf="user?.profilePicture; else defaultIcon">
-              <img [src]="user.profilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
+              <img [src]="user?.profilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
             </ng-container>
             <ng-template #defaultIcon>
                 <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
             </ng-template>
           </div>
-          <span class="text-lg">{{user.username}}</span>
+          <span class="text-lg">{{user?.fullName}}</span>
         </div>
   
         <!-- Text Area with POST Button and Attachment Icon -->
@@ -30,13 +30,20 @@
             rows="4"
           ></textarea>
          <div class="flex items-center justify-end gap-2">
+            <!-- Hidden file input -->
+            <input 
+            type="file" 
+            id="fileInput"  
+            (change)="handleFileInput($event)" 
+            style="display: none"
+            />
               <!-- Attachment Icon -->
-            <button
-            (click)="handleAttachmentClick()"
+            <label
+            for="fileInput"
             class="bg-transparent hover:opacity-80 transition-all ease-linear hover:scale-95 rounded-md"
             >
                 <svg-icon name="attach" [svgClass]="'custom-icon'"></svg-icon>
-            </button>
+            </label>
             <!-- Post Button -->
             <button
             (click)="submitPost()"
@@ -48,6 +55,32 @@
          </div>
         </div>
       </div>
+
+      <!-- Post attachments -->
+      <div class="flex flex-col gap-2  px-4">
+        <div *ngIf="attachmentFile"
+          class="flex items-center gap-2 p-2 bg-primary_2-dark rounded-md"
+        >
+          <img
+            *ngIf="isTypeOf('image')"
+            [src]="attachmentFile.url"
+            alt="Attachment"
+            class="w-16 h-16 rounded-md bg-cover"
+          />
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <button
+                (click)="removeAttachment()"
+                class="text-xs font-aahawow text-red-500 hover:underline"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+              
     </div>
+
   </div>
   

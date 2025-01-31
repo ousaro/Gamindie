@@ -22,7 +22,14 @@ public class AttachmentController {
      private final AttachmentService service;
 
     @PostMapping("/")
-    public ResponseEntity<Integer> uploadAttachment(
+    public ResponseEntity<Integer> uploadAttachment(@RequestParam("sourceFile") MultipartFile sourceFile, AttachmentRequest request, Authentication connectedUser) {       
+        Integer attachmentId = service.uploadAttachment(sourceFile,request, connectedUser);
+        return ResponseEntity.ok(attachmentId);
+    }
+
+
+    @PostMapping("/postman")
+    public ResponseEntity<Integer> uploadAttachmentPostman(
             @RequestParam("sourceFile") MultipartFile sourceFile,
             @RequestParam("name") String name,
             @RequestParam("type") String type,
@@ -30,12 +37,11 @@ public class AttachmentController {
             Authentication connectedUser) {
 
         // Manually construct AttachmentRequest
-        AttachmentRequest request = new AttachmentRequest(sourceFile, name, type, metadata);
+        AttachmentRequest request = new AttachmentRequest(name, type, metadata);
        
         // Pass the request to the service
-        Integer attachmentId = service.uploadAttachment(request, connectedUser);
+        Integer attachmentId = service.uploadAttachment(sourceFile,request, connectedUser);
         return ResponseEntity.ok(attachmentId);
     }
-
     
 }

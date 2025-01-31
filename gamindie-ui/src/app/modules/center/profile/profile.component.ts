@@ -13,31 +13,26 @@ import { PostService } from '../../../core/services/services';
 
 @Component({
   selector: 'app-profile',
-  imports: [AngularSvgIconModule, CommonModule, FormsModule],
+  imports: [AngularSvgIconModule, CommonModule, FormsModule, PostCardComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
    private authContext = inject(AuthContext);
     
-    // Track both the user and loading state
-    userSignal = this.authContext.user;
-    isLoading = this.authContext.isLoading;
+  // Track both the user and loading state
+  userSignal = this.authContext.user;
+  isLoading = this.authContext.isLoading;
  
   user: UserResponse | null = null;
   posts:PostResponse[] | null= [];
   postsCount: number = 0;
   followers: number = 0;
   following: number = 0;
-
-
+  currentUrl: string = '';
   // Tab state
   activeTab: 'posts' | 'saved' = 'posts';
 
-  // Menu state for each post
-  menuState: { [postId: number]: boolean } = {};
-
-  currentUrl: string = '';
 
   async ngOnInit(): Promise<void> {
     this.routeTrackerService.currentUrl$.subscribe((url) => {

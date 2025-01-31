@@ -2,6 +2,7 @@ package com.ousaro.gamindie.attachment;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ousaro.gamindie.file.FileStorageService;
 import com.ousaro.gamindie.user.User;
@@ -16,11 +17,11 @@ public class AttachmentService {
     private final AttachmentMapper attachmentMapper;
     private final AttachmentRepository attachmentRepository;
 
-     public Integer uploadAttachment(AttachmentRequest request, Authentication connectedUser) {
+     public Integer uploadAttachment(MultipartFile sourceFile, AttachmentRequest request, Authentication connectedUser) {
         // Get the user id
         User user = ((User) connectedUser.getPrincipal());
         // Save the file to storage
-        String fileUrl = fileStorageService.saveFile(request.sourceFile(), request.type(), user.getId());
+        String fileUrl = fileStorageService.saveFile(sourceFile, request.type(), user.getId());
 
         // Create and save the attachment entity
         Attachment attachment = attachmentMapper.toAttachment(request, fileUrl);

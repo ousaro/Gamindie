@@ -52,13 +52,18 @@ public class FileStorageService {
         
         String typeUploadPath = "";
 
-        switch(fileType){
-            case "image" -> typeUploadPath = imagesUploadPath;
-            case "video" -> typeUploadPath = videosUploadPath;
-            case "audio" -> typeUploadPath = audiosUploadPath;
-            case "document" -> typeUploadPath = documentsUploadPath;
-            default -> log.warn("Unsupported file type");
+        if (fileType.contains("image")) {
+            typeUploadPath = imagesUploadPath;
+        } else if (fileType.contains("video")) {
+            typeUploadPath = videosUploadPath;
+        } else if (fileType.contains("audio")) {
+            typeUploadPath = audiosUploadPath;
+        } else if (fileType.contains("document")) {
+            typeUploadPath = documentsUploadPath;
+        } else {
+            log.warn("Unsupported file type");
         }
+        
         
         final String finalUploadPath = typeUploadPath + File.separator + fileUploadSubPath;
         File targetFolder = new File(finalUploadPath);

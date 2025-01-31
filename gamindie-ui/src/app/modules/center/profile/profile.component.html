@@ -70,23 +70,9 @@
   </div>
 
   <!-- Posts or Saved Content -->
-  <div *ngIf="activeTab === 'posts'" class="grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
-    <div *ngFor="let post of posts" class="p-2 rounded-md dark:bg-primary_5-dark shadow-md">
-      <ng-container *ngIf="hasAttachments(post); else textPost">
-        <img
-          [src]="getPostAttachmentURLs(post)[0]"
-          alt="Post Image"
-          class="w-full h-full object-cover cursor-pointer rounded-md"
-          (click)="navigateToPostDetails(post.id)"
-        />
-      </ng-container>
-  
-      <!-- Text-only Post -->
-      <ng-template #textPost>
-        <div class="p-4 dark:text-primaryText-dark cursor-pointer" (click)="navigateToPostDetails(post.id)">
-          <p class="text-sm">{{ post.content | slice:0:150 }}...</p>
-        </div>
-      </ng-template>
+  <div *ngIf="activeTab === 'posts'" class="grid grid-cols-1 p-4 gap-2">
+    <div *ngFor="let post of posts">
+      <app-post-card [post]="post" [isMyProfile]="true"></app-post-card>
     </div>
   </div>
 

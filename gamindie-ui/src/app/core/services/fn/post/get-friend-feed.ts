@@ -8,14 +8,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Post } from '../../models/post';
+import { PageResponsePostResponse } from '../../models/page-response-post-response';
 
 export interface GetFriendFeed$Params {
+  page?: number;
+  size?: number;
 }
 
-export function getFriendFeed(http: HttpClient, rootUrl: string, params?: GetFriendFeed$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Post>>> {
+export function getFriendFeed(http: HttpClient, rootUrl: string, params?: GetFriendFeed$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
   const rb = new RequestBuilder(rootUrl, getFriendFeed.PATH, 'get');
   if (params) {
+    rb.query('page', params.page, {});
+    rb.query('size', params.size, {});
   }
 
   return http.request(
@@ -23,9 +27,9 @@ export function getFriendFeed(http: HttpClient, rootUrl: string, params?: GetFri
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<Post>>;
+      return r as StrictHttpResponse<PageResponsePostResponse>;
     })
   );
 }
 
-getFriendFeed.PATH = '/users/feed';
+getFriendFeed.PATH = '/posts/feed';

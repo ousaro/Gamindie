@@ -18,7 +18,9 @@ import lombok.Setter;
 public class UserResponse {
 
     private Integer id;
+    private String firstName;
     private String fullName;
+    private String lastName;
     private LocalDate dateOfBirth;
     private String email;
     private String ProfilePicture;

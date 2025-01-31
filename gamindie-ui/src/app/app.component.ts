@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAuthenticated = this.tokenService.token ? true : false;
+    this.darkModeService.setTheme('dark'); // just because we still don't have a white theme
     this.darkModeService.loadTheme();
     this.svg_names.forEach(name => {
       this.iconReg.loadSvg(`Icons/${name}.svg`, name);

@@ -1,4 +1,4 @@
-.PHONY: ui docker java storage
+.PHONY: ui docker java storage api-gen
 
 ui:
 	cd gamindie-ui && npm start
@@ -12,3 +12,5 @@ java:
 storage:
 	cd storage && npm start
 
+api-gen:
+	cd gamindie-ui && npm run api-gen
