@@ -4,4 +4,9 @@
   <div *ngFor="let post of posts" class="w-full">
     <app-post-card [post]="post" [isMyFeed]="true"></app-post-card>
   </div>
+
+  <div *ngIf="isLoading" class="flex justify-center p-4">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-gray-300 border-t-white"></div>
+  </div>
+  
 </div>

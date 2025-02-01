@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ousaro.gamindie.post.Post;
-import com.ousaro.gamindie.post.PostRepository;
-import com.ousaro.gamindie.user.User;
+import com.ousaro.gamindie.commun.PageResponse;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 
 import lombok.RequiredArgsConstructor;
@@ -17,39 +19,59 @@ import lombok.RequiredArgsConstructor;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final CommentMapper commentMapper;
 
     public Integer createComment(CommentRequest request, Authentication connectedUser) {
-        Post post = postRepository.findById(request.getPostId())
-                    .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + request.getPostId()));
+        Comment comment = commentMapper.toComment(request, connectedUser);
 
-        User owner = ((User) connectedUser.getPrincipal());
-
-        Comment parent = null;
-        if (request.getParentId() != null) {
-            parent = commentRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + request.getParentId()));
-        }
-
-        Comment comment = Comment.builder()
-                .content(request.getContent())
-                .owner(owner)
-                .post(post)
-                .parent(parent)
-                .build();
-                
         return commentRepository.save(comment).getId();
     }
 
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+
+
+    public PageResponse<CommentResponse> getTopLevelComments(int postId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdData").descending());
+        Page<Comment> comments = commentRepository.findByParentIsNullAndPostId(postId ,pageable);
+        
+        List<CommentResponse> commentResponses = comments.stream()
+            .map(commentMapper::toCommentResponse)
+            .toList();
+            
+        return new PageResponse<>(
+            commentResponses,
+            comments.getNumber(),
+            comments.getSize(),
+            comments.getTotalElements(),
+            comments.getTotalPages(),
+            comments.isFirst(),
+            comments.isLast()
+        );
     }
 
-    public Comment getCommentById(Integer id) {
-        return commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
+      public PageResponse<CommentResponse> getDirectReplies(Integer commentId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdData").descending());
+        Page<Comment> replies = commentRepository.findByParentId(commentId, pageable);
+        
+        List<CommentResponse> replyResponses = replies.stream()
+            .map(commentMapper::toCommentResponse)
+            .toList();
+            
+        return new PageResponse<>(
+            replyResponses,
+            replies.getNumber(),
+            replies.getSize(),
+            replies.getTotalElements(),
+            replies.getTotalPages(),
+            replies.isFirst(),
+            replies.isLast()
+        );
     }
+
+
+
 
     public void deleteComment(Integer id) {
+        
         commentRepository.deleteById(id);
     }
 }

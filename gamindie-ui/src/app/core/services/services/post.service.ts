@@ -13,6 +13,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { createPost } from '../fn/post/create-post';
 import { CreatePost$Params } from '../fn/post/create-post';
+import { deletePost } from '../fn/post/delete-post';
+import { DeletePost$Params } from '../fn/post/delete-post';
 import { findAllPosts } from '../fn/post/find-all-posts';
 import { FindAllPosts$Params } from '../fn/post/find-all-posts';
 import { findAllPostsByOwner } from '../fn/post/find-all-posts-by-owner';
@@ -102,6 +104,31 @@ export class PostService extends BaseService {
   findPostById(params: FindPostById$Params, context?: HttpContext): Observable<PostResponse> {
     return this.findPostById$Response(params, context).pipe(
       map((r: StrictHttpResponse<PostResponse>): PostResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `deletePost()` */
+  static readonly DeletePostPath = '/posts/{post-id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deletePost()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deletePost$Response(params: DeletePost$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+    return deletePost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deletePost$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deletePost(params: DeletePost$Params, context?: HttpContext): Observable<number> {
+    return this.deletePost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<number>): number => r.body)
     );
   }
 

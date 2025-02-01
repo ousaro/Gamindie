@@ -44,7 +44,7 @@ export class AuthContext {
       this.userSignal.set(response);
     } catch (error) {
       console.error('Failed to load user profile:', error);
-      await this.logout(); // Clean up on error
+      //await this.logout(); // Clean up on error
     } finally {
       this.loadingSignal.set(false);
     }

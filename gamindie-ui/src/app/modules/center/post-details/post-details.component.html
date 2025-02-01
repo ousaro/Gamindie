@@ -44,7 +44,7 @@
         <p class="text-sm text-gray-400">{{ getFormattedDate() }}</p>
       </div>
       <div class="relative">
-        <button
+        <button *ngIf="isOwner()"
           class="transition-all ease-linear hover:scale-95"
           (click)="toggleMenu()"
         >
@@ -155,7 +155,7 @@
   <!-- Comment Section -->
   <div *ngIf="openPostId === post?.id" class="mt-4 p-2">
     <app-comment-section
-      [comments]="post?.comments"
+      [postId]="post?.id"
       (addReply)="handleAddReply($event)"
     ></app-comment-section>
   </div>

@@ -134,6 +134,17 @@ public class PostService {
             end == friendPosts.size()
         );
     }
+
+    public Integer deletePost(Integer postId, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new EntityNotFoundException("No Post found with id " + postId));
+        if (!post.getOwner().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("You can only delete your own posts");
+        }
+        postRepository.delete(post);
+        return postId;
+    }
     
 
     

@@ -8,26 +8,25 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Comment } from '../../models/comment';
 
-export interface GetCommentById$Params {
+export interface DeleteAttachment$Params {
   id: number;
 }
 
-export function getCommentById(http: HttpClient, rootUrl: string, params: GetCommentById$Params, context?: HttpContext): Observable<StrictHttpResponse<Comment>> {
-  const rb = new RequestBuilder(rootUrl, getCommentById.PATH, 'get');
+export function deleteAttachment(http: HttpClient, rootUrl: string, params: DeleteAttachment$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, deleteAttachment.PATH, 'delete');
   if (params) {
     rb.path('id', params.id, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'blob', accept: '*/*', context })
+    rb.build({ responseType: 'text', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Comment>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }
 
-getCommentById.PATH = '/comments/{id}';
+deleteAttachment.PATH = '/attachments/{id}';

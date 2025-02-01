@@ -15,18 +15,19 @@ export async function createPost(postService:PostService, postRequest:PostReques
     }
 }
   
-  
-export async function loadPosts(postService:PostService): Promise<PostResponse[]> {
-    try {
-      const response = await firstValueFrom(
-        postService.findAllPosts({ page: 0, size: 10 })
-      );
-      return response.content || [];
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      return [];
-    }
+export async function loadPosts(postService: PostService, page: number, size: number = 10): Promise<PostResponse[]> {
+  try {
+    const response = await firstValueFrom(
+      postService.findAllPosts({ page, size })
+    );
+    return response.content || [];
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
   }
+}
+
+
 
 export async function loadPostById(postService:PostService, postId:number): Promise<PostResponse> {
     try {
@@ -40,10 +41,10 @@ export async function loadPostById(postService:PostService, postId:number): Prom
     }
 }
 
-export async function loadOwnerPosts(postService:PostService): Promise<PostResponse[]> {
+export async function loadOwnerPosts(postService:PostService,page: number, size: number = 10): Promise<PostResponse[]> {
   try {
     const response = await firstValueFrom(
-      postService.findAllPostsByOwner()
+      postService.findAllPostsByOwner({"page":page,"size":size})
     );
     return response.content || [];
   } catch (error) {
@@ -52,10 +53,10 @@ export async function loadOwnerPosts(postService:PostService): Promise<PostRespo
   }
 }
 
-export async function loadFriendFeed(postService:PostService): Promise<PostResponse[]> {
+export async function loadFriendFeed(postService:PostService,page: number, size: number = 10): Promise<PostResponse[]> {
     try {
       const response = await firstValueFrom(
-        postService.getFriendFeed()
+        postService.getFriendFeed({"page":page,"size":size})
       );
       return response.content || [];
     } catch (error) {
@@ -64,12 +65,12 @@ export async function loadFriendFeed(postService:PostService): Promise<PostRespo
     }
 }
 
-export async function loadOwnerFeed(postService: PostService): Promise<PostResponse[]> {
+export async function loadOwnerFeed(postService: PostService, page: number, size: number = 10): Promise<PostResponse[]> {
   try {
     // Fetch both owner posts and friend feed
     const [ownerPosts, friendFeed] = await Promise.all([
-      loadOwnerPosts(postService),
-      loadFriendFeed(postService)
+      loadOwnerPosts(postService,page,size),
+      loadFriendFeed(postService,page,size)
     ]);
 
     // Merge and remove duplicates based on post ID
@@ -89,4 +90,17 @@ export async function loadOwnerFeed(postService: PostService): Promise<PostRespo
     console.error('Error loading owner feed:', error);
     return [];
   }
+}
+
+
+export async function deletePost(postService:PostService,postId:number): Promise<number> {
+    try {
+      const response = await firstValueFrom(
+        postService.deletePost({ 'post-id':postId })
+      );
+      return response;
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      return -1;
+    }
 }

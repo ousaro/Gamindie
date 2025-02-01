@@ -1,16 +1,16 @@
 <!-- Comment Section -->
-<div *ngFor="let comment of comments" class="mb-6">
+<div *ngFor="let comment of comments; let i = index" class="mb-6">
   <div class="flex items-start gap-4">
-    <ng-container *ngIf="comment.owner?.profilePicture; else defaultIcon">
-      <img [src]="comment.owner?.profilePicture" alt="User Photo" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
+    <ng-container *ngIf="comment.createdBy; else defaultIcon">
+      <img [src]="comment.createdBy" alt="User Photo" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
     </ng-container>
     <ng-template #defaultIcon>
       <svg-icon name="user" [svgClass]="'custom-icon text-gray-400'" class="w-8 h-8 md:w-10 md:h-10"></svg-icon>
     </ng-template>
     <div class="flex-1">
       <div>
-        <span class="font-semibold dark:text-primaryText-dark">{{ comment.owner?.username }}</span>
-        <small class="text-xs text-gray-400 ml-2">{{ comment.createdData | date: 'short' }}</small>
+        <span class="font-semibold dark:text-primaryText-dark">{{ comment.createdBy }}</span>
+        <small class="text-xs text-gray-400 ml-2">{{ getDate(i)}}</small>
       </div>
       <!-- Comment Content -->
       <div class="text-sm leading-relaxed font-sans mt-2 dark:text-primaryText-dark">
@@ -30,10 +30,10 @@
 
   <div class="ml-12 mt-4">
     <div *ngIf="isExpandedReplies">
-      <app-comment-section [comments]="comment.replies" [isReply]="true"></app-comment-section>
+      <app-comment-section [postId]="postId" [commentId]="comment.id" [isReply]="true"></app-comment-section>
     </div>
     <button
-      (click)="toggleReplies(comment)"
+      (click)="toggleReplies()"
       class="text-secondary-dark text-sm font-medium mt-2 hover:underline"
     >
       {{ isExpandedReplies ? 'Hide Replies' : 'See Replies' }}
@@ -47,7 +47,7 @@
 <!-- Comment Input -->
 <div class="flex items-center gap-4 mt-6">
 <ng-container *ngIf="user?.profilePicture; else defaultIcon">
-  <img [src]="user.profilePicture" alt="User Photo" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
+  <img [src]="user?.profilePicture" alt="User Photo" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover" />
 </ng-container>
 <ng-template #defaultIcon>
   <svg-icon name="user" [svgClass]="'custom-icon text-gray-400'" class="w-8 h-8 md:w-10 md:h-10"></svg-icon>

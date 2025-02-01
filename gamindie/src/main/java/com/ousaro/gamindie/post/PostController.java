@@ -2,6 +2,7 @@ package com.ousaro.gamindie.post;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,11 @@ public class PostController {
         Authentication connectedUser
     ) {
         return ResponseEntity.ok(service.getFriendFeed(page, size, connectedUser));
+    }
+
+    @DeleteMapping("{post-id}")
+    public ResponseEntity<Integer> deletePost(@PathVariable("post-id") Integer postId, Authentication connectedUser) {
+        return ResponseEntity.ok(service.deletePost(postId, connectedUser));
     }
 
     

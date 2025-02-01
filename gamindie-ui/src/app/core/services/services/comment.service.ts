@@ -11,20 +11,45 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { Comment } from '../models/comment';
 import { createComment } from '../fn/comment/create-comment';
 import { CreateComment$Params } from '../fn/comment/create-comment';
 import { deleteComment } from '../fn/comment/delete-comment';
 import { DeleteComment$Params } from '../fn/comment/delete-comment';
-import { getAllComments } from '../fn/comment/get-all-comments';
-import { GetAllComments$Params } from '../fn/comment/get-all-comments';
-import { getCommentById } from '../fn/comment/get-comment-by-id';
-import { GetCommentById$Params } from '../fn/comment/get-comment-by-id';
+import { getDirectReplies } from '../fn/comment/get-direct-replies';
+import { GetDirectReplies$Params } from '../fn/comment/get-direct-replies';
+import { getTopLevelComments } from '../fn/comment/get-top-level-comments';
+import { GetTopLevelComments$Params } from '../fn/comment/get-top-level-comments';
+import { PageResponseCommentResponse } from '../models/page-response-comment-response';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `getTopLevelComments()` */
+  static readonly GetTopLevelCommentsPath = '/comments/';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getTopLevelComments()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTopLevelComments$Response(params: GetTopLevelComments$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseCommentResponse>> {
+    return getTopLevelComments(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getTopLevelComments$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getTopLevelComments(params: GetTopLevelComments$Params, context?: HttpContext): Observable<PageResponseCommentResponse> {
+    return this.getTopLevelComments$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponseCommentResponse>): PageResponseCommentResponse => r.body)
+    );
   }
 
   /** Path part for operation `createComment()` */
@@ -52,53 +77,28 @@ export class CommentService extends BaseService {
     );
   }
 
-  /** Path part for operation `getAllComments()` */
-  static readonly GetAllCommentsPath = '/comments';
+  /** Path part for operation `getDirectReplies()` */
+  static readonly GetDirectRepliesPath = '/comments/{id}/replies';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllComments()` instead.
+   * To access only the response body, use `getDirectReplies()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllComments$Response(params?: GetAllComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Comment>>> {
-    return getAllComments(this.http, this.rootUrl, params, context);
+  getDirectReplies$Response(params: GetDirectReplies$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseCommentResponse>> {
+    return getDirectReplies(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllComments$Response()` instead.
+   * To access the full response (for headers, for example), `getDirectReplies$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllComments(params?: GetAllComments$Params, context?: HttpContext): Observable<Array<Comment>> {
-    return this.getAllComments$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Comment>>): Array<Comment> => r.body)
-    );
-  }
-
-  /** Path part for operation `getCommentById()` */
-  static readonly GetCommentByIdPath = '/comments/{id}';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getCommentById()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getCommentById$Response(params: GetCommentById$Params, context?: HttpContext): Observable<StrictHttpResponse<Comment>> {
-    return getCommentById(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getCommentById$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getCommentById(params: GetCommentById$Params, context?: HttpContext): Observable<Comment> {
-    return this.getCommentById$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Comment>): Comment => r.body)
+  getDirectReplies(params: GetDirectReplies$Params, context?: HttpContext): Observable<PageResponseCommentResponse> {
+    return this.getDirectReplies$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponseCommentResponse>): PageResponseCommentResponse => r.body)
     );
   }
 

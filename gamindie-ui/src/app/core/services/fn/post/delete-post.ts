@@ -8,14 +8,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Comment } from '../../models/comment';
 
-export interface GetAllComments$Params {
+export interface DeletePost$Params {
+  'post-id': number;
 }
 
-export function getAllComments(http: HttpClient, rootUrl: string, params?: GetAllComments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Comment>>> {
-  const rb = new RequestBuilder(rootUrl, getAllComments.PATH, 'get');
+export function deletePost(http: HttpClient, rootUrl: string, params: DeletePost$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  const rb = new RequestBuilder(rootUrl, deletePost.PATH, 'delete');
   if (params) {
+    rb.path('post-id', params['post-id'], {});
   }
 
   return http.request(
@@ -23,9 +24,9 @@ export function getAllComments(http: HttpClient, rootUrl: string, params?: GetAl
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<Comment>>;
+      return (r as HttpResponse<any>).clone({ body: parseFloat(String((r as HttpResponse<any>).body)) }) as StrictHttpResponse<number>;
     })
   );
 }
 
-getAllComments.PATH = '/comments';
+deletePost.PATH = '/posts/{post-id}';

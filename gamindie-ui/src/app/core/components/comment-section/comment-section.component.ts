@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Comment, User } from '../../services/models';
+import { Comment, CommentResponse, User, UserResponse } from '../../services/models';
+import { AuthContext } from '../../../shared/contexts/auth-context';
+import { getDirectReplies, getTopLevelComments } from '../../services/commun_fn/Comment_fn';
+import { CommentService } from '../../services/services';
+import { getFormattedDate } from '../../services/commun_fn/utilities';
 
 @Component({
   selector: 'app-comment-section',
@@ -10,19 +14,20 @@ import { Comment, User } from '../../services/models';
   templateUrl: './comment-section.component.html',
   styleUrl: './comment-section.component.scss'
 })
-export class CommentSectionComponent {
+export class CommentSectionComponent implements OnInit {
+ private authContext = inject(AuthContext);
+    
+  // Track both the user and loading state
+  userSignal = this.authContext.user;
+  isLoading = this.authContext.isLoading;
+ 
+  user: UserResponse | null = null;
+  comments: CommentResponse[] | null= null;
 
-
-  
-  @Input() comments?: Comment[] = [];
+  @Input() postId: number | undefined = undefined;
+  @Input() commentId?: number | undefined = undefined;
   @Input() isReply: boolean = false;
   @Output() addReply = new EventEmitter<{ reply: Comment; parentId: number }>();
-
-  user: User = {
-    id: 1,
-    username: 'johnwill22',
-    profilePicture: './Imgs/postImgs.JPG'
-  }
 
   newCommentContent: string = '';
   replyContent: { [key: number]: string } = {}; // Holds reply content for each comment
@@ -30,42 +35,56 @@ export class CommentSectionComponent {
   maxLengthContent : number= 100;
   isExpandedReplies: boolean = false;
   maxLengthReply : number= 1;
- 
 
-  toggleReplies(comment: Comment) {
-    this.isExpandedReplies = !this.isExpandedReplies;}
-  // Add a new comment
-  addComment() {
-    if (this.newCommentContent.trim()) {
-      this.comments?.unshift({
-        id: Date.now(),
-        owner: {
-          username: 'CurrentUser',
-          profilePicture: this.user.profilePicture,
-        },
-        content: this.newCommentContent,
-        createdData: new Date().toISOString(),
-        replies: [],
-      });
-      this.newCommentContent = '';
+  async ngOnInit(): Promise<void> {
+    await this.loadComments();
+  }
+
+  constructor(
+    private commentService: CommentService
+  ){
+    effect(() => {
+          this.getUserValue();
+          
+    });
+  }
+    
+  getUserValue() {
+    if (this.isLoading()) {
+        return;
+    }
+    this.user = this.userSignal();
+    
+  }
+ 
+  async loadComments() {
+    if(this.postId !== undefined){
+      this.comments = await getTopLevelComments(this.commentService, this.postId, 0);
+    }
+    if(this.commentId !== undefined){
+      this.comments = await getDirectReplies(this.commentService, this.commentId, 0);
     }
   }
 
-  // Add a reply to a specific comment
+  async toggleReplies() {
+   
+    await this.loadComments();
+    this.isExpandedReplies = !this.isExpandedReplies;
+
+  }
+
+  getDate(index:number):string{
+    console.log(this.comments![index].createdData);
+    return getFormattedDate(this.comments![index].createdData);
+  }
+
+
+  addComment() {
+    
+  }
+
   addReplyToComment(commentId: number) {
-    const comment = this.comments?.find((c) => c.id === commentId);
-    if (comment && this.replyContent[commentId]?.trim()) {
-      comment.replies?.push({
-        id: Date.now(),
-        owner: {
-          username: 'CurrentUser',
-          profilePicture: this.user.profilePicture,
-        },
-        content: this.replyContent[commentId],
-        createdData: new Date().toISOString(),
-      });
-      this.replyContent[commentId] = '';
-    }
+    
   }
 
 }

@@ -15,3 +15,11 @@ export async function uploadAttachment(attachmentService: AttachmentService, att
 
     return -1;
 }
+
+export async function deleteAttachment(attachmentService: AttachmentService, attachmentId: number): Promise<void> {
+  try {
+    await firstValueFrom(attachmentService.deleteAttachment({"id":attachmentId}));
+  } catch (error) {
+    console.error('Failed to delete attachment:', error);
+  }
+}

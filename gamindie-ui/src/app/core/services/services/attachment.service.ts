@@ -11,6 +11,11 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { AttachmentResponse } from '../models/attachment-response';
+import { deleteAttachment } from '../fn/attachment/delete-attachment';
+import { DeleteAttachment$Params } from '../fn/attachment/delete-attachment';
+import { getAllAttachments } from '../fn/attachment/get-all-attachments';
+import { GetAllAttachments$Params } from '../fn/attachment/get-all-attachments';
 import { uploadAttachment } from '../fn/attachment/upload-attachment';
 import { UploadAttachment$Params } from '../fn/attachment/upload-attachment';
 import { uploadAttachmentPostman } from '../fn/attachment/upload-attachment-postman';
@@ -47,6 +52,31 @@ export class AttachmentService extends BaseService {
     );
   }
 
+  /** Path part for operation `getAllAttachments()` */
+  static readonly GetAllAttachmentsPath = '/attachments/';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllAttachments()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAttachments$Response(params?: GetAllAttachments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttachmentResponse>>> {
+    return getAllAttachments(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllAttachments$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAttachments(params?: GetAllAttachments$Params, context?: HttpContext): Observable<Array<AttachmentResponse>> {
+    return this.getAllAttachments$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AttachmentResponse>>): Array<AttachmentResponse> => r.body)
+    );
+  }
+
   /** Path part for operation `uploadAttachment()` */
   static readonly UploadAttachmentPath = '/attachments/';
 
@@ -69,6 +99,31 @@ export class AttachmentService extends BaseService {
   uploadAttachment(params: UploadAttachment$Params, context?: HttpContext): Observable<number> {
     return this.uploadAttachment$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
+    );
+  }
+
+  /** Path part for operation `deleteAttachment()` */
+  static readonly DeleteAttachmentPath = '/attachments/{id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deleteAttachment()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteAttachment$Response(params: DeleteAttachment$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteAttachment(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deleteAttachment$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deleteAttachment(params: DeleteAttachment$Params, context?: HttpContext): Observable<void> {
+    return this.deleteAttachment$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

@@ -93,7 +93,7 @@
       <img
         [src]="attachment"
         alt="Post Image"
-        class="w-full object-cover cursor-pointer"
+        class="w-full max-h-[40vh] object-cover cursor-pointer"
         (click)="openModal(attachment)"
       />
     </div>
@@ -176,7 +176,7 @@
 <!-- Comment Section -->
 <div *ngIf="openPostId === post.id" class="mt-4 p-2">
   <app-comment-section
-          [comments]="post.comments"
+          [postId]="post.id"
           (addReply)="handleAddReply($event)"
   ></app-comment-section>
 </div>

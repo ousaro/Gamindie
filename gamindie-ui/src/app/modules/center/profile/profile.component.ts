@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, HostListener, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PostCardComponent } from "../../../core/components/post-card/post-card.component";
@@ -25,11 +25,18 @@ export class ProfileComponent implements OnInit {
   isLoading = this.authContext.isLoading;
  
   user: UserResponse | null = null;
-  posts:PostResponse[] | null= [];
+  posts:PostResponse[] = [];
   postsCount: number = 0;
   followers: number = 0;
   following: number = 0;
   currentUrl: string = '';
+
+
+ // Pagination variables
+  page: number = 0;
+  isLoadingPosts: boolean = false;
+  hasMorePosts: boolean = true;
+
   // Tab state
   activeTab: 'posts' | 'saved' = 'posts';
 
@@ -61,9 +68,31 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  fetchOwnerPosts = async () => {
-      this.posts = await loadOwnerPosts(this.postService)
+  async fetchOwnerPosts() {
+   if (this.isLoadingPosts || !this.hasMorePosts) return;
+   
+       this.isLoadingPosts = true;
+   
+       const newPosts = await loadOwnerPosts(this.postService, this.page);
+   
+       if (newPosts.length > 0) {
+         this.posts = [...this.posts, ...newPosts];
+         this.editUserInfo();
+         this.page++;
+       } else {
+         this.hasMorePosts = false; // No more posts available
+       }
+   
+       this.isLoadingPosts = false;
+  }
+
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+      this.fetchOwnerPosts();
     }
+  }
 
   hasAttachments(post: PostResponse): boolean {
     return !!post.attachments && post.attachments.length > 0;

@@ -74,6 +74,10 @@
     <div *ngFor="let post of posts">
       <app-post-card [post]="post" [isMyProfile]="true"></app-post-card>
     </div>
+
+    <div *ngIf="isLoadingPosts" class="flex justify-center p-4">
+      <div class="animate-spin rounded-full h-10 w-10 border-4 border-gray-300 border-t-white"></div>
+    </div>
   </div>
 
   <div *ngIf="activeTab === 'saved'" class="p-4">

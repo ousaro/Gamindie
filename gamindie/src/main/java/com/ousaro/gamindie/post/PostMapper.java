@@ -38,8 +38,6 @@ public class PostMapper {
             .createdData(post.getCreatedData())
             .lastModifiedDate(post.getLastModifiedDate())
             .tags(post.getTags())
-            .likes(post.getLikes())
-            .comments(post.getComments())
             .build();
     }
 

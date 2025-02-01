@@ -1,12 +1,14 @@
 import { CommonModule,Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Post,Comment, PostRequest, PostResponse } from '../../../core/services/models';
+import { Post,Comment, PostRequest, PostResponse, UserResponse } from '../../../core/services/models';
 import { CommentSectionComponent } from '../../../core/components/comment-section/comment-section.component';
-import { loadPostById } from '../../../core/services/commun_fn/Post_fn';
-import { PostService } from '../../../core/services/services';
+import { deletePost, loadPostById } from '../../../core/services/commun_fn/Post_fn';
+import { AttachmentService, PostService } from '../../../core/services/services';
 import { ActivatedRoute } from '@angular/router';
+import { AuthContext } from '../../../shared/contexts/auth-context';
+import { deleteAttachment } from '../../../core/services/commun_fn/Attachment_fn';
 
 @Component({
   selector: 'app-post-details',
@@ -15,6 +17,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './post-details.component.scss'
 })
 export class PostDetailsComponent implements OnInit {
+
+  private authContext = inject(AuthContext);
+      
+  // Track both the user and loading state
+  userSignal = this.authContext.user;
+  isLoading = this.authContext.isLoading;
 
 
   
@@ -25,6 +33,7 @@ export class PostDetailsComponent implements OnInit {
     isMenuOpen: boolean = false;
     openPostId: number | null = null;
     attachmentsURL: string[] = [];
+    user:UserResponse | null = null;
     post:PostResponse | null = {} ;;
 
 
@@ -40,9 +49,23 @@ export class PostDetailsComponent implements OnInit {
   constructor(
     private location: Location,
     private postService: PostService,
+    private attachmentService: AttachmentService,
     private route: ActivatedRoute) {
+
+      effect(() => {
+        this.getUserValue();
+      });
    
   }
+
+  
+    getUserValue() {
+      if (this.isLoading()) {
+        return;
+      }
+      this.user = this.userSignal();
+  
+    }
 
 
   fetchPostById = async (postId:number) => {
@@ -97,6 +120,11 @@ export class PostDetailsComponent implements OnInit {
       console.log($event);
     }
 
+
+    isOwner(): boolean {
+      return this.user?.id === this.post?.ownerId;
+    }
+
   toggleExpanded() {
     this.isExpanded = !this.isExpanded;
     }
@@ -123,10 +151,33 @@ export class PostDetailsComponent implements OnInit {
     // Call your API to save the updated post
   }
 
-  deletePost() {
-    console.log('Post deleted:', this.post);
-    this.toggleMenu();
+  async deletePost() {
+    if (!this.post || !this.post.id) return;
+  
+    try {
+      // Delete attachments in parallel if they exist
+      if (this.post.attachments && this.post.attachments.length > 0) {
+        await Promise.all(
+          this.post.attachments
+            .filter(attachment => attachment.id !== undefined) // Exclude undefined IDs
+            .map(attachment => deleteAttachment(this.attachmentService, attachment.id as number))
+        );
+      }
+      
+  
+      // Delete the post itself
+      await deletePost(this.postService, this.post.id);
+  
+      // Navigate back and close the menu
+      this.goBack();
+      this.toggleMenu();
+      
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      // Optionally, show an error message to the user
+    }
   }
+  
 
 
   toggleLike(postId: number|undefined) {

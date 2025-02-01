@@ -101,6 +101,16 @@ public class FileStorageService {
 
         return fileName.substring(lastDotIndex + 1).toLowerCase();
 
+    }
+
+
+    public void deleteFile(String url) {
+        try {
+            Files.deleteIfExists(Paths.get(url));
+            log.info("File deleted from " + url);
+        } catch (IOException e) {
+            log.error("File was not deleted", e);
+        }
     }       
 
         
