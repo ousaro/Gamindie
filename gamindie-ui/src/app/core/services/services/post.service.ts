@@ -11,6 +11,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { countPostsByOwner } from '../fn/post/count-posts-by-owner';
+import { CountPostsByOwner$Params } from '../fn/post/count-posts-by-owner';
 import { createPost } from '../fn/post/create-post';
 import { CreatePost$Params } from '../fn/post/create-post';
 import { deletePost } from '../fn/post/delete-post';
@@ -128,6 +130,31 @@ export class PostService extends BaseService {
    */
   deletePost(params: DeletePost$Params, context?: HttpContext): Observable<number> {
     return this.deletePost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<number>): number => r.body)
+    );
+  }
+
+  /** Path part for operation `countPostsByOwner()` */
+  static readonly CountPostsByOwnerPath = '/posts/{owner-id}/count';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `countPostsByOwner()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countPostsByOwner$Response(params: CountPostsByOwner$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+    return countPostsByOwner(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `countPostsByOwner$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countPostsByOwner(params: CountPostsByOwner$Params, context?: HttpContext): Observable<number> {
+    return this.countPostsByOwner$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
     );
   }

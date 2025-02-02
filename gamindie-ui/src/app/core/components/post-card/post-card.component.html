@@ -13,13 +13,13 @@
           class="w-12 h-12 rounded-full dark:bg-primary_5-dark flex items-center justify-center"
         >
           <ng-container *ngIf="post.ownerProfilePicture; else defaultIcon">
-              <img [src]="post.ownerProfilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
+              <img [src]="getProfileUrl(post.ownerProfilePicture)" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
           </ng-container>
           <ng-template #defaultIcon>
               <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
           </ng-template>
         </div>
-        <div class="hover:cursor-pointer" (click)="navigateToPostDetails(post.id)">
+        <div class="hover:cursor-pointer" (click)="navigateToProfile(post.ownerId)">
           <span class="text-md sm:text-lg font-semibold">{{ post.ownerFullName }}</span>
           <div class="flex items-center gap-2">
             <svg-icon name="clock" [svgClass]="'clock-icon'"></svg-icon>
@@ -94,29 +94,10 @@
         [src]="attachment"
         alt="Post Image"
         class="w-full max-h-[40vh] object-cover cursor-pointer"
-        (click)="openModal(attachment)"
+        (click)="navigateToPostDetails(post.id)"
       />
     </div>
 
-    <!-- Modal -->
-    <div
-      *ngIf="isModalOpen"
-      class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-    >
-      <div class="relative dark:bg-primary_2-dark rounded-2xl p-4 max-w-4xl w-full">
-        <button
-          (click)="closeModal()"
-          class="absolute top-2 right-2 bg-gray-800 text-white p-2 rounded-full"
-        >
-          ✕
-        </button>
-        <img
-          [src]="selectedImage"
-          alt="Selected Post Image"
-          class="w-full max-h-[90vh] object-contain"
-        />
-      </div>
-    </div>
 
 
  <!-- Actions (Like, Comment, Share) -->
@@ -134,7 +115,7 @@
           name="heart"
           [svgClass]="isLiked ? 'feedback-icon feedback-icon-hover' : 'feedback-icon hover:feedback-icon-hover'"
         ></svg-icon>
-        <span class="inline-block">{{ post.likes?.length }}</span>
+        <span class="inline-block">{{ likesCount }}</span>
       </button>
     </div>
 
@@ -149,7 +130,7 @@
           name="comment"
           [svgClass]="isCommentSectionOpen ? 'comment-icon comment-icon-hover' : 'comment-icon hover:comment-icon-hove'"
         ></svg-icon>
-        <span class="inline-block">{{post.comments?.length}}</span>
+        <span class="inline-block">{{commentsCount}}</span>
       </button>
     </div>
 
@@ -177,6 +158,5 @@
 <div *ngIf="openPostId === post.id" class="mt-4 p-2">
   <app-comment-section
           [postId]="post.id"
-          (addReply)="handleAddReply($event)"
   ></app-comment-section>
 </div>

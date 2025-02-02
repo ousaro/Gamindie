@@ -6,6 +6,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { UserService } from './services/user.service';
 import { PostService } from './services/post.service';
 import { MessageService } from './services/message.service';
 import { LikeService } from './services/like.service';
@@ -14,7 +15,6 @@ import { CommentService } from './services/comment.service';
 import { ChatRoomService } from './services/chat-room.service';
 import { AuthenticationService } from './services/authentication.service';
 import { AttachmentService } from './services/attachment.service';
-import { UserService } from './services/user.service';
 
 /**
  * Module that provides all services and configuration.
@@ -24,6 +24,7 @@ import { UserService } from './services/user.service';
   exports: [],
   declarations: [],
   providers: [
+    UserService,
     PostService,
     MessageService,
     LikeService,
@@ -32,7 +33,6 @@ import { UserService } from './services/user.service';
     ChatRoomService,
     AuthenticationService,
     AttachmentService,
-    UserService,
     ApiConfiguration
   ],
 })

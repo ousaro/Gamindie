@@ -86,6 +86,17 @@ export class ProfileComponent implements OnInit {
        this.isLoadingPosts = false;
   }
 
+  getProfileUrl(profilePicture:String|undefined): string {
+    const baseURL = "http://localhost:3000/";
+
+    // Remove leading './' or extra slashes
+    const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
+    console.log(baseURL + cleanPath);
+    return  baseURL + cleanPath;
+    
+
+  }
+
 
   @HostListener('window:scroll', ['$event'])
   onScroll() {

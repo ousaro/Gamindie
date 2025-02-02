@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 
+    // Count all post id comments
+    Long countByPostId(Integer postId);
     // Get replies for a specific comment
     Page<Comment> findByParentId(Integer id, Pageable pageable);
         

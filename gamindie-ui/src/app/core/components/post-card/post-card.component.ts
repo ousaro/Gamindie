@@ -5,8 +5,12 @@ import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
-import { Comment, Post, PostResponse } from '../../services/models';
+import { Comment, LikeRequest, Post, PostResponse } from '../../services/models';
 import { CommentSectionComponent } from "../comment-section/comment-section.component";
+import { getFormattedDate } from '../../services/commun_fn/utilities';
+import { getPostCommentsCount } from '../../services/commun_fn/Comment_fn';
+import { CommentService, LikeService } from '../../services/services';
+import { getLikesCount, isOwnerLiked, toggleLike } from '../../services/commun_fn/Likes_fn';
 
 
 @Component({
@@ -26,55 +30,37 @@ export class PostCardComponent implements OnInit {
   isMenuOpen: boolean = false;
   currentUrl: string = '';
   openPostId: number | null = null;
-  isModalOpen:boolean = false;
-  selectedImage: string | null = null;
   isCommentSectionOpen:boolean = false;
   isLiked :boolean = false;
   maxLength:number = 100; // Maximum length of text before truncating
   isExpanded:boolean = false; // State to track whether content is expanded
   attachmentsURL: string[] = [];
-
+  commentsCount: number = 0;
+  likesCount: number = 0;
   
  
 
   constructor( 
     private routeTrackerService: RouteTrackerService,
-    private router: Router
+    private router: Router,
+    private commentService: CommentService,
+    private likeService: LikeService
   ){}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.routeTrackerService.currentUrl$.subscribe((url) => {
     this.currentUrl = url;
     });
     
     this.getAttachmentURLs();
+    await this.getCommentsCount();
+    await this.getLikesCount();
+    await this.isOwnerLiked();
       
   }
 
   getFormattedDate(): string {
-      const date = new Date(this.post.createdData ?? '');
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-
-      const seconds = Math.floor(diffMs / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-      const weeks = Math.floor(days / 7);
-      const months = Math.floor(days / 30);
-      const years = Math.floor(days / 365);
-
-      if (seconds < 60) return `${seconds} seconds ago`;
-      if (minutes < 60) return `${minutes} minutes ago`;
-      if (hours < 24) return `${hours} hours ago`;
-      if (days < 7) return `${days} days ago`;
-      if (weeks < 4) return `${weeks} weeks ago`;
-      if (months < 12) return `${months} months ago`;
-      return date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-      }); // Example: "January 29, 2025"
+      return getFormattedDate(this.post.createdData);
   }
 
   getAttachmentURLs(): void {
@@ -92,33 +78,55 @@ export class PostCardComponent implements OnInit {
       .filter((url): url is string => url !== undefined) || [];
 
     }
+
+    getProfileUrl(profilePicture:String|undefined): string {
+      const baseURL = "http://localhost:3000/";
   
-
-  openModal(imageUrl: string|undefined): void {
-    if(imageUrl === undefined) return;
-    this.selectedImage = imageUrl;
-    this.isModalOpen = true;
+      // Remove leading './' or extra slashes
+      const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
+      console.log(baseURL + cleanPath);
+      return  baseURL + cleanPath;
+      
+  
+    }
+  
+  async getCommentsCount(): Promise<void> {
+    if (this.post.id !== undefined){
+     this.commentsCount = await getPostCommentsCount(this.commentService, this.post.id);
+    }
   }
 
-  closeModal(): void {
-    this.isModalOpen = false;
-    this.selectedImage = null;
+  async getLikesCount(): Promise<void> {
+    if (this.post.id !== undefined){
+      this.likesCount = await getLikesCount(this.likeService, this.post.id);
+    }
   }
+
+  async isOwnerLiked(): Promise<void> {
+    if (this.post.id !== undefined){
+      this.isLiked = await isOwnerLiked(this.likeService, this.post.id);
+    }
+  }
+
 
   toggleExpanded(): void {
     this.isExpanded = !this.isExpanded;
   }
 
 
-  toggleCommentSection(postId: number|undefined): void {
+  async toggleCommentSection(postId: number|undefined): Promise<void> {
+    await this.getCommentsCount();
     if(postId === undefined) return;
     this.openPostId = this.openPostId === postId ? null : postId;
     this.isCommentSectionOpen = !this.isCommentSectionOpen;
   }
 
-  toggleLike(postId: number|undefined) {
-    this.isLiked = !this.isLiked;
-    console.log("like");
+  async toggleLike(postId: number|undefined) {
+    if(postId === undefined) return;
+    const request:LikeRequest = {"postId": postId};
+    await toggleLike(this.likeService,request);
+    await this.getLikesCount();
+    await this.isOwnerLiked();
   }
 
   sharePost(postId: number|undefined) {
@@ -138,7 +146,8 @@ export class PostCardComponent implements OnInit {
     centerNavigateTo(path,this.currentUrl,this.router);
   }
 
-  handleAddReply($event: { reply: Comment; parentId: number; }) {
-    console.log($event);
+  navigateToProfile(userId: number | undefined): void {
+    const path:string = `profile`;
+    centerNavigateTo(path,this.currentUrl,this.router);
   }
 }

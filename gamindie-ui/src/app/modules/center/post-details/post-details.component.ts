@@ -2,13 +2,18 @@ import { CommonModule,Location } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Post,Comment, PostRequest, PostResponse, UserResponse } from '../../../core/services/models';
+import { Post,Comment, PostRequest, PostResponse, UserResponse, LikeRequest } from '../../../core/services/models';
 import { CommentSectionComponent } from '../../../core/components/comment-section/comment-section.component';
 import { deletePost, loadPostById } from '../../../core/services/commun_fn/Post_fn';
-import { AttachmentService, PostService } from '../../../core/services/services';
-import { ActivatedRoute } from '@angular/router';
+import { AttachmentService, CommentService, LikeService, PostService } from '../../../core/services/services';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthContext } from '../../../shared/contexts/auth-context';
 import { deleteAttachment } from '../../../core/services/commun_fn/Attachment_fn';
+import { getFormattedDate } from '../../../core/services/commun_fn/utilities';
+import { getPostCommentsCount } from '../../../core/services/commun_fn/Comment_fn';
+import { getLikesCount, isOwnerLiked, toggleLike } from '../../../core/services/commun_fn/Likes_fn';
+import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
+import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 
 @Component({
   selector: 'app-post-details',
@@ -25,7 +30,7 @@ export class PostDetailsComponent implements OnInit {
   isLoading = this.authContext.isLoading;
 
 
-  
+    currentUrl: string = '';
     isExpanded: boolean = false;
     maxLength: number = 100;
     isEditing: boolean = false; 
@@ -34,15 +39,23 @@ export class PostDetailsComponent implements OnInit {
     openPostId: number | null = null;
     attachmentsURL: string[] = [];
     user:UserResponse | null = null;
-    post:PostResponse | null = {} ;;
+    post:PostResponse | null = {} ;
+    commentsCount: number = 0;
+    likesCount: number = 0;
 
 
   async ngOnInit(): Promise<void> {
+    this.routeTrackerService.currentUrl$.subscribe((url) => {
+      this.currentUrl = url;
+    });
     const postId = this.route.snapshot.paramMap.get('id'); // 'id' should match the route parameter
     if (postId) {
       await this.fetchPostById(+postId); // Convert to number and fetch post
       this.openPostId = this.post?.id !== undefined ? this.post.id : null;
       this.getAttachmentURLs();
+      await this.getCommentsCount();
+      await this.getLikesCount();
+      await this.isOwnerLiked();
     }
   }
 
@@ -50,7 +63,11 @@ export class PostDetailsComponent implements OnInit {
     private location: Location,
     private postService: PostService,
     private attachmentService: AttachmentService,
-    private route: ActivatedRoute) {
+    private commentService: CommentService,
+    private likeService: LikeService,
+    private route: ActivatedRoute,
+    private routeTrackerService: RouteTrackerService,
+    private router: Router,) {
 
       effect(() => {
         this.getUserValue();
@@ -73,29 +90,7 @@ export class PostDetailsComponent implements OnInit {
   }
 
   getFormattedDate(): string {
-    const date = new Date(this.post?.createdData ?? '');
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-
-    const seconds = Math.floor(diffMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(days / 365);
-
-    if (seconds < 60) return `${seconds} seconds ago`;
-    if (minutes < 60) return `${minutes} minutes ago`;
-    if (hours < 24) return `${hours} hours ago`;
-    if (days < 7) return `${days} days ago`;
-    if (weeks < 4) return `${weeks} weeks ago`;
-    if (months < 12) return `${months} months ago`;
-    return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    }); // Example: "January 29, 2025"
+    return getFormattedDate(this.post?.createdData);
   }
 
   getAttachmentURLs(): void {
@@ -115,11 +110,35 @@ export class PostDetailsComponent implements OnInit {
 
     }
 
-
-   handleAddReply($event: { reply: Comment; parentId: number; }) {
-      console.log($event);
+    getProfileUrl(profilePicture:String|undefined): string {
+      const baseURL = "http://localhost:3000/";
+  
+      // Remove leading './' or extra slashes
+      const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
+      console.log(baseURL + cleanPath);
+      return  baseURL + cleanPath;
+      
+  
     }
 
+     async getCommentsCount(): Promise<void> {
+        if (this.post?.id !== undefined){
+         this.commentsCount = await getPostCommentsCount(this.commentService, this.post.id);
+        }
+      }
+
+      async getLikesCount(): Promise<void> {
+          if (this.post?.id !== undefined){
+            this.likesCount = await getLikesCount(this.likeService, this.post.id);
+          }
+        }
+
+        async isOwnerLiked(): Promise<void> {
+          if (this.post?.id !== undefined){
+            this.isLiked = await isOwnerLiked(this.likeService, this.post.id);
+          }
+        }
+      
 
     isOwner(): boolean {
       return this.user?.id === this.post?.ownerId;
@@ -180,12 +199,22 @@ export class PostDetailsComponent implements OnInit {
   
 
 
-  toggleLike(postId: number|undefined) {
-    this.isLiked = !this.isLiked;
-    console.log("like");
+  async toggleLike(postId: number|undefined) {
+    if(postId === undefined) return;
+    const request:LikeRequest = {"postId": postId};
+    await toggleLike(this.likeService,request);
+    await this.getLikesCount();
+    await this.isOwnerLiked();
   }
 
   sharePost(postId: number|undefined) {
     console.log("share");
   }
+
+  navigateToProfile(userId: number | undefined): void {
+      const path:string = `profile`;
+      centerNavigateTo(path,this.currentUrl,this.router);
+  }
+
+
 }

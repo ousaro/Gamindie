@@ -10,4 +10,6 @@ import com.ousaro.gamindie.user.User;
 public interface  PostRepository extends JpaRepository<Post, Integer> , JpaSpecificationExecutor<Post> {
         
         List<Post> findByOwner(User owner); // Fetch posts by a specific user
+
+        Long countByOwnerId(Integer ownerId); // Count posts by a specific user
 }

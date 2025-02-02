@@ -31,6 +31,57 @@
     }
   ],
   "paths": {
+    "/users/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "updateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/posts/": {
       "get": {
         "tags": [
@@ -637,29 +688,6 @@
         }
       }
     },
-    "/users/": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "operationId": "getAllUsers",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/posts/{post-id}": {
       "get": {
         "tags": [
@@ -714,6 +742,38 @@
                 "schema": {
                   "type": "integer",
                   "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{owner-id}/count": {
+      "get": {
+        "tags": [
+          "Post"
+        ],
+        "operationId": "countPostsByOwner",
+        "parameters": [
+          {
+            "name": "owner-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -798,6 +858,69 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponsePostResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/likes/owner/{postId}": {
+      "get": {
+        "tags": [
+          "Like"
+        ],
+        "operationId": "getOwnerLike",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/likes/count/{postId}": {
+      "get": {
+        "tags": [
+          "Like"
+        ],
+        "operationId": "countLikes",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -918,6 +1041,38 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseCommentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/count/{postId}": {
+      "get": {
+        "tags": [
+          "Comment"
+        ],
+        "operationId": "countComments",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1100,6 +1255,84 @@
   },
   "components": {
     "schemas": {
+      "UserRequest": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "profilePrictureId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "email": {
+            "type": "string"
+          },
+          "accountLocked": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "socialLinks": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "savedPosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "profilePicture": {
+            "type": "string"
+          }
+        }
+      },
       "PostRequest": {
         "required": [
           "Content"
@@ -1267,56 +1500,6 @@
           }
         }
       },
-      "UserResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "fullName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "email": {
-            "type": "string"
-          },
-          "accountLocked": {
-            "type": "boolean"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "socialLinks": {
-            "type": "string"
-          },
-          "bio": {
-            "type": "string"
-          },
-          "savedPosts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "profilePicture": {
-            "type": "string"
-          }
-        }
-      },
       "AttachmentResponse": {
         "type": "object",
         "properties": {
@@ -1450,6 +1633,9 @@
           },
           "message": {
             "$ref": "#/components/schemas/Message"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/User"
           }
         }
       },
@@ -1790,6 +1976,9 @@
               "type": "string"
             }
           },
+          "attachment": {
+            "$ref": "#/components/schemas/Attachment"
+          },
           "roles": {
             "type": "array",
             "items": {
@@ -1861,10 +2050,10 @@
           "credentialsNonExpired": {
             "type": "boolean"
           },
-          "username": {
+          "profilePicture": {
             "type": "string"
           },
-          "profilePicture": {
+          "username": {
             "type": "string"
           },
           "authorities": {
@@ -1892,6 +2081,12 @@
           "createdBy": {
             "type": "integer",
             "format": "int32"
+          },
+          "createdByUsername": {
+            "type": "string"
+          },
+          "createdByAvatar": {
+            "type": "string"
           },
           "parentId": {
             "type": "integer",

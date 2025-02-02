@@ -31,15 +31,16 @@
     <div class="flex items-center mb-4">
       <div
         class="w-12 h-12 rounded-full flex items-center justify-center dark:bg-primary_5-dark"
+        (click)="navigateToProfile(user?.id)"
       >
         <ng-container *ngIf="post?.ownerProfilePicture; else defaultIcon">
-          <img [src]="post?.ownerProfilePicture" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
+          <img [src]="getProfileUrl(post?.ownerProfilePicture)" alt="User Photo" class="w-12 h-12 rounded-full bg-cover" />
         </ng-container>
         <ng-template #defaultIcon>
           <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
         </ng-template>
       </div>
-      <div class="ml-3 text-white">
+      <div class="ml-3 text-white" (click)="navigateToProfile(post?.ownerId)">
         <p class="text-lg font-bold">{{ post?.ownerFullName }}</p>
         <p class="text-sm text-gray-400">{{ getFormattedDate() }}</p>
       </div>
@@ -120,7 +121,7 @@
                 : 'feedback-icon hover:feedback-icon-hover'
             "
           ></svg-icon>
-          <span class="inline-block">{{ post?.likes?.length }}</span>
+          <span class="inline-block">{{ likesCount }}</span>
         </button>
       </div>
 
@@ -133,7 +134,7 @@
             name="comment"
             [svgClass]="'comment-icon comment-icon-hover'"
           ></svg-icon>
-          <span class="inline-block">{{ post?.comments?.length }}</span>
+          <span class="inline-block">{{ commentsCount }}</span>
         </button>
       </div>
 
@@ -156,7 +157,6 @@
   <div *ngIf="openPostId === post?.id" class="mt-4 p-2">
     <app-comment-section
       [postId]="post?.id"
-      (addReply)="handleAddReply($event)"
     ></app-comment-section>
   </div>
 </div>

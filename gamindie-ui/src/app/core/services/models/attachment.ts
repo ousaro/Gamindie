@@ -4,6 +4,7 @@
 
 import { Message } from '../models/message';
 import { Post } from '../models/post';
+import { User } from '../models/user';
 export interface Attachment {
   createdBy?: number;
   createdData?: string;
@@ -13,6 +14,7 @@ export interface Attachment {
   message?: Message;
   metadata?: string;
   name?: string;
+  owner?: User;
   post?: Post;
   type?: string;
   url?: string;

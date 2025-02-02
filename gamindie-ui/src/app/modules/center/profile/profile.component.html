@@ -4,7 +4,7 @@
     <!-- Avatar -->
     <div class="w-28 h-28 rounded-full overflow-hidden flex items-center justify-center dark:bg-primary_5-dark">
       <ng-container *ngIf="user?.profilePicture; else defaultIcon">
-        <img [src]="user?.profilePicture" alt="User Photo" class="w-full h-full object-cover" />
+        <img [src]="getProfileUrl(user?.profilePicture)" alt="User Photo" class="w-full h-full object-cover" />
       </ng-container>
       <ng-template #defaultIcon>
         <svg-icon name="user" [svgClass]="'custom-icon'"></svg-icon>

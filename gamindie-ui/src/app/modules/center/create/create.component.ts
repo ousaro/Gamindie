@@ -102,4 +102,15 @@ export class CreateComponent {
     return false;
 
   }
+
+  getProfileUrl(): string {
+    const baseURL = "http://localhost:3000/";
+
+    // Remove leading './' or extra slashes
+    const cleanPath = this.user?.profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
+    console.log(baseURL + cleanPath);
+    return  baseURL + cleanPath;
+    
+
+  }
 }

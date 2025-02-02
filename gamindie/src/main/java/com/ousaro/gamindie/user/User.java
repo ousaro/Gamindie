@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ousaro.gamindie.attachment.Attachment;
 import com.ousaro.gamindie.chat.ChatRoom;
 import com.ousaro.gamindie.chat.Message;
 import com.ousaro.gamindie.feedback.Comment;
@@ -33,11 +34,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import jakarta.persistence.OneToOne;
 
 @Getter
 @Setter
@@ -67,6 +71,10 @@ public class User implements UserDetails, Principal {
     private String socialLinks;
     private String bio;
     private List<String> savedPosts;
+
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Attachment attachment;
 
     @ManyToMany(fetch = FetchType.EAGER) // fetch = FetchType.EAGER is used to load the roles of the user when the user is loaded.
     private List<Role> roles;
@@ -105,6 +113,8 @@ public class User implements UserDetails, Principal {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Message> messages;
+
+
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

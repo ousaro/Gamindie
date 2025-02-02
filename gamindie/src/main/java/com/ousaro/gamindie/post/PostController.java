@@ -52,6 +52,11 @@ public class PostController {
         return ResponseEntity.ok(service.findAllPostsByOwner(page,size, connectedUser));
     }
 
+    @GetMapping("{owner-id}/count")
+    public ResponseEntity<Long> countPostsByOwner(@PathVariable("owner-id") Integer ownerId) {
+        return ResponseEntity.ok(service.countPostsByOwner(ownerId));
+    }
+
     @GetMapping("feed")
     public ResponseEntity<PageResponse<PostResponse>> getFriendFeed(
         @RequestParam(name="page", defaultValue="0") int page,

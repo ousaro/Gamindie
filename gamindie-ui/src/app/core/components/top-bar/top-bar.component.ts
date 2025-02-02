@@ -105,6 +105,17 @@ export class TopBarComponent implements OnInit {
    
   }
 
+  getProfileUrl(profilePicture:String|undefined): string {
+    const baseURL = "http://localhost:3000/";
+
+    // Remove leading './' or extra slashes
+    const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
+    console.log(baseURL + cleanPath);
+    return  baseURL + cleanPath;
+    
+
+  }
+
   isActive(section: string): boolean {
     return this.currentUrl.includes(section);
   }

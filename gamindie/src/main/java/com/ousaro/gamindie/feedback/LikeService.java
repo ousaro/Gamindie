@@ -51,4 +51,15 @@ public class LikeService {
        
         
     }
+
+    public Long countLikes(Integer postId) {
+        return likeRepository.countByPostId(postId);
+    }
+
+    public Boolean getOwnerLike(Integer postId, Authentication connectedUser) {
+        User owner = ((User) connectedUser.getPrincipal());
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
+        return likeRepository.existsByOwnerAndPost(owner, post);
+    }
 }

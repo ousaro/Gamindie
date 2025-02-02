@@ -146,6 +146,9 @@ public class PostService {
         return postId;
     }
     
+    public Long countPostsByOwner(Integer ownerId) {
+        return postRepository.countByOwnerId(ownerId);
+    }
 
     
 }

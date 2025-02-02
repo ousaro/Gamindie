@@ -74,4 +74,10 @@ public class CommentService {
         
         commentRepository.deleteById(id);
     }
+
+
+
+    public Long countComments(Integer postId) {
+        return commentRepository.countByPostId(postId);
+    }
 }

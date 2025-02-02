@@ -11,8 +11,12 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { countLikes } from '../fn/like/count-likes';
+import { CountLikes$Params } from '../fn/like/count-likes';
 import { createLike } from '../fn/like/create-like';
 import { CreateLike$Params } from '../fn/like/create-like';
+import { getOwnerLike } from '../fn/like/get-owner-like';
+import { GetOwnerLike$Params } from '../fn/like/get-owner-like';
 
 @Injectable({ providedIn: 'root' })
 export class LikeService extends BaseService {
@@ -41,6 +45,56 @@ export class LikeService extends BaseService {
    */
   createLike(params: CreateLike$Params, context?: HttpContext): Observable<number> {
     return this.createLike$Response(params, context).pipe(
+      map((r: StrictHttpResponse<number>): number => r.body)
+    );
+  }
+
+  /** Path part for operation `getOwnerLike()` */
+  static readonly GetOwnerLikePath = '/likes/owner/{postId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getOwnerLike()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOwnerLike$Response(params: GetOwnerLike$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return getOwnerLike(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getOwnerLike$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOwnerLike(params: GetOwnerLike$Params, context?: HttpContext): Observable<boolean> {
+    return this.getOwnerLike$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
+    );
+  }
+
+  /** Path part for operation `countLikes()` */
+  static readonly CountLikesPath = '/likes/count/{postId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `countLikes()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countLikes$Response(params: CountLikes$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+    return countLikes(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `countLikes$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countLikes(params: CountLikes$Params, context?: HttpContext): Observable<number> {
+    return this.countLikes$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
     );
   }

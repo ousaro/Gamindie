@@ -11,6 +11,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { countComments } from '../fn/comment/count-comments';
+import { CountComments$Params } from '../fn/comment/count-comments';
 import { createComment } from '../fn/comment/create-comment';
 import { CreateComment$Params } from '../fn/comment/create-comment';
 import { deleteComment } from '../fn/comment/delete-comment';
@@ -99,6 +101,31 @@ export class CommentService extends BaseService {
   getDirectReplies(params: GetDirectReplies$Params, context?: HttpContext): Observable<PageResponseCommentResponse> {
     return this.getDirectReplies$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponseCommentResponse>): PageResponseCommentResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `countComments()` */
+  static readonly CountCommentsPath = '/comments/count/{postId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `countComments()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countComments$Response(params: CountComments$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+    return countComments(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `countComments$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countComments(params: CountComments$Params, context?: HttpContext): Observable<number> {
+    return this.countComments$Response(params, context).pipe(
+      map((r: StrictHttpResponse<number>): number => r.body)
     );
   }
 

@@ -44,6 +44,8 @@ public class CommentMapper {
             .Content(comment.getContent())
             .postId(comment.getPost().getId())
             .createdBy(comment.getCreatedBy())
+            .createdByUsername(comment.getOwner().fullName())
+            .createdByAvatar(comment.getOwner().getProfilePicture())
             .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
             .createdData(comment.getCreatedData())
             .build();

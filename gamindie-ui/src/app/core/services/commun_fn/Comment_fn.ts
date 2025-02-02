@@ -1,6 +1,17 @@
 import { firstValueFrom } from "rxjs";
-import { CommentResponse } from "../models";
+import { CommentRequest, CommentResponse } from "../models";
 import { CommentService } from "../services";
+
+
+export async function createComment(commentService:CommentService,request:CommentRequest): Promise<void> {
+    try {
+      await firstValueFrom(
+        commentService.createComment({"body":request})
+      );
+    } catch (error) {
+      console.error('Error creating comment:', error);
+    }
+} 
 
 
 export async function getTopLevelComments(commentService:CommentService,postId: number, page:number, size:number=10): Promise<CommentResponse[]> {
@@ -24,5 +35,17 @@ export async function getDirectReplies(commentService:CommentService,commentId: 
     } catch (error) {
       console.error('Error fetching replies:', error);
       return [];
+    }
+}
+
+export async function getPostCommentsCount(commentService:CommentService,postId: number): Promise<number> {
+    try {
+      const response = await firstValueFrom(
+        commentService.countComments({ 'postId':postId })
+      );
+      return response;
+    } catch (error) {
+      console.error('Error fetching comments count:', error);
+      return 0;
     }
 }

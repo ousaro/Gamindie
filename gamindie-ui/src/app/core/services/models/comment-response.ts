@@ -5,6 +5,8 @@
 export interface CommentResponse {
   content?: string;
   createdBy?: number;
+  createdByAvatar?: string;
+  createdByUsername?: string;
   createdData?: string;
   id?: number;
   parentId?: number;

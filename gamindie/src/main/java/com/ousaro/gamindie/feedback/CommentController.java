@@ -47,4 +47,9 @@ public class CommentController {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/count/{postId}")
+    public ResponseEntity<Long> countComments(@PathVariable Integer postId) {
+        return ResponseEntity.ok(commentService.countComments(postId));
+    }
 }

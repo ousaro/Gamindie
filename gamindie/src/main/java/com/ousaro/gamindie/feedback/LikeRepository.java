@@ -11,8 +11,7 @@ import com.ousaro.gamindie.user.User;
 public interface  LikeRepository extends JpaRepository<Likes, Integer> {
 
     boolean existsByOwnerAndPost(User owner, Post post);
-
-    int countByPost(Post post);
+    Long countByPostId(Integer postId);
 
     Optional<Likes> findByOwnerAndPost(User owner, Post post);
 

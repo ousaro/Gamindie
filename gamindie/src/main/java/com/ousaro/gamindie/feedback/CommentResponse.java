@@ -20,6 +20,8 @@ public class CommentResponse {
     private String Content;
     private Integer postId;
     private Integer createdBy;
+    private String createdByUsername;
+    private String createdByAvatar;
     private Integer parentId;
     private LocalDateTime createdData; 
     
