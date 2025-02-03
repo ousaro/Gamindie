@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { centerNavigateTo, navigateTo } from '../../services/commun_fn/Navigation_fn';
 import { TokenService } from '../../services/token/token.service';
 import { AuthContext } from '../../../shared/contexts/auth-context';
+import { UserResponse } from '../../services/models';
 
 @Component({
   selector: 'app-left-bar',
@@ -17,7 +18,12 @@ import { AuthContext } from '../../../shared/contexts/auth-context';
   styleUrl: './left-bar.component.scss',
 })
 export class LeftBarComponent implements OnInit {
-  authContext = inject(AuthContext);
+  private authContext = inject(AuthContext);
+  
+  // Track both the user and loading state
+  userSignal = this.authContext.user;
+  isLoading = this.authContext.isLoading;
+  user: UserResponse | null = null;
 
   isMenuModalOpen: boolean = false;
   isSettingsModalOpen: boolean = false;
@@ -32,7 +38,11 @@ export class LeftBarComponent implements OnInit {
     private router: Router,
     private breakpointObserver: BreakpointObserver,
     private tokenService: TokenService
-  ) {}
+  ) {
+    effect(() => {
+            this.getUserValue();
+    });
+  }
 
   ngOnInit(): void {
     this.routeTrackerService.currentUrl$.subscribe((url) => {
@@ -48,6 +58,14 @@ export class LeftBarComponent implements OnInit {
               this.isSettingsModalOpen = false;
             } 
     });
+  }
+
+  getUserValue() {
+    if (this.isLoading()) {
+      return;
+    }
+    this.user = this.userSignal();
+
   }
 
   isActive(section: string): boolean {
@@ -82,14 +100,15 @@ export class LeftBarComponent implements OnInit {
 
   }
 
-  navigateToSection(section: string): void {
-    centerNavigateTo(section,this.currentUrl,this.router);
+  navigateToSection(section: string, param?:number|undefined): void {
+    const fullSection = section + (param ? `/${param}` : '' );
+    centerNavigateTo(fullSection,this.currentUrl,this.router);
   }
 
-  rightNavigateTo(section: string) {
+  rightNavigateTo(section: string, param?:number|undefined) {
     this.isSettingsModalOpen = false;
     this.toggleMenuModal();
-    this.navigateToSection(section);
+    this.navigateToSection(section, param);
    
   }
 

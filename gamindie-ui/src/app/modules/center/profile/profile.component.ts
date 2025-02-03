@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PostCardComponent } from "../../../core/components/post-card/post-card.component";
 import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Post, PostResponse, User, UserResponse } from '../../../core/services/models';
 import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
 import { AuthContext } from '../../../shared/contexts/auth-context';
 import { loadOwnerPosts } from '../../../core/services/commun_fn/Post_fn';
-import { PostService } from '../../../core/services/services';
+import { PostService, UserService } from '../../../core/services/services';
+import { getUserById } from '../../../core/services/commun_fn/User_fn';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +25,7 @@ export class ProfileComponent implements OnInit {
   userSignal = this.authContext.user;
   isLoading = this.authContext.isLoading;
  
+  authUser: UserResponse | null = null;
   user: UserResponse | null = null;
   posts:PostResponse[] = [];
   postsCount: number = 0;
@@ -45,7 +47,8 @@ export class ProfileComponent implements OnInit {
     this.routeTrackerService.currentUrl$.subscribe((url) => {
       this.currentUrl = url;
     });
-
+    const userId = this.route.snapshot.paramMap.get('id') || this.authUser?.id;
+    await this.fetchUser(Number(userId));
     await this.fetchOwnerPosts();
     this.editUserInfo();
   }
@@ -53,27 +56,32 @@ export class ProfileComponent implements OnInit {
   constructor( 
     private routeTrackerService: RouteTrackerService,
     private router: Router,
-    private postService: PostService
+    private postService: PostService,
+    private route: ActivatedRoute,
+    private userService: UserService
   ){
     effect(() => {
-      this.getUserValue();
+      this.getAuthUserValue();
     });
   }
 
-  getUserValue() {
+  getAuthUserValue() {
     if (this.isLoading()) {
       return;
     }
-    this.user = this.userSignal();
+    this.authUser = this.userSignal();
 
   }
 
+  async fetchUser(userId: number) {
+    this.user = await getUserById(this.userService, userId);
+  }
   async fetchOwnerPosts() {
-   if (this.isLoadingPosts || !this.hasMorePosts) return;
+   if (this.isLoadingPosts || !this.hasMorePosts || this.user?.id === undefined) return;
    
        this.isLoadingPosts = true;
    
-       const newPosts = await loadOwnerPosts(this.postService, this.page);
+       const newPosts = await loadOwnerPosts(this.postService,this.user?.id, this.page);
    
        if (newPosts.length > 0) {
          this.posts = [...this.posts, ...newPosts];
@@ -151,6 +159,10 @@ export class ProfileComponent implements OnInit {
 
   editProfile(){
     centerNavigateTo('edit-profile',this.currentUrl,this.router);
+  }
+
+  isMyProfile(): boolean {
+    return this.authUser?.id === this.user?.id;
   }
 
 }

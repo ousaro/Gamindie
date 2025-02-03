@@ -34,7 +34,7 @@
     </div>
 
     <!-- Edit Profile Button -->
-    <div class="mt-4">
+    <div class="mt-4" *ngIf="isMyProfile()">
       <button
         class="px-6 py-2 text-sm dark:bg-secondary-dark dark:text-black rounded-lg
         hover:scale-105 transition"

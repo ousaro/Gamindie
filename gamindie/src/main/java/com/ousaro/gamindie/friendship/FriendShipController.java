@@ -1,6 +1,5 @@
 package com.ousaro.gamindie.friendship;
 
-import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -10,7 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ousaro.gamindie.commun.PageResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,26 +42,23 @@ public class FriendShipController {
         return ResponseEntity.ok(friendShipService.cancelFriendRequest(id));
     }
 
-    // Get all friends of a user
-    @GetMapping("/friends")
-    public ResponseEntity<List<FriendShip>> getFriends(Authentication connectedUser) {
-        List<FriendShip> friends = friendShipService.getFriends(connectedUser);
-        return ResponseEntity.ok(friends);
+    // Get all friends of authenticated user
+    @GetMapping("/friends/{userId}")
+    public ResponseEntity<PageResponse<FriendShipResponse>> getFriends(
+        @PathVariable Integer userId,
+        @RequestParam(name="page", defaultValue="0") int page,
+        @RequestParam(name="size", defaultValue="10") int size) {
+        return ResponseEntity.ok(friendShipService.getFriendships(page, size, userId, FriendShipStatus.ACCEPTED.toString()));
     }
 
 
     // Get pending friend requests for a user
-    @GetMapping("/pending")
-    public ResponseEntity<List<FriendShip>> getPendingRequests(Authentication connectedUser) {
-        List<FriendShip> pendingRequests = friendShipService.getPendingRequests(connectedUser);
-        return ResponseEntity.ok(pendingRequests);
-    }
-
-     // Get pending friend requests for a user
-     @GetMapping("/accepted")
-    public ResponseEntity<List<FriendShip>> getAcceptedRequests(Authentication connectedUser) {
-        List<FriendShip> acceptedRequests = friendShipService.getAcceptedRequests(connectedUser);
-        return ResponseEntity.ok(acceptedRequests);
+    @GetMapping("/pending/{userId}")
+    public ResponseEntity<PageResponse<FriendShipResponse>> getgetPendingRequestsFriends(
+        @PathVariable Integer userId,
+        @RequestParam(name="page", defaultValue="0") int page,
+        @RequestParam(name="size", defaultValue="10") int size) {
+        return ResponseEntity.ok(friendShipService.getFriendships(page, size, userId, FriendShipStatus.PENDING.toString()));
     }
 
     // Detete a friend request

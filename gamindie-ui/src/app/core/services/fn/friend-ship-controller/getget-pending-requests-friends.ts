@@ -8,18 +8,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PageResponsePostResponse } from '../../models/page-response-post-response';
+import { PageResponseFriendShipResponse } from '../../models/page-response-friend-ship-response';
 
-export interface FindAllPostsByOwner$Params {
-  'owner-id': number;
+export interface GetgetPendingRequestsFriends$Params {
+  userId: number;
   page?: number;
   size?: number;
 }
 
-export function findAllPostsByOwner(http: HttpClient, rootUrl: string, params: FindAllPostsByOwner$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
-  const rb = new RequestBuilder(rootUrl, findAllPostsByOwner.PATH, 'get');
+export function getgetPendingRequestsFriends(http: HttpClient, rootUrl: string, params: GetgetPendingRequestsFriends$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseFriendShipResponse>> {
+  const rb = new RequestBuilder(rootUrl, getgetPendingRequestsFriends.PATH, 'get');
   if (params) {
-    rb.path('owner-id', params['owner-id'], {});
+    rb.path('userId', params.userId, {});
     rb.query('page', params.page, {});
     rb.query('size', params.size, {});
   }
@@ -29,9 +29,9 @@ export function findAllPostsByOwner(http: HttpClient, rootUrl: string, params: F
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PageResponsePostResponse>;
+      return r as StrictHttpResponse<PageResponseFriendShipResponse>;
     })
   );
 }
 
-findAllPostsByOwner.PATH = '/posts/owner/{owner-id}';
+getgetPendingRequestsFriends.PATH = '/friendships/pending/{userId}';

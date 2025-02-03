@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, effect, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
-import { Comment, LikeRequest, Post, PostResponse } from '../../services/models';
+import { Comment, FriendShipRequest, FriendShipResponse, LikeRequest, Post, PostResponse, UserResponse } from '../../services/models';
 import { CommentSectionComponent } from "../comment-section/comment-section.component";
 import { getFormattedDate } from '../../services/commun_fn/utilities';
 import { getPostCommentsCount } from '../../services/commun_fn/Comment_fn';
-import { CommentService, LikeService } from '../../services/services';
+import { CommentService, FriendShipControllerService, LikeService } from '../../services/services';
 import { getLikesCount, isOwnerLiked, toggleLike } from '../../services/commun_fn/Likes_fn';
+import { AuthContext } from '../../../shared/contexts/auth-context';
+import { deleteFriendShip, getUserFriendShip, sendFriendRequest } from '../../services/commun_fn/FriendShip_fn';
 
 
 @Component({
@@ -22,10 +24,17 @@ import { getLikesCount, isOwnerLiked, toggleLike } from '../../services/commun_f
 export class PostCardComponent implements OnInit {
 
 
+    private authContext = inject(AuthContext);
+  
+    userSignal = this.authContext.user;
+    isLoading = this.authContext.isLoading;
+  
+    user: UserResponse | null = null;
   @Input() post!: PostResponse;
 
-  @Input() isMyFeed: boolean = false;
   @Input() isMyProfile: boolean = false;
+
+  friends:FriendShipResponse[] = [];
 
   isMenuOpen: boolean = false;
   currentUrl: string = '';
@@ -44,8 +53,15 @@ export class PostCardComponent implements OnInit {
     private routeTrackerService: RouteTrackerService,
     private router: Router,
     private commentService: CommentService,
-    private likeService: LikeService
-  ){}
+    private likeService: LikeService,
+    private friendShipService: FriendShipControllerService,
+  ){
+
+     effect(() => {
+          this.getUserValue();
+          this.getFriends();
+        });
+  }
 
   async ngOnInit(): Promise<void> {
     this.routeTrackerService.currentUrl$.subscribe((url) => {
@@ -59,6 +75,34 @@ export class PostCardComponent implements OnInit {
       
   }
 
+  getUserValue() {
+    if (this.isLoading()) {
+      return;
+    }
+    this.user = this.userSignal();
+  }
+
+  async follow(receiverId:number|undefined): Promise<void> {
+      if(receiverId === undefined) return ;
+      const request : FriendShipRequest = {
+        receiverId : receiverId,
+      }
+      await sendFriendRequest(this.friendShipService, request);
+    }
+
+      async getFriends(): Promise<void> {
+        if(this.user?.id === undefined) return ;
+        this.friends = await getUserFriendShip(this.friendShipService,this.user?.id,0);
+        
+      }
+
+  async unfollow(receiverId:number|undefined): Promise<void>{
+    const friendShipId = this.friends.find(friend => friend.receiverId === receiverId || friend.senderId === receiverId)?.id;
+    if(friendShipId === undefined) return ;
+    await deleteFriendShip(this.friendShipService,friendShipId);
+    await this.getFriends();
+
+  }
   getFormattedDate(): string {
       return getFormattedDate(this.post.createdData);
   }
@@ -84,7 +128,6 @@ export class PostCardComponent implements OnInit {
   
       // Remove leading './' or extra slashes
       const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
-      console.log(baseURL + cleanPath);
       return  baseURL + cleanPath;
       
   
@@ -132,6 +175,16 @@ export class PostCardComponent implements OnInit {
   sharePost(postId: number|undefined) {
     console.log("share");
   }
+
+  isFollowed():boolean {
+    if(this.post.ownerId  === undefined) return false;
+    return this.friends.some(friend => (friend.receiverId === this.post.ownerId || friend.senderId === this.post.ownerId));
+  
+  }
+
+  isMyPost():boolean {
+    return this.isMyProfile || this.post.ownerId === this.user?.id;
+  }
   
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -147,7 +200,9 @@ export class PostCardComponent implements OnInit {
   }
 
   navigateToProfile(userId: number | undefined): void {
-    const path:string = `profile`;
+    const path:string = `profile/${userId}`;
     centerNavigateTo(path,this.currentUrl,this.router);
   }
+
+
 }

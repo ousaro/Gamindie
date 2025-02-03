@@ -42,7 +42,7 @@ export const CENTER_ROUTES: Routes = [
     component: SavedPostComponent,
   },
   {
-    path: 'profile',
+    path: 'profile/:id',
     component: ProfileComponent,
   },
   {

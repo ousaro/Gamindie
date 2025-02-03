@@ -212,7 +212,7 @@ export class PostDetailsComponent implements OnInit {
   }
 
   navigateToProfile(userId: number | undefined): void {
-      const path:string = `profile`;
+      const path:string = `profile/${userId}`;
       centerNavigateTo(path,this.currentUrl,this.router);
   }
 

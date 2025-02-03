@@ -28,10 +28,11 @@
         </div>
       </div>
      <div class="flex items-center gap-1">
-        <ng-container *ngIf="!isMyProfile">
+        <ng-container *ngIf="!isMyPost()">
           <button
-            *ngIf="!isMyFeed; else myFeed"
+            *ngIf="!isFollowed(); else myFeed"
             class="text-black font-bold text-xs sm:text-sm dark:bg-secondary-dark p-2 rounded-lg"
+            (click)="follow(post.ownerId)"
           >
             FOLLOW
           </button>
@@ -39,7 +40,7 @@
           <ng-template #myFeed>
             <button
               class="dark:text-secondary-dark text-xs sm:text-sm dark:bg-primary_3-dark p-2 rounded-lg"
-              disabled
+              (click)="unfollow(post.ownerId)"
             >
               following
             </button>

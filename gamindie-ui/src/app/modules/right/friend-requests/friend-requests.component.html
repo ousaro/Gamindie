@@ -15,20 +15,20 @@
           
           <!-- User Info -->
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full p-2 bg-zinc-700 flex items-center justify-center">
-              <ng-container *ngIf="request.sender?.profilePicture; else defaultIcon">
-                  <img [src]="request.sender?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+            <div class="w-9 h-9 sm:w-14 sm:h-14 rounded-full bg-zinc-700 flex items-center justify-center">
+              <ng-container *ngIf="request.senderAvatar; else defaultIcon">
+                  <img [src]="getProfileUrl(request.senderAvatar)" alt="User Photo" class="w-full h-full rounded-full bg-cover" />
               </ng-container>
               <ng-template #defaultIcon>
                   <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
               </ng-template>
             </div>
-            <span class="text-md">{{ request.sender?.username }}</span>
+            <span class="text-md">{{ request.senderUsername }}</span>
           </div>
           
           <!-- Follow Back Button -->
           <button 
-            (click)="request.id !== undefined && handleFollowBack(request.id)"
+            (click)="acceptFriendRequest(request.id) "
             class="dark:bg-secondary-dark text-black h-[2rem] px-2 py-[0.20rem] rounded-md follow_button font-bold hover:opacity-80 transition-colors">
             FOLLOW BACK
           </button>

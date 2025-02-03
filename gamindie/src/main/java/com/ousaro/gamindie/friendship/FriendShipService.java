@@ -1,9 +1,16 @@
 package com.ousaro.gamindie.friendship;
 
+import com.ousaro.gamindie.commun.PageResponse;
 import com.ousaro.gamindie.user.User;
 import com.ousaro.gamindie.user.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,24 +22,13 @@ import java.util.List;
 public class FriendShipService {
 
     private final FriendShipRepository friendShipRepository;
+    private final FriendShipMapper friendShipMapper;
     private final UserRepository userRepository;
 
     // Create a new friendship request
-    @Transactional // This annotation is used to indicate that the method is a transactional method
+    @Transactional
     public Integer sendFriendRequest(FriendShipRequest request , Authentication connectedUser) {
-        User sender = ((User) connectedUser.getPrincipal());
-        User receiver = userRepository.findById(request.getReceiverId())
-                .orElseThrow(() -> new IllegalArgumentException("Receiver not found."));
-
-        if (friendShipRepository.existsBySenderAndReceiver(sender, receiver)) {
-            throw new IllegalStateException("Friendship request already exists.");
-        }
-
-        FriendShip friendShip = FriendShip.builder()
-                .sender(sender)
-                .receiver(receiver)
-                .status(FriendShipStatus.PENDING.toString())
-                .build();
+        FriendShip friendShip = friendShipMapper.toFriendShip(request, connectedUser);
 
         return friendShipRepository.save(friendShip).getId();
     }
@@ -57,26 +53,45 @@ public class FriendShipService {
         return friendShipRepository.save(friendShip).getId();
     }
 
-    // Get all friends of a user
-    public List<FriendShip> getFriends(Authentication connectedUser) {
-        User user =  ((User) connectedUser.getPrincipal());
-
-        return friendShipRepository.findFriendsByUser(user);
+    // Get all friends of a user by status 
+    public PageResponse<FriendShipResponse> getFriendships(int page, int size, Integer userId, String status) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("No User found with id " + userId));
+    
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdData").descending());
+    
+        Page<FriendShip> friends = friendShipRepository.findAll(
+            (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get("sender"), user),
+                    criteriaBuilder.equal(root.get("receiver"), user)
+                ),
+                criteriaBuilder.equal(root.get("status"), status)
+            ), pageable
+        );
+    
+        List<FriendShipResponse> friendShipResponses = friends.stream()
+            .map(friendShipMapper::toFriendShipResponse)
+            .toList();
+    
+        return new PageResponse<>(
+            friendShipResponses,
+            friends.getNumber(),
+            friends.getSize(),
+            friends.getTotalElements(),
+            friends.getTotalPages(),
+            friends.isFirst(),
+            friends.isLast()
+        );
     }
-
-    // Get pending friend requests for a user
-    public List<FriendShip> getPendingRequests(Authentication connectedUser) {
-        User user = ((User) connectedUser.getPrincipal());
-
-        return friendShipRepository.findByStatusFriendShips(user, FriendShipStatus.PENDING.toString());
-    }
-
-    // Get accepted friend requests for a user
-    public List<FriendShip> getAcceptedRequests(Authentication connectedUser) {
-        User user = ((User) connectedUser.getPrincipal());
-
+    
+    // Get All accepted friends of a user
+    public List<FriendShip> getAcceptedFrieds(Integer userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("No User found with id " + userId));
         return friendShipRepository.findByStatusFriendShips(user, FriendShipStatus.ACCEPTED.toString());
     }
+   
 
     public void deleteFriendRequest(Integer id) {
         friendShipRepository.deleteById(id);

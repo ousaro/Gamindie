@@ -160,7 +160,7 @@ export class PostService extends BaseService {
   }
 
   /** Path part for operation `findAllPostsByOwner()` */
-  static readonly FindAllPostsByOwnerPath = '/posts/owner';
+  static readonly FindAllPostsByOwnerPath = '/posts/owner/{owner-id}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -168,7 +168,7 @@ export class PostService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findAllPostsByOwner$Response(params?: FindAllPostsByOwner$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
+  findAllPostsByOwner$Response(params: FindAllPostsByOwner$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponsePostResponse>> {
     return findAllPostsByOwner(this.http, this.rootUrl, params, context);
   }
 
@@ -178,7 +178,7 @@ export class PostService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findAllPostsByOwner(params?: FindAllPostsByOwner$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
+  findAllPostsByOwner(params: FindAllPostsByOwner$Params, context?: HttpContext): Observable<PageResponsePostResponse> {
     return this.findAllPostsByOwner$Response(params, context).pipe(
       map((r: StrictHttpResponse<PageResponsePostResponse>): PageResponsePostResponse => r.body)
     );

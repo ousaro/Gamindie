@@ -8,14 +8,20 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { FriendShip } from '../../models/friend-ship';
+import { PageResponseFriendShipResponse } from '../../models/page-response-friend-ship-response';
 
 export interface GetFriends$Params {
+  userId: number;
+  page?: number;
+  size?: number;
 }
 
-export function getFriends(http: HttpClient, rootUrl: string, params?: GetFriends$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FriendShip>>> {
+export function getFriends(http: HttpClient, rootUrl: string, params: GetFriends$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseFriendShipResponse>> {
   const rb = new RequestBuilder(rootUrl, getFriends.PATH, 'get');
   if (params) {
+    rb.path('userId', params.userId, {});
+    rb.query('page', params.page, {});
+    rb.query('size', params.size, {});
   }
 
   return http.request(
@@ -23,9 +29,9 @@ export function getFriends(http: HttpClient, rootUrl: string, params?: GetFriend
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<FriendShip>>;
+      return r as StrictHttpResponse<PageResponseFriendShipResponse>;
     })
   );
 }
 
-getFriends.PATH = '/friendships/friends';
+getFriends.PATH = '/friendships/friends/{userId}';

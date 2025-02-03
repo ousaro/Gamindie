@@ -74,8 +74,9 @@ export class TopBarComponent implements OnInit {
 
   }
 
-  center_NavigateTo(section: string): void {
-   centerNavigateTo(section, this.currentUrl, this.router);
+  center_NavigateTo(section: string, param?:number|undefined): void {
+    const fullSection = section + (param ? `/${param}` : '' );
+   centerNavigateTo(fullSection, this.currentUrl, this.router);
   }
 
   right_NavigateTo(section: string): void {
@@ -110,7 +111,6 @@ export class TopBarComponent implements OnInit {
 
     // Remove leading './' or extra slashes
     const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
-    console.log(baseURL + cleanPath);
     return  baseURL + cleanPath;
     
 

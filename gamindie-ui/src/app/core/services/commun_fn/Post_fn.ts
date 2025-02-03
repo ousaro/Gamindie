@@ -41,10 +41,10 @@ export async function loadPostById(postService:PostService, postId:number): Prom
     }
 }
 
-export async function loadOwnerPosts(postService:PostService,page: number, size: number = 10): Promise<PostResponse[]> {
+export async function loadOwnerPosts(postService:PostService,ownerId:number,page: number, size: number = 10): Promise<PostResponse[]> {
   try {
     const response = await firstValueFrom(
-      postService.findAllPostsByOwner({"page":page,"size":size})
+      postService.findAllPostsByOwner({"page":page,"size":size, "owner-id":ownerId})
     );
     return response.content || [];
   } catch (error) {
@@ -65,11 +65,11 @@ export async function loadFriendFeed(postService:PostService,page: number, size:
     }
 }
 
-export async function loadOwnerFeed(postService: PostService, page: number, size: number = 10): Promise<PostResponse[]> {
+export async function loadOwnerFeed(postService: PostService,ownerId:number, page: number, size: number = 10): Promise<PostResponse[]> {
   try {
     // Fetch both owner posts and friend feed
     const [ownerPosts, friendFeed] = await Promise.all([
-      loadOwnerPosts(postService,page,size),
+      loadOwnerPosts(postService,ownerId,page,size),
       loadFriendFeed(postService,page,size)
     ]);
 

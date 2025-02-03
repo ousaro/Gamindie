@@ -58,7 +58,7 @@
       <li
         class="nav-li-hide"
         [class.active-nav-el-hide]="isActive('profile')"
-        (click)="navigateToSection('profile')"
+        (click)="navigateToSection('profile',user?.id)"
       >
         <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
         <span  class="hidden md:block">Profile</span>
@@ -138,7 +138,7 @@
       <li
         class="nav-li-el"
         [class.active-nav-el]='isActive("profile")'
-        (click)="rightNavigateTo('profile')"
+        (click)="rightNavigateTo('profile',user?.id)"
       >
         <svg-icon name="user" [svgClass]="isActive('profile') ? 'nav-icons active-nav-icons ' : 'nav-icons'"></svg-icon>
       </li>

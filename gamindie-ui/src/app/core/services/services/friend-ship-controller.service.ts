@@ -17,13 +17,11 @@ import { cancelFriendRequest } from '../fn/friend-ship-controller/cancel-friend-
 import { CancelFriendRequest$Params } from '../fn/friend-ship-controller/cancel-friend-request';
 import { deleteFriendRequest } from '../fn/friend-ship-controller/delete-friend-request';
 import { DeleteFriendRequest$Params } from '../fn/friend-ship-controller/delete-friend-request';
-import { FriendShip } from '../models/friend-ship';
-import { getAcceptedRequests } from '../fn/friend-ship-controller/get-accepted-requests';
-import { GetAcceptedRequests$Params } from '../fn/friend-ship-controller/get-accepted-requests';
 import { getFriends } from '../fn/friend-ship-controller/get-friends';
 import { GetFriends$Params } from '../fn/friend-ship-controller/get-friends';
-import { getPendingRequests } from '../fn/friend-ship-controller/get-pending-requests';
-import { GetPendingRequests$Params } from '../fn/friend-ship-controller/get-pending-requests';
+import { getgetPendingRequestsFriends } from '../fn/friend-ship-controller/getget-pending-requests-friends';
+import { GetgetPendingRequestsFriends$Params } from '../fn/friend-ship-controller/getget-pending-requests-friends';
+import { PageResponseFriendShipResponse } from '../models/page-response-friend-ship-response';
 import { sendFriendRequest } from '../fn/friend-ship-controller/send-friend-request';
 import { SendFriendRequest$Params } from '../fn/friend-ship-controller/send-friend-request';
 
@@ -108,33 +106,33 @@ export class FriendShipControllerService extends BaseService {
     );
   }
 
-  /** Path part for operation `getPendingRequests()` */
-  static readonly GetPendingRequestsPath = '/friendships/pending';
+  /** Path part for operation `getgetPendingRequestsFriends()` */
+  static readonly GetgetPendingRequestsFriendsPath = '/friendships/pending/{userId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getPendingRequests()` instead.
+   * To access only the response body, use `getgetPendingRequestsFriends()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getPendingRequests$Response(params?: GetPendingRequests$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FriendShip>>> {
-    return getPendingRequests(this.http, this.rootUrl, params, context);
+  getgetPendingRequestsFriends$Response(params: GetgetPendingRequestsFriends$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseFriendShipResponse>> {
+    return getgetPendingRequestsFriends(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getPendingRequests$Response()` instead.
+   * To access the full response (for headers, for example), `getgetPendingRequestsFriends$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getPendingRequests(params?: GetPendingRequests$Params, context?: HttpContext): Observable<Array<FriendShip>> {
-    return this.getPendingRequests$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<FriendShip>>): Array<FriendShip> => r.body)
+  getgetPendingRequestsFriends(params: GetgetPendingRequestsFriends$Params, context?: HttpContext): Observable<PageResponseFriendShipResponse> {
+    return this.getgetPendingRequestsFriends$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageResponseFriendShipResponse>): PageResponseFriendShipResponse => r.body)
     );
   }
 
   /** Path part for operation `getFriends()` */
-  static readonly GetFriendsPath = '/friendships/friends';
+  static readonly GetFriendsPath = '/friendships/friends/{userId}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -142,7 +140,7 @@ export class FriendShipControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getFriends$Response(params?: GetFriends$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FriendShip>>> {
+  getFriends$Response(params: GetFriends$Params, context?: HttpContext): Observable<StrictHttpResponse<PageResponseFriendShipResponse>> {
     return getFriends(this.http, this.rootUrl, params, context);
   }
 
@@ -152,34 +150,9 @@ export class FriendShipControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getFriends(params?: GetFriends$Params, context?: HttpContext): Observable<Array<FriendShip>> {
+  getFriends(params: GetFriends$Params, context?: HttpContext): Observable<PageResponseFriendShipResponse> {
     return this.getFriends$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<FriendShip>>): Array<FriendShip> => r.body)
-    );
-  }
-
-  /** Path part for operation `getAcceptedRequests()` */
-  static readonly GetAcceptedRequestsPath = '/friendships/accepted';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAcceptedRequests()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAcceptedRequests$Response(params?: GetAcceptedRequests$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FriendShip>>> {
-    return getAcceptedRequests(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAcceptedRequests$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAcceptedRequests(params?: GetAcceptedRequests$Params, context?: HttpContext): Observable<Array<FriendShip>> {
-    return this.getAcceptedRequests$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<FriendShip>>): Array<FriendShip> => r.body)
+      map((r: StrictHttpResponse<PageResponseFriendShipResponse>): PageResponseFriendShipResponse => r.body)
     );
   }
 

@@ -43,13 +43,14 @@ public class PostController {
         return ResponseEntity.ok(service.findAllPosts(page,size));
     }
 
-    @GetMapping("owner")
+    @GetMapping("owner/{owner-id}")
     public ResponseEntity<PageResponse<PostResponse>> findAllPostsByOwner(
+        @PathVariable("owner-id") Integer ownerId,
         @RequestParam(name="page", defaultValue="0") int page,
         @RequestParam(name="size", defaultValue="10") int size,
         Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllPostsByOwner(page,size, connectedUser));
+        return ResponseEntity.ok(service.findAllPostsByOwner(page,size, ownerId));
     }
 
     @GetMapping("{owner-id}/count")

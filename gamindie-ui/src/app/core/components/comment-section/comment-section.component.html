@@ -70,7 +70,7 @@
 <div class="flex items-center gap-4 mt-6">
   <ng-container *ngIf="user?.profilePicture; else defaultIcon">
     <img
-      [src]="user?.profilePicture"
+      [src]="getProfileUrl(user?.profilePicture)"
       alt="User Photo"
       class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
     />

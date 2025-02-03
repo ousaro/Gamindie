@@ -18,6 +18,7 @@ import com.ousaro.gamindie.attachment.AttachmentRepository;
 import com.ousaro.gamindie.commun.PageResponse;
 import com.ousaro.gamindie.friendship.FriendShipService;
 import com.ousaro.gamindie.user.User;
+import com.ousaro.gamindie.user.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class PostService {
     private final PostMapper postMapper;
     private final AttachmentRepository attachmentRepository;
     private final FriendShipService friendShipService;
+    private final UserRepository userRepository;
 
     public Integer create(PostRequest request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
@@ -79,8 +81,9 @@ public class PostService {
         );
     }
 
-    public PageResponse<PostResponse> findAllPostsByOwner(int page, int size, Authentication connectedUser) {
-        User user = ((User) connectedUser.getPrincipal());
+    public PageResponse<PostResponse> findAllPostsByOwner(int page, int size, Integer ownerId) {
+        User user = userRepository.findById(ownerId)
+            .orElseThrow(() -> new EntityNotFoundException("No User found with id " + ownerId));
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdData").descending());
         Page<Post> posts = postRepository.findAll(PostSpecification.withOwner(user.getId()), pageable);
         List<PostResponse> postResponses = posts.stream()
@@ -98,10 +101,10 @@ public class PostService {
     }
 
     public PageResponse<PostResponse> getFriendFeed(int page, int size, Authentication connectedUser) {
-        User user = (User) connectedUser.getPrincipal();
-    
+        User user = (User) connectedUser.getPrincipal();  
+
         // Get all the user's accepted friendships
-        List<User> friends = friendShipService.getAcceptedRequests(connectedUser)
+        List<User> friends = friendShipService.getAcceptedFrieds(user.getId())
                 .stream()
                 .map(friendShip -> friendShip.getSender().getId().equals(user.getId()) 
                     ? friendShip.getReceiver() 
