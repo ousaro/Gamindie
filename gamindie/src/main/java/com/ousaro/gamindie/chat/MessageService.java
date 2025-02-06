@@ -2,12 +2,13 @@ package com.ousaro.gamindie.chat;
 
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ousaro.gamindie.attachment.Attachment;
 import com.ousaro.gamindie.attachment.AttachmentRepository;
-import com.ousaro.gamindie.user.User;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,14 +18,20 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
     private final AttachmentRepository attachmentRepository;
-    private final ChatRoomRepository chatRoomRepository;
+    private final SimpMessagingTemplate messagingTemplate; // Injected for broadcasting
 
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
+
+    public List<MessageResponse> getAllMessages(Integer chatRoomId) {
+        List<Message> messages = messageRepository.findByChatRoomIdOrderBySentAtAsc(chatRoomId);
+        List<MessageResponse> messageResponses = messages.stream()
+                                                          .map(messageMapper::toMessageResponse)
+                                                          .toList();
+        return messageResponses;
     }
 
-    public Integer createMessage(MessageRequest request, Authentication connectedUser) {
-        User owner = ((User) connectedUser.getPrincipal());
+    @Transactional
+    public MessageResponse createMessageAndBroadcast(MessageRequest request) {
+       
 
         List<Attachment> attachments = null;
         if(request.attachmentIds() != null && !request.attachmentIds().isEmpty()) {
@@ -32,12 +39,7 @@ public class MessageService {
         }
 
         Message message = messageMapper.toMessage(request, attachments);
-        message.setOwner(owner);
-        ChatRoom chatRoom = chatRoomRepository.findById(request.chatRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("Chat room not found with id: " + request.chatRoomId()));
-        message.setChatRoom(chatRoom);
         Message savedMessage = messageRepository.save(message);
-
         // Update the attachments to associate them with the saved post
         if (attachments != null) {
             for (Attachment attachment : attachments) {
@@ -46,7 +48,27 @@ public class MessageService {
             attachmentRepository.saveAll(attachments);
         }
 
-        return savedMessage.getId();
+        // Convert to response
+        MessageResponse response = messageMapper.toMessageResponse(savedMessage);
+
+        // Real-time broadcasting
+        messagingTemplate.convertAndSend("/topic/chatroom", response);
+
+        return response;
+    }
+
+    @Transactional
+    public MessageResponse updateMessageStatusAndBroadcast(Integer messageId) {
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+        message.updateStatus();
+        messageRepository.save(message);
+
+        MessageResponse response = messageMapper.toMessageResponse(message);
+        // Broadcast status update
+        messagingTemplate.convertAndSend("/topic/status", response);
+        
+        return response;
     }
 
     public void deleteMessage(int id) {

@@ -70,7 +70,12 @@ public class BeansConfig {
             "PUT",
             "PATCH"
         ));
+         // Allow WebSocket-specific headers
+        config.addExposedHeader("Connection");
+        config.addExposedHeader("Upgrade");
+
         source.registerCorsConfiguration("/**", config);
+        
 
         return new CorsFilter(source);
 

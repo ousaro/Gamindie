@@ -34,7 +34,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/global-polyfill.js"
+            ]
           },
           "configurations": {
             "production": {

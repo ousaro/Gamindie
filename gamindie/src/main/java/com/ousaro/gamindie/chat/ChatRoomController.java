@@ -1,7 +1,6 @@
 package com.ousaro.gamindie.chat;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,16 +14,14 @@ public class ChatRoomController {
 
     private final ChatRoomService service;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ChatRoom> getChatRoomById(@PathVariable Integer id) {
-        return service.getChatRoomById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{user1Id}/{user2Id}")
+    public ResponseEntity<ChatRoomResponse> getChatRoom(@PathVariable Integer user1Id, @PathVariable Integer user2Id) {
+        return ResponseEntity.ok(service.getChatRoom(user1Id, user2Id));
     }
 
     @PostMapping("/")
-    public ResponseEntity<Integer> createChatRoom(@RequestBody ChatRoomRequest request, Authentication connectedUser) {
-        return ResponseEntity.ok(service.createChatRoom(request, connectedUser));
+    public ResponseEntity<Integer> createChatRoom(@RequestBody ChatRoomRequest request) {
+        return ResponseEntity.ok(service.createChatRoom(request));
     }
 
     @DeleteMapping("/{id}")

@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ChatRoom } from '../../../core/services/models';
 import { centerNavigateTo, rightNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
+import { WebsocketTestService } from '../../../core/services/websocketTest/websocket-test.service';
 
 
 
@@ -88,7 +89,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private routeTrackerService: RouteTrackerService,
     private router: Router,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private WebSocketTestService: WebsocketTestService
   ) {}
 
   ngOnInit(): void {
@@ -105,7 +107,11 @@ export class ChatComponent implements OnInit, OnDestroy {
           this.isCenterRoute = result.matches;
         })
     );
+
+    this.WebSocketTestService.connect();
+    
   }
+
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
@@ -119,6 +125,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     } else {
       rightNavigateTo(chatPath, this.currentUrl, this.router);
     }
+  }
+
+  sendMessage(){
+    this.WebSocketTestService.sendMessage();
   }
 
 }

@@ -1,13 +1,8 @@
 package com.ousaro.gamindie.chat;
 
-import java.util.Optional;
-
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.ousaro.gamindie.user.User;
-import com.ousaro.gamindie.user.UserRepository;
-
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -16,23 +11,16 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMapper chatRoomMapper;
-    private final UserRepository userRepository;
 
 
-    public Optional<ChatRoom> getChatRoomById(Integer id) {
-        return chatRoomRepository.findById(id);
+    public ChatRoomResponse getChatRoom(Integer user1Id, Integer user2Id) {
+        ChatRoom chatRoom = chatRoomRepository.findByUser1IdAndUser2Id(user1Id, user2Id).orElse(null);
+        return chatRoomMapper.toChatRoomResponse(chatRoom);
     }
 
-    public Integer createChatRoom(ChatRoomRequest request, Authentication connectedUser) {
-        User user1 = (User) connectedUser.getPrincipal();
-
+    @Transactional
+    public Integer createChatRoom(ChatRoomRequest request) {
         ChatRoom chatRoom = chatRoomMapper.toChatRoom(request);
-        chatRoom.setUser1(user1);
-        User user2 = userRepository.findById(request.user2Id())
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + request.user2Id()));
-        chatRoom.setUser2(user2);
-        chatRoom.setName(chatRoom.getUser2().getUsername());
-
         return chatRoomRepository.save(chatRoom).getId();
     }
 

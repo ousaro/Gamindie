@@ -19,7 +19,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +35,6 @@ import lombok.experimental.SuperBuilder;
 public class Message extends BaseEntity {
 
     @NotBlank
-    @Size(max = 1000)
     private String content;
 
     @Column(nullable = false)
