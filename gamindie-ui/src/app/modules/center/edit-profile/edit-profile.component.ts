@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { AttachmentRequest, User, UserRequest, UserResponse } from '../../../core/services/models';
+import { AttachmentRequest, UserRequest, UserResponse } from '../../../core/services/models';
 import { AuthContext } from '../../../shared/contexts/auth-context';
 import { uploadAttachment } from '../../../core/services/commun_fn/Attachment_fn';
 import { AttachmentService, UserService } from '../../../core/services/services';

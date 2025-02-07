@@ -3,6 +3,7 @@ package com.ousaro.gamindie.chat;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,8 +23,8 @@ public class MessageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Integer> createMessage(@RequestBody MessageRequest request) {
-        return ResponseEntity.ok(service.createMessageAndBroadcast(request).getId());
+    public ResponseEntity<Integer> createMessage(@RequestBody MessageRequest request, Authentication authentication) {
+        return ResponseEntity.ok(service.createMessage(request,authentication).getId());
     }
 
     @DeleteMapping("/{id}")

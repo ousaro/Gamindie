@@ -7,12 +7,6 @@
       <div class="h-0.5 w-full dark:bg-primary_4-dark mt-2 sm:mt-3"></div>
     </div>
 
-    <button class="w-full h-12 dark:bg-primary_4-dark rounded-md flex items-center
-     justify-center gap-2 font-merriweather text-white hover:dark:bg-primary_3-dark transition-colors duration-200"
-            (click)="sendMessage()">
-      <svg-icon name="send" [svgClass]="'custom-icon'"></svg-icon>
-    </button>
-
      <!-- Search Bar -->
      <div class=" py-2  mb-4 font-merriweather">
         <div class="w-full rounded-md dark:bg-primary_4-dark text-white flex items-center gap-[0.10rem]">
@@ -37,20 +31,20 @@
         <!-- User Info -->
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
-            <ng-container *ngIf="chatRoom.user2?.profilePicture; else defaultIcon">
-              <img [src]="chatRoom.user2?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+            <ng-container *ngIf="chatRoom.user2Id; else defaultIcon">
+              <img [src]="" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
             </ng-container>
             <ng-template #defaultIcon>
                 <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
             </ng-template>
           </div>
-          <span class="text-md">{{ chatRoom.user2?.username }}</span>
+          <span class="text-md">{{ chatRoom.name }}</span>
         </div>
         
         <!-- message number -->
-        <div *ngIf="chatRoom.messages?.length" class="flex items-center justify-center w-8 h-8 dark:bg-secondary-dark text-black p-1 rounded-full text-xs font-bold">
+        <!-- <div *ngIf="chatRoom.messages?.length" class="flex items-center justify-center w-8 h-8 dark:bg-secondary-dark text-black p-1 rounded-full text-xs font-bold">
             {{ chatRoom.messages?.length }}
-          </div>
+          </div> -->
       </div>
     </div>
   </div>

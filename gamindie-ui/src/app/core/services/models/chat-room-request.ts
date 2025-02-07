@@ -4,5 +4,7 @@
 
 export interface ChatRoomRequest {
   isActive?: boolean;
+  name?: string;
+  user1Id: number;
   user2Id: number;
 }

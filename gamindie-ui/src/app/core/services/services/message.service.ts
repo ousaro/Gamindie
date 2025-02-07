@@ -17,37 +17,12 @@ import { deleteMessage } from '../fn/message/delete-message';
 import { DeleteMessage$Params } from '../fn/message/delete-message';
 import { getAllMessages } from '../fn/message/get-all-messages';
 import { GetAllMessages$Params } from '../fn/message/get-all-messages';
-import { Message } from '../models/message';
+import { MessageResponse } from '../models/message-response';
 
 @Injectable({ providedIn: 'root' })
 export class MessageService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
-  }
-
-  /** Path part for operation `getAllMessages()` */
-  static readonly GetAllMessagesPath = '/messages/';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllMessages()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAllMessages$Response(params?: GetAllMessages$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Message>>> {
-    return getAllMessages(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllMessages$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAllMessages(params?: GetAllMessages$Params, context?: HttpContext): Observable<Array<Message>> {
-    return this.getAllMessages$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<Message>>): Array<Message> => r.body)
-    );
   }
 
   /** Path part for operation `createMessage()` */
@@ -72,6 +47,31 @@ export class MessageService extends BaseService {
   createMessage(params: CreateMessage$Params, context?: HttpContext): Observable<number> {
     return this.createMessage$Response(params, context).pipe(
       map((r: StrictHttpResponse<number>): number => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllMessages()` */
+  static readonly GetAllMessagesPath = '/messages/{chatRoomId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllMessages()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllMessages$Response(params: GetAllMessages$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MessageResponse>>> {
+    return getAllMessages(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllMessages$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllMessages(params: GetAllMessages$Params, context?: HttpContext): Observable<Array<MessageResponse>> {
+    return this.getAllMessages$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MessageResponse>>): Array<MessageResponse> => r.body)
     );
   }
 

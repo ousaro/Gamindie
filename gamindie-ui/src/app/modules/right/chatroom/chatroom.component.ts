@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
-import { ChatRoom } from '../../../core/services/models';
-import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
+import {  ChatRoomResponse, MessageRequest } from '../../../core/services/models';
+import { getChatroomById } from '../../../core/services/commun_fn/Chatroom_fn';
+import { ChatRoomService } from '../../../core/services/services';
+import { WebsocketService } from '../../../core/services/websocket/websocket.service';
 
 @Component({
   selector: 'app-chatroom',
@@ -17,35 +19,7 @@ import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn
 })
 export class ChatroomComponent implements OnInit {
 
-  chatRoom: ChatRoom = {
-    name: 'Alice',
-    id: 1,
-    user1: {
-      id: 1,
-      username: 'Alice',
-      profilePicture: ''
-    },
-    user2: {
-      id: 2,
-      username: 'Bob',
-      profilePicture: ''
-    },
-    messages: [
-      {
-        content: 'Hello Bob',
-        createdBy: 1,
-        sentAt: '2021-06-01T00:00:00',
-        status: 'SENT'
-      },
-      {
-        content: 'Hello Alice',
-        createdBy: 2,
-        sentAt: '2021-06-01T00:00:01',
-        status: 'SENT'
-      }
-    ]
-
-  }
+  chatRoom: ChatRoomResponse = {}
  
   newMessage = '';
   currentUrl: string = '';
@@ -56,10 +30,13 @@ export class ChatroomComponent implements OnInit {
   constructor(
      private routeTrackerService: RouteTrackerService,
      private router: Router,
-    private breakpointObserver: BreakpointObserver
+     private route: ActivatedRoute,
+    private breakpointObserver: BreakpointObserver,
+    private chatRoomService: ChatRoomService,
+    private websocketService: WebsocketService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
       this.routeTrackerService.currentUrl$.subscribe((url) => {
         this.currentUrl = url;
       });
@@ -69,19 +46,31 @@ export class ChatroomComponent implements OnInit {
             .subscribe(result => {
               this.isCenterRoute = result.matches;
       });
-  
+
+      const chatRoomId = this.route.snapshot.paramMap.get('id');
+      if(chatRoomId) {
+        await this.fetchChatRoom(Number(chatRoomId));
+      }
+
+      this.websocketService.connect();
       
     }
 
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.chatRoom.messages?.push({
-        content: this.newMessage,
-        createdBy: 1,
-        sentAt: new Date().toISOString(),
-      });
-      this.newMessage = '';
+    async fetchChatRoom(id: number) {
+      this.chatRoom = await getChatroomById(this.chatRoomService, id);
     }
+
+  sendMessage() {
+    const message: MessageRequest = {
+      chatRoomId: this.chatRoom.id,
+      content: "hello again user-1",
+      ownerId: 202,
+
+      recipientEmail: "johnWill3@gmail.com",
+
+    }
+    
+    this.websocketService.sendPrivateMessage(message);
   }
 
   goBack() {

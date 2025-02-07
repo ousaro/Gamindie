@@ -61,7 +61,10 @@ public class BeansConfig {
             HttpHeaders.ORIGIN,
             HttpHeaders.CONTENT_TYPE,
             HttpHeaders.ACCEPT,
-            HttpHeaders.AUTHORIZATION
+            HttpHeaders.AUTHORIZATION,
+            "Sec-WebSocket-Key",
+            "Sec-WebSocket-Version",
+            "Sec-WebSocket-Extensions" // Required for WebSockets
             ));
         config.setAllowedMethods(Arrays.asList(
             "GET",

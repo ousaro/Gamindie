@@ -37,9 +37,12 @@ public class MessageMapper {
     }
 
     public MessageResponse toMessageResponse(Message message) {
-        List<AttachmentResponse> attachments = message.getAttachments().stream()
+        List<AttachmentResponse> attachments = null;
+        if(message.getAttachments() != null) {
+            attachments = message.getAttachments().stream()
             .map(attachmentMapper::toAttachmentResponse)
             .toList();
+        }
         return MessageResponse.builder()
             .id(message.getId())
             .content(message.getContent())

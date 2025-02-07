@@ -2,7 +2,7 @@ import { CommonModule,Location } from '@angular/common';
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Post,Comment, PostRequest, PostResponse, UserResponse, LikeRequest } from '../../../core/services/models';
+import {PostResponse, UserResponse, LikeRequest } from '../../../core/services/models';
 import { CommentSectionComponent } from '../../../core/components/comment-section/comment-section.component';
 import { deletePost, loadPostById } from '../../../core/services/commun_fn/Post_fn';
 import { AttachmentService, CommentService, LikeService, PostService } from '../../../core/services/services';

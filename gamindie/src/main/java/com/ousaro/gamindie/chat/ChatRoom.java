@@ -38,12 +38,12 @@ public class ChatRoom extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user1_id", nullable = false)
     @JsonBackReference
-    private User user1; // First user in the private chat
+    private User user1; // sender of the message
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user2_id", nullable = false)
     @JsonBackReference
-    private User user2; // Second user in the private chat
+    private User user2; // receiver of the message
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference

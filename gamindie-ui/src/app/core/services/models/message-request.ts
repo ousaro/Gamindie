@@ -6,5 +6,7 @@ export interface MessageRequest {
   attachmentIds?: Array<number>;
   chatRoomId?: number;
   content: string;
-  id?: number;
+  ownerId?: number;
+  ownerUsername?: string;
+  recipientEmail?: string;
 }

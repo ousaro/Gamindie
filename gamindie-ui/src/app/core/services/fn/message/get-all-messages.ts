@@ -8,14 +8,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Message } from '../../models/message';
+import { MessageResponse } from '../../models/message-response';
 
 export interface GetAllMessages$Params {
+  chatRoomId: number;
 }
 
-export function getAllMessages(http: HttpClient, rootUrl: string, params?: GetAllMessages$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<Message>>> {
+export function getAllMessages(http: HttpClient, rootUrl: string, params: GetAllMessages$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MessageResponse>>> {
   const rb = new RequestBuilder(rootUrl, getAllMessages.PATH, 'get');
   if (params) {
+    rb.path('chatRoomId', params.chatRoomId, {});
   }
 
   return http.request(
@@ -23,9 +25,9 @@ export function getAllMessages(http: HttpClient, rootUrl: string, params?: GetAl
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<Message>>;
+      return r as StrictHttpResponse<Array<MessageResponse>>;
     })
   );
 }
 
-getAllMessages.PATH = '/messages/';
+getAllMessages.PATH = '/messages/{chatRoomId}';

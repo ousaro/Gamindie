@@ -10,14 +10,12 @@ import { RequestBuilder } from '../../request-builder';
 
 import { ChatRoomResponse } from '../../models/chat-room-response';
 
-export interface GetChatRoomById$Params {
-  id: number;
+export interface GetChatRoomOwner$Params {
 }
 
-export function getChatRoomById(http: HttpClient, rootUrl: string, params: GetChatRoomById$Params, context?: HttpContext): Observable<StrictHttpResponse<ChatRoomResponse>> {
-  const rb = new RequestBuilder(rootUrl, getChatRoomById.PATH, 'get');
+export function getChatRoomOwner(http: HttpClient, rootUrl: string, params?: GetChatRoomOwner$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ChatRoomResponse>>> {
+  const rb = new RequestBuilder(rootUrl, getChatRoomOwner.PATH, 'get');
   if (params) {
-    rb.path('id', params.id, {});
   }
 
   return http.request(
@@ -25,9 +23,9 @@ export function getChatRoomById(http: HttpClient, rootUrl: string, params: GetCh
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<ChatRoomResponse>;
+      return r as StrictHttpResponse<Array<ChatRoomResponse>>;
     })
   );
 }
 
-getChatRoomById.PATH = '/chatrooms/{id}';
+getChatRoomOwner.PATH = '/chatrooms/owner';

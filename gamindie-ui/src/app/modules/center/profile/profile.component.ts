@@ -5,7 +5,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PostCardComponent } from "../../../core/components/post-card/post-card.component";
 import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Post, PostResponse, User, UserResponse } from '../../../core/services/models';
+import { PostResponse, UserResponse } from '../../../core/services/models';
 import { centerNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
 import { AuthContext } from '../../../shared/contexts/auth-context';
 import { loadOwnerPosts } from '../../../core/services/commun_fn/Post_fn';

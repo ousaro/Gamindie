@@ -8,20 +8,20 @@
       </button>
       <div class="flex items-center">
         <div class="w-10 h-10 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
-          <ng-container *ngIf="chatRoom.user2?.profilePicture; else defaultIcon">
-            <img [src]="chatRoom.user2?.profilePicture" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+          <ng-container *ngIf="chatRoom.user2Id; else defaultIcon">
+            <img [src]="" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
           </ng-container>
           <ng-template #defaultIcon>
               <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
           </ng-template>
         </div>
-        <span class="ml-2 font-semibold">{{chatRoom.user2?.username}}</span>
+        <span class="ml-2 font-semibold">{{chatRoom.name}}</span>
       </div>
     </div>
 
     <!-- Chat Messages Template -->
     <div class="flex-1 overflow-y-auto scrollbar-none p-2 space-y-4 dark:bg-primary_4-dark flex flex-col items-center">
-      <ng-container *ngFor="let message of chatRoom.messages">
+      <!-- <ng-container *ngFor="let message of chatRoom.messages">
         <div class="flex w-full" 
             [class.justify-end]="message.createdBy === 1"
             [class.justify-start]="message.createdBy === 2"
@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-      </ng-container>
+      </ng-container> -->
     </div>
 
     <!-- Input Area -->

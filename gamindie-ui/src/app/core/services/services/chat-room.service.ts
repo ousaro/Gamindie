@@ -11,13 +11,17 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { ChatRoom } from '../models/chat-room';
+import { ChatRoomResponse } from '../models/chat-room-response';
 import { createChatRoom } from '../fn/chat-room/create-chat-room';
 import { CreateChatRoom$Params } from '../fn/chat-room/create-chat-room';
 import { deleteChatRoom } from '../fn/chat-room/delete-chat-room';
 import { DeleteChatRoom$Params } from '../fn/chat-room/delete-chat-room';
+import { getChatRoom } from '../fn/chat-room/get-chat-room';
+import { GetChatRoom$Params } from '../fn/chat-room/get-chat-room';
 import { getChatRoomById } from '../fn/chat-room/get-chat-room-by-id';
 import { GetChatRoomById$Params } from '../fn/chat-room/get-chat-room-by-id';
+import { getChatRoomOwner } from '../fn/chat-room/get-chat-room-owner';
+import { GetChatRoomOwner$Params } from '../fn/chat-room/get-chat-room-owner';
 
 @Injectable({ providedIn: 'root' })
 export class ChatRoomService extends BaseService {
@@ -50,6 +54,31 @@ export class ChatRoomService extends BaseService {
     );
   }
 
+  /** Path part for operation `getChatRoom()` */
+  static readonly GetChatRoomPath = '/chatrooms/{user1Id}/{user2Id}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getChatRoom()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getChatRoom$Response(params: GetChatRoom$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ChatRoomResponse>>> {
+    return getChatRoom(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getChatRoom$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getChatRoom(params: GetChatRoom$Params, context?: HttpContext): Observable<Array<ChatRoomResponse>> {
+    return this.getChatRoom$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<ChatRoomResponse>>): Array<ChatRoomResponse> => r.body)
+    );
+  }
+
   /** Path part for operation `getChatRoomById()` */
   static readonly GetChatRoomByIdPath = '/chatrooms/{id}';
 
@@ -59,7 +88,7 @@ export class ChatRoomService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getChatRoomById$Response(params: GetChatRoomById$Params, context?: HttpContext): Observable<StrictHttpResponse<ChatRoom>> {
+  getChatRoomById$Response(params: GetChatRoomById$Params, context?: HttpContext): Observable<StrictHttpResponse<ChatRoomResponse>> {
     return getChatRoomById(this.http, this.rootUrl, params, context);
   }
 
@@ -69,9 +98,9 @@ export class ChatRoomService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getChatRoomById(params: GetChatRoomById$Params, context?: HttpContext): Observable<ChatRoom> {
+  getChatRoomById(params: GetChatRoomById$Params, context?: HttpContext): Observable<ChatRoomResponse> {
     return this.getChatRoomById$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ChatRoom>): ChatRoom => r.body)
+      map((r: StrictHttpResponse<ChatRoomResponse>): ChatRoomResponse => r.body)
     );
   }
 
@@ -97,6 +126,31 @@ export class ChatRoomService extends BaseService {
   deleteChatRoom(params: DeleteChatRoom$Params, context?: HttpContext): Observable<void> {
     return this.deleteChatRoom$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `getChatRoomOwner()` */
+  static readonly GetChatRoomOwnerPath = '/chatrooms/owner';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getChatRoomOwner()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getChatRoomOwner$Response(params?: GetChatRoomOwner$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ChatRoomResponse>>> {
+    return getChatRoomOwner(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getChatRoomOwner$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getChatRoomOwner(params?: GetChatRoomOwner$Params, context?: HttpContext): Observable<Array<ChatRoomResponse>> {
+    return this.getChatRoomOwner$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<ChatRoomResponse>>): Array<ChatRoomResponse> => r.body)
     );
   }
 

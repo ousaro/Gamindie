@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, HostListener, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { PostCardComponent } from '../../../core/components/post-card/post-card.component';
-import { Post, PostResponse, UserResponse } from '../../../core/services/models';
+import { PostResponse, UserResponse } from '../../../core/services/models';
 import { PostService } from '../../../core/services/services';
 import { loadOwnerFeed } from '../../../core/services/commun_fn/Post_fn';
 import { AuthContext } from '../../../shared/contexts/auth-context';

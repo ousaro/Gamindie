@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Comment, CommentRequest, CommentResponse, User, UserResponse } from '../../services/models';
+import { CommentRequest, CommentResponse, UserResponse } from '../../services/models';
 import { AuthContext } from '../../../shared/contexts/auth-context';
 import { createComment, getDirectReplies, getTopLevelComments } from '../../services/commun_fn/Comment_fn';
 import { CommentService } from '../../services/services';

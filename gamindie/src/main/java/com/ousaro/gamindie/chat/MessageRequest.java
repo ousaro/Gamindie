@@ -11,6 +11,8 @@ public record MessageRequest(
     String content, 
     Integer chatRoomId,
     Integer ownerId,
+    String ownerUsername,
+    String recipientEmail,
     List<Integer> attachmentIds){
 
 }

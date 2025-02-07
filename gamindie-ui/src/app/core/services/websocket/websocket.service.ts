@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { MessageRequest } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketTestService {
+export class WebsocketService {
   private stompClient: Client | null = null;
-  private serverUrl = 'http://localhost:8088/api/v1/ws'; // WebSocket endpoint
+  private token = localStorage.getItem('token');
+  private serverUrl = `http://localhost:8088/api/v1/ws?token=${this.token}`; // WebSocket endpoint
 
 
   constructor() { }
@@ -17,14 +19,11 @@ export class WebsocketTestService {
 
     this.stompClient = new Client({
       webSocketFactory: () => new SockJS(this.serverUrl),
-      connectHeaders: {
-        Authorization: ' Bearer ' + localStorage.getItem('token'),
-      },
       reconnectDelay: 5000, // Auto-reconnect after 5s
       //debug: (msg) => console.log(`STOMP Debug: ${msg}`), // Optional debugging
       onConnect: () => {
         console.log('✅ Connected to WebSocket');
-        this.subscribeToTestChannel();
+        this.subscribeToPrivateMessages();
       },
       onStompError: (frame) => {
         console.error('❌ STOMP Error:', frame);
@@ -37,38 +36,33 @@ export class WebsocketTestService {
     this.stompClient.activate();
   }
 
-  subscribeToTestChannel(): void {
+  subscribeToPrivateMessages(): void {
     if (!this.stompClient || !this.stompClient.connected) {
       console.log('❌ STOMP client is not connected!');
       return;
     }
   
-    this.stompClient.subscribe('/user/test', (message) => {
+    this.stompClient.subscribe('/user/queue/messages', (message) => {
       try {
         const parsedMessage = JSON.parse(message.body);
-        console.log('✅ Parsed message:', parsedMessage);
+        console.log('📥 Private Message Received:', parsedMessage);
       } catch (error) {
         console.error('❌ Failed to parse message:', error);
       }
     });
-
   }
   
   
+  
 
-  sendMessage(): void {
+  sendPrivateMessage(message:MessageRequest): void {
     if (!this.stompClient || !this.stompClient.connected) return;
-
-    const message = {
-      content: 'Hello from Angular!',
-      chatroomId: 2,
-      ownerId: 202,
-    };
-
+  
     this.stompClient.publish({
-      destination: '/app/chat.test',
+      destination: '/app/chat.sendMessage', // Send message to the server
       body: JSON.stringify(message),
     });
   }
+  
 
 }

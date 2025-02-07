@@ -154,27 +154,6 @@
       }
     },
     "/messages/": {
-      "get": {
-        "tags": [
-          "Message"
-        ],
-        "operationId": "getAllMessages",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Message"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "Message"
@@ -874,6 +853,40 @@
         }
       }
     },
+    "/messages/{chatRoomId}": {
+      "get": {
+        "tags": [
+          "Message"
+        ],
+        "operationId": "getAllMessages",
+        "parameters": [
+          {
+            "name": "chatRoomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MessageResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/likes/owner/{postId}": {
       "get": {
         "tags": [
@@ -1122,6 +1135,49 @@
         }
       }
     },
+    "/chatrooms/{user1Id}/{user2Id}": {
+      "get": {
+        "tags": [
+          "Chat Room"
+        ],
+        "operationId": "getChatRoom",
+        "parameters": [
+          {
+            "name": "user1Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "user2Id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatRoomResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/chatrooms/{id}": {
       "get": {
         "tags": [
@@ -1145,7 +1201,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/ChatRoom"
+                  "$ref": "#/components/schemas/ChatRoomResponse"
                 }
               }
             }
@@ -1171,6 +1227,29 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/chatrooms/owner": {
+      "get": {
+        "tags": [
+          "Chat Room"
+        ],
+        "operationId": "getChatRoomOwner",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChatRoomResponse"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1409,16 +1488,22 @@
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "content": {
             "type": "string"
           },
           "chatRoomId": {
             "type": "integer",
             "format": "int32"
+          },
+          "ownerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ownerUsername": {
+            "type": "string"
+          },
+          "recipientEmail": {
+            "type": "string"
           },
           "attachmentIds": {
             "type": "array",
@@ -1465,13 +1550,21 @@
       },
       "ChatRoomRequest": {
         "required": [
+          "user1Id",
           "user2Id"
         ],
         "type": "object",
         "properties": {
+          "user1Id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "user2Id": {
             "type": "integer",
             "format": "int32"
+          },
+          "name": {
+            "type": "string"
           },
           "isActive": {
             "type": "boolean"
@@ -1635,477 +1728,35 @@
           }
         }
       },
-      "Attachment": {
+      "MessageResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "string"
-          },
-          "post": {
-            "$ref": "#/components/schemas/Post"
-          },
-          "message": {
-            "$ref": "#/components/schemas/Message"
-          },
-          "owner": {
-            "$ref": "#/components/schemas/User"
-          }
-        }
-      },
-      "ChatRoom": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "user1": {
-            "$ref": "#/components/schemas/User"
-          },
-          "user2": {
-            "$ref": "#/components/schemas/User"
-          },
-          "messages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Message"
-            }
-          },
-          "active": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Comment": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
-            "type": "integer",
-            "format": "int32"
-          },
           "content": {
             "type": "string"
           },
-          "replies": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Comment"
-            }
-          },
-          "parent": {
-            "$ref": "#/components/schemas/Comment"
-          },
-          "owner": {
-            "$ref": "#/components/schemas/User"
-          },
-          "post": {
-            "$ref": "#/components/schemas/Post"
-          }
-        }
-      },
-      "FriendShip": {
-        "type": "object",
-        "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
             "type": "integer",
             "format": "int32"
           },
           "status": {
             "type": "string"
-          },
-          "sender": {
-            "$ref": "#/components/schemas/User"
-          },
-          "receiver": {
-            "$ref": "#/components/schemas/User"
-          }
-        }
-      },
-      "GrantedAuthority": {
-        "type": "object",
-        "properties": {
-          "authority": {
-            "type": "string"
-          }
-        }
-      },
-      "Likes": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "owner": {
-            "$ref": "#/components/schemas/User"
-          },
-          "post": {
-            "$ref": "#/components/schemas/Post"
-          }
-        }
-      },
-      "Message": {
-        "required": [
-          "content"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "content": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "SENT",
-              "DELIVERED",
-              "READ"
-            ]
           },
           "sentAt": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
-          "owner": {
-            "$ref": "#/components/schemas/User"
+          "ownerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chatRoomId": {
+            "type": "integer",
+            "format": "int32"
           },
           "attachments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Attachment"
+              "$ref": "#/components/schemas/AttachmentResponse"
             }
-          },
-          "chatRoom": {
-            "$ref": "#/components/schemas/ChatRoom"
-          }
-        }
-      },
-      "Post": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdData": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastModifiedBy": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "owner": {
-            "$ref": "#/components/schemas/User"
-          },
-          "attachments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Attachment"
-            }
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Comment"
-            }
-          },
-          "likes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Likes"
-            }
-          },
-          "content": {
-            "type": "string"
-          }
-        }
-      },
-      "Role": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "firstname": {
-            "type": "string"
-          },
-          "lastname": {
-            "type": "string"
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "accountLocked": {
-            "type": "boolean"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "socialLinks": {
-            "type": "string"
-          },
-          "bio": {
-            "type": "string"
-          },
-          "savedPosts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "attachment": {
-            "$ref": "#/components/schemas/Attachment"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Role"
-            }
-          },
-          "posts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Post"
-            }
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Comment"
-            }
-          },
-          "likes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Likes"
-            }
-          },
-          "sentFriendships": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FriendShip"
-            }
-          },
-          "receivedFriendships": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FriendShip"
-            }
-          },
-          "initiatedChats": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChatRoom"
-            }
-          },
-          "receivedChats": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChatRoom"
-            }
-          },
-          "messages": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Message"
-            }
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "lastModifiedDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "name": {
-            "type": "string"
-          },
-          "credentialsNonExpired": {
-            "type": "boolean"
-          },
-          "accountNonExpired": {
-            "type": "boolean"
-          },
-          "username": {
-            "type": "string"
-          },
-          "profilePicture": {
-            "type": "string"
-          },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
-          },
-          "accountNonLocked": {
-            "type": "boolean"
           }
         }
       },
@@ -2241,6 +1892,29 @@
             "type": "boolean"
           },
           "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ChatRoomResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "user1Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "user2Id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
             "type": "boolean"
           }
         }

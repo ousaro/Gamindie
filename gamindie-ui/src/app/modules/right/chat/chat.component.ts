@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../../core/services/routeTracker/route-tracker.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ChatRoom } from '../../../core/services/models';
 import { centerNavigateTo, rightNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
-import { WebsocketTestService } from '../../../core/services/websocketTest/websocket-test.service';
+import { ChatRoomResponse, UserResponse } from '../../../core/services/models';
+import { AuthContext } from '../../../shared/contexts/auth-context';
+import { ChatRoomService } from '../../../core/services/services';
+import { getOwnerChatroom } from '../../../core/services/commun_fn/Chatroom_fn';
 
 
 
@@ -20,78 +22,33 @@ import { WebsocketTestService } from '../../../core/services/websocketTest/webso
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
+
+  private authContext = inject(AuthContext);
+    
+      userSignal = this.authContext.user;
+      isLoading = this.authContext.isLoading;
+    
+      user: UserResponse | null = null;
   searchQuery: string = '';
   currentUrl: string = '';
   isCenterRoute: boolean = false;
   private subscriptions: Subscription[] = [];
 
-  chatRooms: ChatRoom[] = [
-    {
-      name: 'Alice',
-      id: 1,
-      user1: {
-        id: 1,
-        username: 'Alice',
-        profilePicture: ''
-      },
-      user2: {
-        id: 2,
-        username: 'Bob',
-        profilePicture: ''
-      },
-      messages: [
-        {
-          content: 'Hello Bob',
-          createdBy: 1,
-          sentAt: '2021-06-01T00:00:00',
-          status: 'SENT'
-        },
-        {
-          content: 'Hello Alice',
-          createdBy: 2,
-          sentAt: '2021-06-01T00:00:01',
-          status: 'SENT'
-        }
-      ]
-
-    },
-    {
-      name: 'Bob',
-      id: 2,
-      user1: {
-        id: 2,
-        username: 'Bob',
-        profilePicture: ''
-      },
-      user2: {
-        id: 1,
-        username: 'Alice',
-        profilePicture: ''
-      },
-      messages: [
-        {
-          content: 'Hello Alice',
-          createdBy: 2,
-          sentAt: '2021-06-01T00:00:01',
-          status: 'SENT'
-        },
-        {
-          content: 'Hello Bob',
-          createdBy: 1,
-          sentAt: '2021-06-01T00:00:00',
-          status: 'SENT'
-        }
-      ]
-    },
-    
-  ]
+  chatRooms: ChatRoomResponse[] = [];
 
   constructor(
     private routeTrackerService: RouteTrackerService,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
-    private WebSocketTestService: WebsocketTestService
-  ) {}
+    private chatRoomService: ChatRoomService
+  ) {
+     effect(() => {
+          this.getUserValue();
+          if (this.user?.id) { 
+            this.getUserChatRooms();
+          }
+        });
+  }
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -107,8 +64,6 @@ export class ChatComponent implements OnInit, OnDestroy {
           this.isCenterRoute = result.matches;
         })
     );
-
-    this.WebSocketTestService.connect();
     
   }
 
@@ -117,7 +72,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  openChatroom(chatRoom: ChatRoom): void {
+  getUserValue() {
+    if (this.isLoading()) {
+      return;
+    }
+    this.user = this.userSignal();
+  }
+
+  async getUserChatRooms(): Promise<void> {
+    if (this.user?.id === undefined) return;
+
+    this.chatRooms = await getOwnerChatroom(this.chatRoomService);
+  }
+
+  openChatroom(chatRoom: ChatRoomResponse): void {
     const chatPath = `chat/chatroom/${chatRoom.id}`;
 
     if (this.isCenterRoute) {
@@ -127,8 +95,5 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendMessage(){
-    this.WebSocketTestService.sendMessage();
-  }
 
 }

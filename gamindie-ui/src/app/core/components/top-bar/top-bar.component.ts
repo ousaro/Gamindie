@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
 import { centerNavigateTo, rightNavigateTo } from '../../services/commun_fn/Navigation_fn';
-import { User, UserResponse } from '../../services/models';
+import {UserResponse } from '../../services/models';
 import { AuthContext } from '../../../shared/contexts/auth-context';
 
 

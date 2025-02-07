@@ -3,10 +3,12 @@ package com.ousaro.gamindie.chat;
 import java.util.List;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.ousaro.gamindie.attachment.Attachment;
 import com.ousaro.gamindie.attachment.AttachmentRepository;
+import com.ousaro.gamindie.user.User;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +32,8 @@ public class MessageService {
     }
 
     @Transactional
-    public MessageResponse createMessageAndBroadcast(MessageRequest request) {
-       
+    public MessageResponse createMessage(MessageRequest request,Authentication authentication) {
+       User user = (User) authentication.getPrincipal();
 
         List<Attachment> attachments = null;
         if(request.attachmentIds() != null && !request.attachmentIds().isEmpty()) {
@@ -39,6 +41,7 @@ public class MessageService {
         }
 
         Message message = messageMapper.toMessage(request, attachments);
+        message.setCreatedBy(user.getId());
         Message savedMessage = messageRepository.save(message);
         // Update the attachments to associate them with the saved post
         if (attachments != null) {
@@ -50,9 +53,6 @@ public class MessageService {
 
         // Convert to response
         MessageResponse response = messageMapper.toMessageResponse(savedMessage);
-
-        // Real-time broadcasting
-        messagingTemplate.convertAndSend("/topic/chatroom", response);
 
         return response;
     }

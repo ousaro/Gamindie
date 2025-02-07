@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { RouteTrackerService } from '../../services/routeTracker/route-tracker.service';
 import { centerNavigateTo } from '../../services/commun_fn/Navigation_fn';
-import { Comment, FriendShipRequest, FriendShipResponse, LikeRequest, Post, PostResponse, UserResponse } from '../../services/models';
+import {FriendShipRequest, FriendShipResponse, LikeRequest, PostResponse, UserResponse } from '../../services/models';
 import { CommentSectionComponent } from "../comment-section/comment-section.component";
 import { getFormattedDate } from '../../services/commun_fn/utilities';
 import { getPostCommentsCount } from '../../services/commun_fn/Comment_fn';

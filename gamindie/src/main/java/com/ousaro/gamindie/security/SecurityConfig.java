@@ -47,6 +47,7 @@ public class SecurityConfig {
                                     "/webjars/**",
                                     "/swagger-ui.html",
                                     "/ws/**"
+                                    
                 ).permitAll()
                     .anyRequest().authenticated() // this to specify that any request should be authenticated
                 )
