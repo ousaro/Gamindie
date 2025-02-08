@@ -7,10 +7,12 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { centerNavigateTo, rightNavigateTo } from '../../../core/services/commun_fn/Navigation_fn';
-import { ChatRoomResponse, UserResponse } from '../../../core/services/models';
+import { ChatRoomRequest, ChatRoomResponse, FriendShipResponse, UserResponse } from '../../../core/services/models';
 import { AuthContext } from '../../../shared/contexts/auth-context';
-import { ChatRoomService } from '../../../core/services/services';
-import { getOwnerChatroom } from '../../../core/services/commun_fn/Chatroom_fn';
+import { ChatRoomService, FriendShipControllerService, UserService } from '../../../core/services/services';
+import { createChatroom, getOwnerChatroom } from '../../../core/services/commun_fn/Chatroom_fn';
+import { getUserById } from '../../../core/services/commun_fn/User_fn';
+import { getUserFriendShip } from '../../../core/services/commun_fn/FriendShip_fn';
 
 
 
@@ -32,14 +34,21 @@ export class ChatComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
   currentUrl: string = '';
   isCenterRoute: boolean = false;
+  isFriendsModalOpen = false;
   private subscriptions: Subscription[] = [];
 
   chatRooms: ChatRoomResponse[] = [];
+
+  recipients: { [key: number]: UserResponse } = {};
+
+  friendsList : FriendShipResponse[] | null = null;
 
   constructor(
     private routeTrackerService: RouteTrackerService,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
+    private userService: UserService,
+    private friendShipService: FriendShipControllerService,
     private chatRoomService: ChatRoomService
   ) {
      effect(() => {
@@ -79,10 +88,70 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.user = this.userSignal();
   }
 
+  async fetchRecipients(): Promise<void> {
+    for (const chatroom of this.chatRooms) {
+      if (chatroom.id) {
+        const recipientId : number = this.user?.id === chatroom.user1Id ? chatroom.user2Id || -1 : chatroom.user1Id || -1;
+        this.recipients[chatroom.id] = await getUserById(this.userService, recipientId);
+      }
+    }        
+  }
+
+  async fetchFriends(): Promise<void> {
+    this.friendsList = await getUserFriendShip(this.friendShipService, this.user?.id || -1, 0);
+  }
+
   async getUserChatRooms(): Promise<void> {
     if (this.user?.id === undefined) return;
 
     this.chatRooms = await getOwnerChatroom(this.chatRoomService);
+    this.fetchRecipients();
+  }
+
+  getProfileUrl(profilePicture:String|undefined): string {
+    const baseURL = "http://localhost:3000/";
+
+    // Remove leading './' or extra slashes
+    const cleanPath = profilePicture?.replace(/\\/g, '/').replace(/^\.?\//, '').replace(/\/+/g, '/') ?? '';
+    return  baseURL + cleanPath;
+    
+
+  }
+
+  async startChatWithFriend(friend: FriendShipResponse) : Promise<void> {
+    
+    await this.createChatroom(friend);
+    this.closeFriendsModal();
+    window.location.reload();
+  }
+
+  async openFriendsModal() {
+    await this.fetchFriends();
+    this.isFriendsModalOpen = true;
+  }
+
+  async createChatroom(friend: FriendShipResponse) {
+    const request : ChatRoomRequest = {
+      isActive: true,
+      user1Id: this.user?.id || -1,
+      user2Id: friend.receiverId === this.user?.id ? friend.senderId || -1 : friend.receiverId || -1,
+      name: `${friend.receiverUsername} - ${friend.senderUsername}`
+
+
+    }
+    await createChatroom(this.chatRoomService,request);
+  }
+  
+  closeFriendsModal() {
+    this.isFriendsModalOpen = false;
+  }
+
+  getFriendProfilePicture(friend: FriendShipResponse): string {
+    return friend.receiverId === this.user?.id ? this.getProfileUrl(friend.senderAvatar) : this.getProfileUrl(friend.receiverAvatar);
+  }
+
+  getFriendName(friend: FriendShipResponse): string | undefined {
+    return friend.receiverId === this.user?.id ? friend.senderUsername : friend.receiverUsername;
   }
 
   openChatroom(chatRoom: ChatRoomResponse): void {

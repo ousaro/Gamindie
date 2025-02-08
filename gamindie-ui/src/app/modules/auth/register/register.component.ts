@@ -49,7 +49,7 @@ export class RegisterComponent {
     this.errorMsg = [];
     this.authService.register({body: this.registerRequest}).subscribe({
       next: () => {
-        this.router.navigate(['activate-account']);
+        navigateTo('activate-account', this.currentUrl, this.router);
       },
       error: (error) => {
         this.errorMsg = error.error.validationErrors;

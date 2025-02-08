@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { MessageRequest } from '../models';
+import { MessageRequest, MessageResponse } from '../models';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,9 @@ export class WebsocketService {
   private token = localStorage.getItem('token');
   private serverUrl = `http://localhost:8088/api/v1/ws?token=${this.token}`; // WebSocket endpoint
 
+   // Subject to emit incoming messages
+   private messageSubject = new Subject<any>();
+   public message$ = this.messageSubject.asObservable();
 
   constructor() { }
 
@@ -41,16 +45,20 @@ export class WebsocketService {
       console.log('❌ STOMP client is not connected!');
       return;
     }
-  
+
     this.stompClient.subscribe('/user/queue/messages', (message) => {
       try {
         const parsedMessage = JSON.parse(message.body);
         console.log('📥 Private Message Received:', parsedMessage);
+        
+        // Emit the received message
+        this.messageSubject.next(parsedMessage);
       } catch (error) {
         console.error('❌ Failed to parse message:', error);
       }
     });
   }
+  
   
   
   

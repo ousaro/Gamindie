@@ -7,42 +7,47 @@
         </svg>
       </button>
       <div class="flex items-center">
-        <div class="w-10 h-10 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
-          <ng-container *ngIf="chatRoom.user2Id; else defaultIcon">
-            <img [src]="" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+        <div class="w-10 h-10 rounded-full dark:bg-primary_5-dark flex items-center justify-center">
+          <ng-container *ngIf="recipient?.profilePicture; else defaultIcon">
+            <img [src]="getProfileUrl(recipient?.profilePicture)" alt="User Photo" class="w-full h-full rounded-full object-cover" />
           </ng-container>
           <ng-template #defaultIcon>
               <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
           </ng-template>
         </div>
-        <span class="ml-2 font-semibold">{{chatRoom.name}}</span>
+        <span class="ml-2 font-semibold">{{recipient?.fullName}}</span>
       </div>
     </div>
 
     <!-- Chat Messages Template -->
-    <div class="flex-1 overflow-y-auto scrollbar-none p-2 space-y-4 dark:bg-primary_4-dark flex flex-col items-center">
-      <!-- <ng-container *ngFor="let message of chatRoom.messages">
+    <div id="chat-container" class="flex-1 overflow-y-auto scrollbar-none p-2 space-y-4 dark:bg-primary_4-dark flex flex-col items-center">
+      <ng-container *ngFor="let message of messages">
         <div class="flex w-full" 
-            [class.justify-end]="message.createdBy === 1"
-            [class.justify-start]="message.createdBy === 2"
+            [class.justify-end]="message.ownerId === user?.id"
+            [class.justify-start]="message.ownerId !== user?.id"
             [class.items-end]="true">
           <div class="flex flex-col max-w-[70%] w-full">
             <div class="rounded-2xl px-3 py-2 break-words"
-                [class.dark:bg-primary_5-dark]="message.createdBy === 2"
-                [class.dark:bg-secondary-dark]="message.createdBy === 1"
-                [class.self-end]="message.createdBy === 1"
-                [class.self-start]="message.createdBy === 2">
+                [class.dark:bg-primary_5-dark]="message.ownerId !== user?.id"
+                [class.dark:bg-secondary-dark]="message.ownerId === user?.id"
+                [class.self-end]="message.ownerId === user?.id"
+                [class.self-start]="message.ownerId !== user?.id">
               <p>{{message.content}}</p>
             </div>
             <div class="text-xs dark:text-primaryText-dark mt-1 text-right" 
-                *ngIf="message.status === 'SENT'"
-                [class.self-end]="message.createdBy === 1"
-                [class.self-start]="message.createdBy === 2">
-              seen
+                [class.self-end]="message.ownerId === user?.id"
+                [class.self-start]="message.ownerId !== user?.id">
+              {{getFormattedDate(message.sentAt)}}
             </div>
+            <!-- <div class="text-xs dark:text-primaryText-dark mt-1 text-right" 
+                *ngIf="message.status === 'SENT'"
+                [class.self-end]="message.ownerId === user?.id"
+                [class.self-start]="message.ownerId !== user?.id">
+              seen
+            </div> -->
           </div>
         </div>
-      </ng-container> -->
+      </ng-container>
     </div>
 
     <!-- Input Area -->

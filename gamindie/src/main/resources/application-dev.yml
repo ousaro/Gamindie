@@ -36,7 +36,7 @@ application: # to set the application properties
       expiration: 604800000   # to set the expiration time for the JWT about 7 days
   mailing:
     frontend:
-      activation-url: http://localhost:4200/activate-account # to set the activation URL for the frontend
+      activation-url: http://localhost:4200/auth/activate-account # to set the activation URL for the frontend
   file:
     upload:
       images-path: ./uploads/images/ # to set the images path

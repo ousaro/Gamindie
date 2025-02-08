@@ -8,7 +8,7 @@ export async function sendFriendRequest(friendService:FriendShipControllerServic
       const response =  await firstValueFrom(friendService.sendFriendRequest({"body":request}));
       return response;
     } catch (error) {
-      console.error('Failed to create attachment:', error);
+      console.error('Failed to send request:', error);
       return -1;
     }
   
@@ -20,7 +20,7 @@ export async function acceptFriendRequest(friendService:FriendShipControllerServ
       const response =  await firstValueFrom(friendService.acceptFriendRequest({"id":friendShipId}));
       return response;
     } catch (error) {
-      console.error('Failed to create attachment:', error);
+      console.error('Failed to accept friendship:', error);
       return -1;
     }   
 }
@@ -30,7 +30,7 @@ export async function getUserFriendShip(friendService:FriendShipControllerServic
       const response =  await firstValueFrom(friendService.getFriends({"userId":userId,"page":page,"size":size}));
       return response.content || []; 
     } catch (error) {
-      console.error('Failed to create attachment:', error);
+      console.error('Failed to get user friendship:', error);
       return [];
     }   
 }
@@ -40,7 +40,7 @@ export async function getUserPendingFriendShip(friendService:FriendShipControlle
       const response =  await firstValueFrom(friendService.getgetPendingRequestsFriends({"userId":userId,"page":page,"size":size}));
       return response.content || [];
     } catch (error) {
-      console.error('Failed to create attachment:', error);
+      console.error('Failed to get pending friendship:', error);
       return [];
     }   
 }
@@ -50,7 +50,8 @@ export async function deleteFriendShip(friendService:FriendShipControllerService
       const response =  await firstValueFrom(friendService.deleteFriendRequest({"id":friendShipId}));
       return response;
     } catch (error) {
-      console.error('Failed to create attachment:', error);
+      console.error('Failed to delete friendship:', error);
       return -1;
     }   
 }
+

@@ -17,6 +17,10 @@ public class ChatRoomController {
 
     private final ChatRoomService service;
 
+    @GetMapping("/")
+    public ResponseEntity<List<ChatRoomResponse>> getAllChatRoom() {
+        return ResponseEntity.ok(service.getAllChatRoom());
+    }
     @GetMapping("/{user1Id}/{user2Id}")
     public ResponseEntity<List<ChatRoomResponse>> getChatRoom(@PathVariable Integer user1Id, @PathVariable Integer user2Id) {
         return ResponseEntity.ok(service.getChatRoom(user1Id, user2Id));

@@ -7,20 +7,12 @@
       <div class="h-0.5 w-full dark:bg-primary_4-dark mt-2 sm:mt-3"></div>
     </div>
 
-     <!-- Search Bar -->
-     <div class=" py-2  mb-4 font-merriweather">
-        <div class="w-full rounded-md dark:bg-primary_4-dark text-white flex items-center gap-[0.10rem]">
-          <div class="cursor-pointer pl-2">
-            <svg-icon name='search' [svgClass]="'custom-icon'"></svg-icon>
-          </div>
-          <input
-          type="text"
-          [(ngModel)]="searchQuery"
-          placeholder="Search for friend..."
-          class="w-full h-12 p-2 rounded-md dark:bg-primary_4-dark focus:outline-none dark:placeholder-primaryText-dark"
-        />
-        </div> 
-      </div>
+    <!-- Button to Open Modal -->
+    <div class="py-2 mb-4 font-merriweather">
+      <button (click)="openFriendsModal()" class="w-full py-2 px-4 rounded-md dark:bg-secondary-dark  transition-colors duration-200">
+          Select Friend to Chat
+      </button>
+    </div>
 
     <!-- Friend Requests List -->
     <div class="flex flex-col max-h-[70vh] sm:max-h-[77vh] gap-2 w-full mt-4 overflow-y-auto scrollbar-none px-1 sm:px-2">
@@ -30,21 +22,44 @@
         
         <!-- User Info -->
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full p-2 dark:bg-primary_5-dark flex items-center justify-center">
-            <ng-container *ngIf="chatRoom.user2Id; else defaultIcon">
-              <img [src]="" alt="User Photo" class="w-9 h-9 rounded-full bg-cover" />
+          <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full dark:bg-primary_5-dark flex items-center justify-center">
+            <ng-container *ngIf="recipients[chatRoom.id || -1].profilePicture; else defaultIcon">
+              <img [src]="getProfileUrl(recipients[chatRoom.id || -1].profilePicture)" alt="User Photo" class="w-full h-full rounded-full bg-cover" />
             </ng-container>
             <ng-template #defaultIcon>
                 <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
             </ng-template>
           </div>
-          <span class="text-md">{{ chatRoom.name }}</span>
+          <span class="text-md">{{ recipients[chatRoom.id || -1].fullName }}</span>
         </div>
-        
-        <!-- message number -->
-        <!-- <div *ngIf="chatRoom.messages?.length" class="flex items-center justify-center w-8 h-8 dark:bg-secondary-dark text-black p-1 rounded-full text-xs font-bold">
-            {{ chatRoom.messages?.length }}
-          </div> -->
       </div>
     </div>
+
+
+
+
+    <!-- Friends Modal -->
+    <div *ngIf="isFriendsModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class=" dark:bg-primary_4-dark rounded-lg p-4 w-3/4 max-w-md">
+          <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold">Select a Friend to Chat</h3>
+              <button (click)="closeFriendsModal()" class="text-red-500">X</button>
+          </div>
+          <div class="flex flex-col gap-2 max-h-60 overflow-y-auto scrollbar-none">
+            <div class="flex items-center gap-3 rounded-md p-2  dark:bg-primary_2-dark hover:dark:bg-primary_3-dark"      *ngFor="let friend of friendsList"
+            (click)="startChatWithFriend(friend)">
+                <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full dark:bg-primary_5-dark flex items-center justify-center" >
+                  <ng-container *ngIf="getFriendProfilePicture(friend); else defaultIcon">
+                    <img [src]="getFriendProfilePicture(friend)" alt="User Photo" class="w-full h-full rounded-full bg-cover" />
+                  </ng-container>
+                  <ng-template #defaultIcon>
+                    <svg-icon name="user" [svgClass]="'custom-icon m-1'"></svg-icon>
+                  </ng-template>
+                </div>
+                <span class="text-md">{{ getFriendName(friend) }}</span>
+              </div>
+          </div>
+      </div>
+    </div>
+
   </div>
