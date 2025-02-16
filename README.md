@@ -1,9 +1,5 @@
 # Gamindie
 
-**A Social Media Platform for Indie Game Developers and Game Testers**
-
-# Gamindie
-
 ## Overview
 Gamindie is a social media MVP designed to connect indie game developers and game testers. The platform enables users to share their projects, collaborate, and receive valuable feedback. It includes essential social media functionalities such as user authentication, post management, friendships, and real-time chat.
 
